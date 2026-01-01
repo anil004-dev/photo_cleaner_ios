@@ -56,7 +56,9 @@ struct CleanerAppApp: App {
                     Text(alertManager.alertModel.message)
                 }
             )
-            
+            .onAppear {
+                WidgetDataProvider.shared.updateAll()
+            }
         }
         .environmentObject(alertManager)
         .environmentObject(mediaDatabase)

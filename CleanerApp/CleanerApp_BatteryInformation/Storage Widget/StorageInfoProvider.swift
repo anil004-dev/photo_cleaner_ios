@@ -1,0 +1,37 @@
+//
+//  StorageInfoProvider.swift
+//  CleanerApp_BatteryInformationExtension
+//
+//  Created by iMac on 01/01/26.
+//
+
+import WidgetKit
+import UIKit
+
+struct StorageInfoProvider: TimelineProvider {
+    func placeholder(in context: Context) -> StorageInfoEntry {
+        StorageInfoEntry()
+    }
+
+    func getSnapshot(in context: Context,
+                     completion: @escaping (StorageInfoEntry) -> Void) {
+        completion(loadEntry())
+    }
+
+    func getTimeline(in context: Context,
+                     completion: @escaping (Timeline<StorageInfoEntry>) -> Void) {
+
+        let entry = loadEntry()
+
+        let nextUpdate = Calendar.current
+            .date(byAdding: .second, value: 60, to: Date())!
+
+        completion(
+            Timeline(entries: [entry], policy: .after(nextUpdate))
+        )
+    }
+
+    private func loadEntry() -> StorageInfoEntry {
+        return StorageInfoEntry()
+    }
+}

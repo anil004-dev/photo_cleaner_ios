@@ -36,6 +36,17 @@ struct HomeTabView: View {
             .tabItem {
                 Label("Contact", systemImage: "person.crop.circle")
             }
+            
+            NavigationStack(path: $navigationManager.path) {
+                WidgetView()
+                    .navigationDestination(for: NavigationDestination.self) { destination in
+                        NavigationRouter.destinationView(for: destination)
+                    }
+            }
+            .tag(2)
+            .tabItem {
+                Label("Widget", systemImage: "widget.small.badge.plus")
+            }
         }
         .tint(.white)
     }
