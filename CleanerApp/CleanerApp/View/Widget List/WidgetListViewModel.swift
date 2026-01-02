@@ -1,5 +1,5 @@
 //
-//  WidgetViewModel.swift
+//  WidgetListViewModel.swift
 //  CleanerApp
 //
 //  Created by iMac on 01/01/26.
@@ -15,7 +15,7 @@ struct WidgetCategory: Identifiable {
     let arrWidgets: [String]
 }
 
-class WidgetViewModel: ObservableObject {
+class WidgetListViewModel: ObservableObject {
     
     @Published var arrCategories: [WidgetCategory] = [
         WidgetCategory(name: "Battery", kind: .battery, arrWidgets: ["Small", "Medium", "Large"]),

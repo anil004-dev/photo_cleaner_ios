@@ -38,7 +38,7 @@ struct HomeTabView: View {
             }
             
             NavigationStack(path: $navigationManager.path) {
-                WidgetView()
+                WidgetListView()
                     .navigationDestination(for: NavigationDestination.self) { destination in
                         NavigationRouter.destinationView(for: destination)
                     }
