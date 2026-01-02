@@ -1,6 +1,6 @@
 //
 //  BatteryRingView.swift
-//  CleanerApp
+//  CleanerApp_WidgetExtension
 //
 //  Created by iMac on 01/01/26.
 //

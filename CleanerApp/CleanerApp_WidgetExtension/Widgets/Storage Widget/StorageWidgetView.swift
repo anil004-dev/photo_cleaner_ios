@@ -1,6 +1,6 @@
 //
 //  StorageWidgetView.swift
-//  CleanerApp
+//  CleanerApp_WidgetExtension
 //
 //  Created by iMac on 01/01/26.
 //
@@ -51,7 +51,6 @@ struct StorageInfoEntry: TimelineEntry {
         formatter.countStyle = .decimal
         formatter.includesUnit = true
         formatter.isAdaptive = true
-
         return formatter.string(fromByteCount: Int64(bytes))
     }
 }
@@ -80,7 +79,6 @@ struct StorageWidgetView: View {
 }
 
 struct SmallStorageWidgetView: View {
-    
     let storageInfo: StorageInfoEntry
 
     var body: some View {
@@ -91,7 +89,6 @@ struct SmallStorageWidgetView: View {
 }
 
 struct MediumStorageWidgetView: View {
-    
     let storageInfo: StorageInfoEntry
 
     var body: some View {
@@ -106,7 +103,6 @@ struct MediumStorageWidgetView: View {
 
 
 struct LargeStorageWidgetView: View {
-    
     let storageInfo: StorageInfoEntry
 
     var body: some View {

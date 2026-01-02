@@ -1,6 +1,6 @@
 //
 //  BatteryWidget.swift
-//  CleanerApp
+//  CleanerApp_WidgetExtension
 //
 //  Created by iMac on 01/01/26.
 //
@@ -14,14 +14,9 @@ struct BatteryWidget: Widget {
     let kind = "BatteryWidget"
     
     var body: some WidgetConfiguration {
-        StaticConfiguration(
-            kind: kind,
-            provider: BatteryInfoProvider()
-        ) { entry in
+        StaticConfiguration(kind: kind, provider: BatteryInfoProvider()) { entry in
             BatteryWidgetView(entry: entry)
         }
-        .supportedFamilies([
-            .systemSmall, .systemMedium, .systemLarge
-        ])
+        .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
     }
 }

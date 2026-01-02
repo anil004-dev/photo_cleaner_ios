@@ -9,10 +9,23 @@
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
-		<key>CleanerApp_BatteryInformationExtension.xcscheme_^#shared#^_</key>
+		<key>CleanerApp_WidgetExtension.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>1</integer>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>8812946A2F063F960071ED86</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>888788C22EE006D9009DE313</key>
+		<dict>
+			<key>primary</key>
+			<true/>
 		</dict>
 	</dict>
 </dict>

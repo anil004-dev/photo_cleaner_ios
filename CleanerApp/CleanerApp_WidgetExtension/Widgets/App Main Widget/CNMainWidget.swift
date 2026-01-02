@@ -1,36 +1,30 @@
 //
-//  CleanerApp_BatteryInformationBundle.swift
-//  CleanerApp_BatteryInformation
+//  CNMainWidget.swift
+//  CleanerApp
 //
-//  Created by iMac on 01/01/26.
+//  Created by iMac on 02/01/26.
 //
+
 
 import WidgetKit
 import SwiftUI
 
-@main
-struct CleanerApp_BatteryInformationBundle: WidgetBundle {
-    var body: some Widget {
-        CNMainWidget()
-    }
-}
-
 struct CNMainWidget: Widget {
-    let kind = "StorageWidget"
+    let kind = "CleanerApp_Widget"
 
     var body: some WidgetConfiguration {
         StaticConfiguration(
             kind: kind,
             provider: StorageInfoProvider()
         ) { entry in
-            CNWidgetEntryPoint()
+            CNWidgetEntryPointView()
                 .containerBackground(Color.black, for: .widget)
         }
         .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
     }
 }
 
-struct CNWidgetEntryPoint: View {
+struct CNWidgetEntryPointView: View {
     var body: some View {
         if UserDefaultManager.selectedWidget == .battery {
             BatteryWidgetView(entry: BatteryInfoEntry())

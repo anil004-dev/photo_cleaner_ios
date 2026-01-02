@@ -72,7 +72,6 @@ final class WidgetDataProvider {
             UserDefaultManager.totalStorage = Float(totalStorage)
             UserDefaultManager.usedStorage = Float(usedStorage)
             UserDefaultManager.usedStoragePercentage = usedStoragePercentage
-            
         } catch {
             print("❌ Storage fetch failed:", error)
         }

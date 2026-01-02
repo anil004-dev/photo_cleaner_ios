@@ -1,6 +1,6 @@
 //
-//  CNWidget.swift
-//  CleanerApp_BatteryInformationExtension
+//  BatteryWidgetView.swift
+//  CleanerApp_WidgetExtension
 //
 //  Created by iMac on 01/01/26.
 //
@@ -69,7 +69,6 @@ struct BatteryWidgetView: View {
 }
 
 struct SmallBatteryWidgetView: View {
-    
     let batteryInfo: BatteryInfoEntry
 
     var body: some View {
@@ -80,7 +79,6 @@ struct SmallBatteryWidgetView: View {
 }
 
 struct MediumBatteryWidgetView: View {
-    
     let batteryInfo: BatteryInfoEntry
 
     var body: some View {
@@ -94,7 +92,6 @@ struct MediumBatteryWidgetView: View {
 }
 
 struct LargeBatteryWidgetView: View {
-    
     let batteryInfo: BatteryInfoEntry
 
     var body: some View {
