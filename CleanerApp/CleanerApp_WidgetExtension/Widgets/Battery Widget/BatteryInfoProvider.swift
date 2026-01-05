@@ -8,6 +8,7 @@
 import WidgetKit
 
 struct BatteryInfoProvider: TimelineProvider {
+    
     func placeholder(in context: Context) -> BatteryInfoEntry {
         BatteryInfoEntry()
     }
@@ -18,8 +19,7 @@ struct BatteryInfoProvider: TimelineProvider {
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<BatteryInfoEntry>) -> Void) {
         let entry = loadEntry()
-        let nextUpdate = Calendar.current.date(byAdding: .second, value: 60, to: Date())!
-
+        let nextUpdate = Calendar.current.date(byAdding: .minute, value: 1, to: Date())!
         completion(Timeline(entries: [entry], policy: .after(nextUpdate)))
     }
 

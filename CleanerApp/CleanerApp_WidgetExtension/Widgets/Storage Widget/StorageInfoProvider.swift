@@ -6,9 +6,9 @@
 //
 
 import WidgetKit
-import UIKit
 
 struct StorageInfoProvider: TimelineProvider {
+    
     func placeholder(in context: Context) -> StorageInfoEntry {
         StorageInfoEntry()
     }
@@ -19,8 +19,7 @@ struct StorageInfoProvider: TimelineProvider {
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<StorageInfoEntry>) -> Void) {
         let entry = loadEntry()
-        let nextUpdate = Calendar.current.date(byAdding: .second, value: 60, to: Date())!
-
+        let nextUpdate = Calendar.current.date(byAdding: .minute, value: 1, to: Date())!
         completion(Timeline(entries: [entry], policy: .after(nextUpdate)))
     }
 

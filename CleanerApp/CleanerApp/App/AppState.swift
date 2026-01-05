@@ -6,6 +6,7 @@
 //
 
 import Combine
+import Foundation
 
 enum AppFlow {
     case none
@@ -16,6 +17,8 @@ class AppState: ObservableObject {
     
     @Published var flow: AppFlow = .none
     @Published var homeViewModel = HomeViewModel()
+    @Published var showChargingAnimation = false
+    
     var isRequestingPermission: Bool = false
     
     static let shared = AppState()
@@ -26,6 +29,15 @@ class AppState: ObservableObject {
     
     func updateFlow() {
         flow = .home
-        //NavigationManager.shared.resetNavigation()
+    }
+    
+    func updateChargingState(isCharging: Bool) {
+        DispatchQueue.main.async {
+            if isCharging, UserDefaultManager.selectedChargingAnimation != nil {
+                AppState.shared.showChargingAnimation = true
+            } else {
+                AppState.shared.showChargingAnimation = false
+            }
+        }
     }
 }

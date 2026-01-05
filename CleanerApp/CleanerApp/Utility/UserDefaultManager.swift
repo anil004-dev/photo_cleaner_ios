@@ -7,7 +7,22 @@
 
 import UIKit
 
+enum WidgetKind: Int, CaseIterable, Identifiable {
+    case battery = 0
+    case storage = 1
+    var id: Int { rawValue }
+}
+
+enum ChargingAnimationType: Int, CaseIterable {
+    case none = 0
+    case waterDrop = 1
+    
+    var id: Int { rawValue }
+}
+
+
 struct UDKeys {
+    // widgets
     static let appGroupId = "group.com.storage.blast.app"
     static let batteryLevel = "batteryLevel"
     static let batteryStateRaw = "batteryState"
@@ -20,12 +35,9 @@ struct UDKeys {
     static let usedStorage = "usedStorage"
     static let usedStoragePercentage = "usedStoragePercentage"
     static let freeStorage = "freeStorage"
-}
-
-enum WidgetKind: Int, CaseIterable, Identifiable {
-    case battery = 0
-    case storage = 1
-    var id: Int { rawValue }
+    
+    // charging animation
+    static let selectedChargingAnimationRaw = "selectedChargingAnimationRaw"
 }
 
 final class UserDefaultManager {
@@ -124,6 +136,17 @@ final class UserDefaultManager {
         }
         set {
             userDefault.setValue(newValue, forKey: UDKeys.usedStoragePercentage)
+        }
+    }
+    
+    
+    static var selectedChargingAnimation: ChargingAnimationType? {
+        get {
+            let raw = userDefault.integer(forKey: UDKeys.selectedChargingAnimationRaw)
+            return ChargingAnimationType(rawValue: raw)
+        }
+        set {
+            userDefault.setValue(newValue?.rawValue, forKey: UDKeys.selectedChargingAnimationRaw)
         }
     }
 }

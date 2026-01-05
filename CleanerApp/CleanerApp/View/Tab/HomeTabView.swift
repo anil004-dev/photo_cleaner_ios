@@ -47,6 +47,17 @@ struct HomeTabView: View {
             .tabItem {
                 Label("Widget", systemImage: "widget.small.badge.plus")
             }
+            
+            NavigationStack(path: $navigationManager.path) {
+                ChargingAnimationListView()
+                    .navigationDestination(for: NavigationDestination.self) { destination in
+                        NavigationRouter.destinationView(for: destination)
+                    }
+            }
+            .tag(3)
+            .tabItem {
+                Label("Charging Animation", systemImage: "powerplug.portrait")
+            }
         }
         .tint(.white)
     }

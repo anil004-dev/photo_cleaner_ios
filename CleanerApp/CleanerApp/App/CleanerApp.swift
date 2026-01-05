@@ -1,5 +1,5 @@
 //
-//  CleanerAppApp.swift
+//  CleanerApp.swift
 //  CleanerApp
 //
 //  Created by iMac on 03/12/25.
@@ -11,7 +11,7 @@ import SDWebImagePhotosPlugin
 
 
 @main
-struct CleanerAppApp: App {
+struct CleanerApp: App {
     
     @StateObject var appState: AppState = AppState.shared
     @StateObject var alertManager: CNAlertManager = CNAlertManager.shared
@@ -32,6 +32,11 @@ struct CleanerAppApp: App {
             ZStack {
                 ZStack {
                     rootView(appFlow: appState.flow)
+                }
+                .fullScreenCover(isPresented: $appState.showChargingAnimation) {
+                    if let animationType = UserDefaultManager.selectedChargingAnimation {
+                        ChargingAnimationView(animationType: animationType)
+                    }
                 }
             }
             .alert(

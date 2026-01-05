@@ -36,6 +36,8 @@ enum NavigationRouter {
             BackupContactView()
         case .allContactsView:
             AllContactsView()
+        case .chargingAnimationPreviewView(let destination):
+            ChargingAnimationPreviewView(viewModel: destination.viewModel)
         }
     }
 }
