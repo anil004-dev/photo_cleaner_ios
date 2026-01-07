@@ -5,6 +5,7 @@
 //  Created by iMac on 05/01/26.
 //
 
+import UIKit
 import SwiftUI
 import Combine
 
@@ -16,19 +17,20 @@ struct Raindrop: Identifiable {
 }
 
 struct WaterDropChargingAnimationPreview: View {
+    
     var body: some View {
         VStack(alignment: .center, spacing: 0) {
             WaterDropChargingAnimationView()
                 .padding()
         }
+        .background(Color.black.ignoresSafeArea())
     }
 }
 
 // MARK: - Main Charging Animation View
 struct WaterDropChargingAnimationView: View {
 
-    @StateObject private var battery = BatteryMonitor.shared
-
+    @EnvironmentObject var batteryMonitor: BatteryMonitor
     @State private var phase: CGFloat = 0
     @State private var drops: [Raindrop] = []
 
@@ -36,25 +38,34 @@ struct WaterDropChargingAnimationView: View {
     private let containerHeight: CGFloat = 340
 
     private let waveTimer = Timer.publish(every: 0.02, on: .main, in: .common).autoconnect()
-    private let dropTimer = Timer.publish(every: 0.5, on: .main, in: .common).autoconnect()
-
+    private let dropSpawnTimer = Timer.publish(every: 0.05, on: .main, in: .common).autoconnect()
+   
     var body: some View {
         ZStack {
             Color.black.ignoresSafeArea()
 
-            UnevenRoundedRectangle(
-                topLeadingRadius: 0,
-                bottomLeadingRadius: 32,
-                bottomTrailingRadius: 32,
-                topTrailingRadius: 0
-            )
+            RoundedRectangle(cornerRadius: 32)
             .stroke(Color.white.opacity(0.25), lineWidth: 2)
             .frame(width: containerWidth, height: containerHeight)
             .overlay(
                 ZStack {
+                    RoundedRectangle(cornerRadius: 32)
+                        .fill(Color.black)
+                        .frame(width: containerWidth, height: containerHeight)
+                        .overlay {
+                            ForEach(drops) { drop in
+                                Circle()
+                                    .fill(Color.cyan.opacity(0.9))
+                                    .frame(width: 6, height: 6)
+                                    .position(x: drop.x, y: drop.y)
+                            }
+                        }
+                        .background(Color.black.ignoresSafeArea())
+                        .clipShape(RoundedRectangle(cornerRadius: 32))
+                        .clipped()
                     
                     LiquidWaveShape(
-                        progress: battery.level,
+                        progress: batteryMonitor.level,
                         waveHeight: 8,
                         phase: phase
                     )
@@ -68,53 +79,47 @@ struct WaterDropChargingAnimationView: View {
                             endPoint: .bottom
                         )
                     )
-                    .clipShape(UnevenRoundedRectangle(topLeadingRadius: 0, bottomLeadingRadius: 32, bottomTrailingRadius: 32, topTrailingRadius: 0))
+                    .clipShape(RoundedRectangle(cornerRadius: 32))
                     
-                    if battery.isCharging {
-                        ForEach(drops) { drop in
-                            Circle()
-                                .fill(Color.cyan.opacity(0.9))
-                                .frame(width: 6, height: 6)
-                                .position(x: drop.x, y: drop.y)
-                        }
-                    }
+                    CNText(title: "\(Int(batteryMonitor.level * 100))%", color: .white, font: .system(size: 15, weight: .bold, design: .default))
                 }
             )
         }
         .onReceive(waveTimer) { _ in
             phase += 0.05
-            updateDrops()
         }
-        .onReceive(dropTimer) { _ in
-            if battery.isCharging {
+        .onReceive(dropSpawnTimer) { _ in
+            if batteryMonitor.level != 1 {
                 spawnDrop()
             }
         }
     }
 
-    // MARK: - Raindrop Logic (VISUAL ONLY)
     private func spawnDrop() {
-        let x = CGFloat.random(in: 20...(containerWidth - 20))
-        drops.append(Raindrop(x: x, y: -10))
-    }
-
-    private func updateDrops() {
-        for index in drops.indices {
-            drops[index].y += 4
-        }
-
-        // Drops disappear when touching water
-        drops.removeAll { drop in
-            let waterY = containerHeight * (1 - battery.level)
-            return drop.y >= waterY
+        let x = CGFloat.random(in: 5...(containerWidth - 5))
+        let startY: CGFloat = -10
+        let targetY = (containerHeight * (1 - batteryMonitor.level)) + 12
+        let drop = Raindrop(x: x, y: startY)
+        let id = drop.id
+        
+        withAnimation {
+            drops.append(drop)
+        } completion: {
+            withAnimation(.easeInOut(duration: 1)) {
+                if let index = drops.firstIndex(where: { $0.id == id }) {
+                    drops[index].y = targetY
+                }
+            } completion: {
+                drops.removeAll { $0.id == id }
+            }
         }
     }
 }
 
 // MARK: - Liquid Wave Shape
-
 struct LiquidWaveShape: Shape {
-    var progress: CGFloat        // 0 → 1
+    
+    var progress: CGFloat
     var waveHeight: CGFloat
     var phase: CGFloat
 
