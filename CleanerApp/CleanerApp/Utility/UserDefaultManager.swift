@@ -16,6 +16,7 @@ enum WidgetKind: Int, CaseIterable, Identifiable {
 enum ChargingAnimationType: Int, CaseIterable {
     case none = 0
     case waterDrop = 1
+    case bubbleRing = 2
     
     var id: Int { rawValue }
 }

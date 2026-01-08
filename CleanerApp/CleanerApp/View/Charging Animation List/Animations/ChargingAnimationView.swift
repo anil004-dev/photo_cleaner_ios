@@ -15,6 +15,8 @@ struct ChargingAnimationPreviewCard: View {
             switch animationType {
             case .waterDrop:
                 WaterDropChargingAnimationPreview()
+            case .bubbleRing:
+                BubbleRingAnimationPreview()
             default:
                 EmptyView()
             }
@@ -32,6 +34,8 @@ struct ChargingAnimationView: View {
                     switch animationType {
                     case .waterDrop:
                         WaterDropChargingAnimationView()
+                    case .bubbleRing:
+                        BubbleRingAnimationPreview()
                     default:
                         EmptyView()
                     }

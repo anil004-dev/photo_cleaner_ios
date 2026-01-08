@@ -15,7 +15,17 @@ struct ChargingAnimationPreviewView: View {
         ZStack {
             VStack(alignment: .leading, spacing: 15) {
                 previewSection
-                applyButton
+            }
+        }
+        .ignoresSafeArea(edges: [.bottom])
+        .toolbar(.hidden, for: .tabBar)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    viewModel.applyAnimation()
+                } label: {
+                    Image(systemName: "checkmark")
+                }
             }
         }
     }
@@ -25,19 +35,11 @@ struct ChargingAnimationPreviewView: View {
             switch viewModel.chargingAnimation.type {
             case .waterDrop:
                 WaterDropChargingAnimationView()
+            case .bubbleRing:
+                BubbleRingAnimationView()
             default:
                 EmptyView()
             }
-        }
-    }
-    
-    private var applyButton: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            CNButton(title: "Apply", height: 55) {
-                viewModel.applyAnimation()
-            }
-            .padding(.horizontal, 20)
-            .padding(.bottom, 20)
         }
     }
 }
