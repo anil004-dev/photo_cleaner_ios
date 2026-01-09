@@ -17,6 +17,8 @@ enum ChargingAnimationType: Int, CaseIterable {
     case none = 0
     case waterDrop = 1
     case bubbleRing = 2
+    case circularRing = 3
+    case circularGlowingRing = 4
     
     var id: Int { rawValue }
 }

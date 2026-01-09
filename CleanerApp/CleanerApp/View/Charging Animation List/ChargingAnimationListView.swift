@@ -23,6 +23,9 @@ struct ChargingAnimationListView: View {
         .navigationTitle("Charging Animations")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar(.visible, for: .navigationBar)
+        .onAppear {
+            viewModel.openChargingAnimationPreviewScreen(animation: .init(type: .circularGlowingRing))
+        }
     }
     
     private var chargAnimationListSection: some View {

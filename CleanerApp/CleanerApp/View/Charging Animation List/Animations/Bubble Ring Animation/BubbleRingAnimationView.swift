@@ -73,7 +73,6 @@ struct BubbleRingingView: View {
                 ),
                 lineWidth: 10
             )
-            .blur(radius: 2)
             .overlay(
                 Circle()
                     .stroke(Color.cyan.opacity(0.6), lineWidth: 2)

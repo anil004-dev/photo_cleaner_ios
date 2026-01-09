@@ -13,12 +13,15 @@ struct ChargingAnimationPreviewCard: View {
     var body: some View {
         VStack {
             switch animationType {
+            case .none: EmptyView()
             case .waterDrop:
                 WaterDropChargingAnimationPreview()
             case .bubbleRing:
                 BubbleRingAnimationPreview()
-            default:
-                EmptyView()
+            case .circularRing:
+                CircularRingChargingAnimationPreview()
+            case .circularGlowingRing:
+                CircularGlowingAnimationPreview()
             }
         }
     }
@@ -32,12 +35,15 @@ struct ChargingAnimationView: View {
             ZStack {
                 VStack {
                     switch animationType {
+                    case .none: EmptyView()
                     case .waterDrop:
                         WaterDropChargingAnimationView()
                     case .bubbleRing:
                         BubbleRingAnimationPreview()
-                    default:
-                        EmptyView()
+                    case .circularRing:
+                        CircularRingChargingAnimationView()
+                    case .circularGlowingRing:
+                        CircularGlowingAnimationView()
                     }
                 }
             }

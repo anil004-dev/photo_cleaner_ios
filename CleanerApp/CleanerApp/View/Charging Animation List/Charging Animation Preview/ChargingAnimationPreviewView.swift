@@ -33,12 +33,15 @@ struct ChargingAnimationPreviewView: View {
     private var previewSection: some View {
         VStack(alignment: .leading, spacing: 0) {
             switch viewModel.chargingAnimation.type {
+            case .none: EmptyView()
             case .waterDrop:
                 WaterDropChargingAnimationView()
             case .bubbleRing:
                 BubbleRingAnimationView()
-            default:
-                EmptyView()
+            case .circularRing:
+                CircularRingChargingAnimationView()
+            case .circularGlowingRing:
+                CircularGlowingAnimationPreview()
             }
         }
     }

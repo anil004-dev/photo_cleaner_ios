@@ -14,7 +14,9 @@ class ChargingAnimationManager {
     func getAllAnimations() -> [ChargingAnimation] {
         return [
             ChargingAnimation(type: .waterDrop),
-            ChargingAnimation(type: .bubbleRing)
+            ChargingAnimation(type: .bubbleRing),
+            ChargingAnimation(type: .circularRing),
+            ChargingAnimation(type: .circularGlowingRing)
         ]
     }
     
