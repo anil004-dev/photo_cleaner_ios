@@ -1,5 +1,5 @@
 //
-//  CircularRingChargingAnimationView.swift
+//  CircularGlowingRingChargingAnimationView.swift
 //  CleanerApp
 //
 //  Created by iMac on 09/01/26.
@@ -9,11 +9,11 @@ import Foundation
 import SwiftUI
 import Combine
 
-struct CircularRingChargingAnimationPreview: View {
+struct CircularGlowingRingChargingAnimationPreview: View {
     
     var body: some View {
         VStack(alignment: .center, spacing: 0) {
-            CircularRingChargingAnimationView(isForPreview: true)
+            CircularGlowingRingChargingAnimationView(isForPreview: true)
                 .frame(height: 500)
                 .padding([.top, .leading, .trailing])
         }
@@ -22,7 +22,7 @@ struct CircularRingChargingAnimationPreview: View {
 }
 
 // MARK: - Main CircularRing Charging Animation View
-struct CircularRingChargingAnimationView: View {
+struct CircularGlowingRingChargingAnimationView: View {
     
     @State private var animate = false
     @EnvironmentObject var batteryMonitor: BatteryMonitor

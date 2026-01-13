@@ -1,5 +1,5 @@
 //
-//  CircleLoaderEffectView.swift
+//  CircularNoiseRingAnimationView.swift
 //  ShaderEffects
 //
 //  Created by Grisha Tadevosyan on 16.11.24.
@@ -7,11 +7,11 @@
 
 import SwiftUI
 
-struct CircularGlowingAnimationPreview: View {
+struct CircularNoiseRingAnimationPreview: View {
     
     var body: some View {
         VStack(alignment: .center, spacing: 0) {
-            CircularGlowingAnimationView()
+            CircularNoiseRingAnimationView()
                 .frame(height: 500)
                 .padding([.top, .leading, .trailing])
         }
@@ -19,7 +19,7 @@ struct CircularGlowingAnimationPreview: View {
     }
 }
 
-struct CircularGlowingAnimationView: View {
+struct CircularNoiseRingAnimationView: View {
     
     @EnvironmentObject var batteryMonitor: BatteryMonitor
     @State var color: Color = .white

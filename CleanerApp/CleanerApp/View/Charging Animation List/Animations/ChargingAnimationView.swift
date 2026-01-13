@@ -1,5 +1,5 @@
 //
-//  ChargingAnimationPreviewCard.swift
+//  ChargingAnimationView.swift
 //  CleanerApp
 //
 //  Created by iMac on 05/01/26.
@@ -18,10 +18,12 @@ struct ChargingAnimationPreviewCard: View {
                 WaterDropChargingAnimationPreview()
             case .bubbleRing:
                 BubbleRingAnimationPreview()
-            case .circularRing:
-                CircularRingChargingAnimationPreview()
             case .circularGlowingRing:
-                CircularGlowingAnimationPreview()
+                CircularGlowingRingChargingAnimationPreview()
+            case .circularNoiseRing:
+                CircularNoiseRingAnimationPreview()
+            case .angularGlowingRing:
+                AngularRingAnimationPreview()
             }
         }
     }
@@ -40,10 +42,12 @@ struct ChargingAnimationView: View {
                         WaterDropChargingAnimationView()
                     case .bubbleRing:
                         BubbleRingAnimationPreview()
-                    case .circularRing:
-                        CircularRingChargingAnimationView()
                     case .circularGlowingRing:
-                        CircularGlowingAnimationView()
+                        CircularGlowingRingChargingAnimationPreview()
+                    case .circularNoiseRing:
+                        CircularNoiseRingAnimationView()
+                    case .angularGlowingRing:
+                        AngularRingAnimationView()
                     }
                 }
             }

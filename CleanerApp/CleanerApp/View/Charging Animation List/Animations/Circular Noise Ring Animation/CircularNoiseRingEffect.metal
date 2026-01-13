@@ -1,5 +1,5 @@
 //
-//  CircleLoaderEffect.metal
+//  CircularNoiseRingEffect.metal
 //  ShaderEffects
 //
 //  Created by Grisha Tadevosyan on 16.11.24.

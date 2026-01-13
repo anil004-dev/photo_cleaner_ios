@@ -38,10 +38,12 @@ struct ChargingAnimationPreviewView: View {
                 WaterDropChargingAnimationView()
             case .bubbleRing:
                 BubbleRingAnimationView()
-            case .circularRing:
-                CircularRingChargingAnimationView()
             case .circularGlowingRing:
-                CircularGlowingAnimationPreview()
+                CircularGlowingRingChargingAnimationView()
+            case .circularNoiseRing:
+                CircularNoiseRingAnimationView()
+            case .angularGlowingRing:
+                AngularRingAnimationView()
             }
         }
     }
