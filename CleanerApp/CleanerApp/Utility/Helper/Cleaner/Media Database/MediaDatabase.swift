@@ -84,32 +84,41 @@ final class MediaDatabase: ObservableObject {
             let screenshots = self.screenshots.items
 
             await withTaskGroup(of: Void.self) { group in
+                let chunkSize = 20
 
                 group.addTask {
                     let res = await SimilarMediaManager.shared.findSimilarMediaGroups(in: photos)
-                    await MainActor.run {
-                        withAnimation { self.similarPhotos.arrSimilarMedias = res }
+                    for chunk in await res.chunked(into: chunkSize) {
+                        await MainActor.run {
+                            withAnimation { self.similarPhotos.arrSimilarMedias.append(contentsOf: chunk) }
+                        }
                     }
                 }
 
                 group.addTask {
                     let res = await SimilarMediaManager.shared.findSimilarMediaGroups(in: screenshots)
-                    await MainActor.run {
-                        withAnimation { self.similarScreenshots.arrSimilarMedias = res }
+                    for chunk in await res.chunked(into: chunkSize) {
+                        await MainActor.run {
+                            withAnimation { self.similarScreenshots.arrSimilarMedias.append(contentsOf: chunk) }
+                        }
                     }
                 }
 
                 group.addTask {
                     let res = await DuplicateMediaManager.shared.findExactDuplicateGroups(in: photos)
-                    await MainActor.run {
-                        withAnimation { self.duplicatePhotos.arrSimilarMedias = res }
+                    for chunk in await res.chunked(into: chunkSize) {
+                        await MainActor.run {
+                            withAnimation { self.duplicatePhotos.arrSimilarMedias.append(contentsOf: chunk) }
+                        }
                     }
                 }
 
                 group.addTask {
                     let res = await DuplicateMediaManager.shared.findExactDuplicateGroups(in: screenshots)
-                    await MainActor.run {
-                        withAnimation { self.duplicateScreenshots.arrSimilarMedias = res }
+                    for chunk in await res.chunked(into: chunkSize) {
+                        await MainActor.run {
+                            withAnimation { self.duplicateScreenshots.arrSimilarMedias.append(contentsOf: chunk) }
+                        }
                     }
                 }
             }

@@ -21,7 +21,7 @@ struct CircularNoiseRingAnimationPreview: View {
 
 struct CircularNoiseRingAnimationView: View {
     
-    @EnvironmentObject var batteryMonitor: BatteryMonitor
+    @StateObject var batteryMonitor = BatteryMonitor.shared
     @State var color: Color = .white
     let startDate = Date()
     
@@ -43,13 +43,15 @@ struct CircularNoiseRingAnimationView: View {
     
     private var dateAndTimeSection: some View {
         VStack(alignment: .center, spacing: 4) {
-            Text(Date(), style: .time)
-                .font(.system(size: 30, weight: .bold))
-                .foregroundColor(.white)
-            
-            Text(Date(), style: .date)
-                .font(.system(size: 18, weight: .medium))
-                .foregroundColor(.white.opacity(0.8))
+            TimelineView(.periodic(from: .now, by: 1)) { context in
+                Text(Date(), style: .time)
+                    .font(.system(size: 30, weight: .bold))
+                    .foregroundColor(.white)
+                
+                Text(Date(), style: .date)
+                    .font(.system(size: 18, weight: .medium))
+                    .foregroundColor(.white.opacity(0.8))
+            }
         }
     }
     

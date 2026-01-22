@@ -16,7 +16,7 @@ final class BatteryMonitor: ObservableObject {
 
     @Published var level: CGFloat = 0.0
     @Published var isCharging: Bool = false
-
+    
     private init() {
         UIDevice.current.isBatteryMonitoringEnabled = true
         update()
@@ -40,6 +40,8 @@ final class BatteryMonitor: ObservableObject {
         let device = UIDevice.current
         level = CGFloat(max(0, device.batteryLevel))
         isCharging = device.batteryState == .charging
+        
+        WidgetDataProvider.shared.updateAll()
         AppState.shared.updateChargingState(isCharging: isCharging)
     }
 }

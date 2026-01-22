@@ -15,7 +15,7 @@ struct CNMediaThumbImage: View {
     var contentMode: ContentMode = .fill
     
     var body: some View {
-        let thumbnailSize = CGSize(width: size.width, height: size.height)
+        let thumbnailSize = CGSize(width: size.width * 2, height: size.height * 2)
         
         WebImage(
             url: mediaItem.thumbnailURL,

@@ -22,7 +22,7 @@ struct BubbleRingAnimationPreview: View {
 
 // MARK: - Main Charging Animation View
 struct BubbleRingAnimationView: View {
-    @EnvironmentObject var batteryMonitor: BatteryMonitor
+    @StateObject var batteryMonitor = BatteryMonitor.shared
 
     var body: some View {
         ZStack(alignment: .center) {

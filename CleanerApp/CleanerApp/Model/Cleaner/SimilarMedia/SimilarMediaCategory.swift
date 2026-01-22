@@ -67,7 +67,7 @@ struct SimilarMedia: Identifiable {
     let title: String
     
     /// Asset ID chosen as the best representative (largest / sharpest / newest)
-    let bestMediaAssetId: String
+    let bestMediaAssetId: String?
     
     /// All similar media items
     var arrMediaItems: [MediaItem]

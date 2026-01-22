@@ -30,7 +30,7 @@ struct WaterDropChargingAnimationPreview: View {
 // MARK: - Main Charging Animation View
 struct WaterDropChargingAnimationView: View {
 
-    @EnvironmentObject var batteryMonitor: BatteryMonitor
+    @StateObject var batteryMonitor = BatteryMonitor.shared
     @State private var phase: CGFloat = 0
     @State private var drops: [Raindrop] = []
 

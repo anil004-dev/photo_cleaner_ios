@@ -5,21 +5,50 @@
 //  Created by iMac on 09/12/25.
 //
 
+//actor AsyncSemaphore {
+//    private var permits: Int
+//
+//    init(value: Int) {
+//        self.permits = value
+//    }
+//
+//    func wait() async {
+//        while permits == 0 {
+//            await Task.yield()
+//        }
+//        permits -= 1
+//    }
+//
+//    func signal() {
+//        permits += 1
+//    }
+//}
+
 actor AsyncSemaphore {
     private var permits: Int
+    private var waiters: [CheckedContinuation<Void, Never>] = []
 
     init(value: Int) {
         self.permits = value
     }
 
     func wait() async {
-        while permits == 0 {
-            await Task.yield()
+        if permits > 0 {
+            permits -= 1
+            return
         }
-        permits -= 1
+
+        await withCheckedContinuation { cont in
+            waiters.append(cont)
+        }
     }
 
     func signal() {
-        permits += 1
+        if waiters.isEmpty {
+            permits += 1
+        } else {
+            let cont = waiters.removeFirst()
+            cont.resume()
+        }
     }
 }

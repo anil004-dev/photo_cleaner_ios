@@ -16,9 +16,10 @@ struct CleanerApp: App {
     @StateObject var appState: AppState = AppState.shared
     @StateObject var alertManager: CNAlertManager = CNAlertManager.shared
     @StateObject var mediaDatabase: MediaDatabase = MediaDatabase.shared
-    @StateObject var batteryMonitor: BatteryMonitor = BatteryMonitor.shared
     
     init() {
+        _ = BatteryMonitor.shared
+        
         let photosLoader = SDImagePhotosLoader.shared
         SDImageLoadersManager.shared.addLoader(photosLoader)
         SDWebImageManager.defaultImageLoader = SDImageLoadersManager.shared
@@ -68,7 +69,6 @@ struct CleanerApp: App {
         }
         .environmentObject(alertManager)
         .environmentObject(mediaDatabase)
-        .environmentObject(batteryMonitor)
     }
     
     @ViewBuilder

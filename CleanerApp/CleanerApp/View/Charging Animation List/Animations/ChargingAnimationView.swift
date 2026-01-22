@@ -24,6 +24,8 @@ struct ChargingAnimationPreviewCard: View {
                 CircularNoiseRingAnimationPreview()
             case .angularGlowingRing:
                 AngularRingAnimationPreview()
+            case .rainDropBucket:
+                ChargingBucketAnimationPreview()
             }
         }
     }
@@ -31,7 +33,8 @@ struct ChargingAnimationPreviewCard: View {
 
 struct ChargingAnimationView: View {
     let animationType: ChargingAnimationType
-
+    @StateObject var batteryMonitor = BatteryMonitor.shared
+    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -48,11 +51,13 @@ struct ChargingAnimationView: View {
                         CircularNoiseRingAnimationView()
                     case .angularGlowingRing:
                         AngularRingAnimationView()
+                    case .rainDropBucket:
+                        ChargingBucketView()
                     }
                 }
             }
             .onAppear {
-                if !BatteryMonitor.shared.isCharging {
+                if !batteryMonitor.isCharging {
                     AppState.shared.showChargingAnimation = false
                 }
             }

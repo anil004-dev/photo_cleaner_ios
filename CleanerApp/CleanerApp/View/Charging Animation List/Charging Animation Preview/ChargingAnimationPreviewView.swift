@@ -44,6 +44,8 @@ struct ChargingAnimationPreviewView: View {
                 CircularNoiseRingAnimationView()
             case .angularGlowingRing:
                 AngularRingAnimationView()
+            case .rainDropBucket:
+                ChargingBucketView()
             }
         }
     }

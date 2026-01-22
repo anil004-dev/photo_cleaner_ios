@@ -25,7 +25,7 @@ struct CircularGlowingRingChargingAnimationPreview: View {
 struct CircularGlowingRingChargingAnimationView: View {
     
     @State private var animate = false
-    @EnvironmentObject var batteryMonitor: BatteryMonitor
+    @StateObject var batteryMonitor = BatteryMonitor.shared
     var isForPreview: Bool = false
     
     var body: some View {
@@ -45,13 +45,17 @@ struct CircularGlowingRingChargingAnimationView: View {
     
     private var dateAndTimeSection: some View {
         VStack(alignment: .center, spacing: 4) {
-            Text(Date(), style: .time)
-                .font(.system(size: 30, weight: .bold))
-                .foregroundColor(.white)
-            
-            Text(Date(), style: .date)
-                .font(.system(size: 18, weight: .medium))
-                .foregroundColor(.white.opacity(0.8))
+            TimelineView(.periodic(from: .now, by: 1)) { context in
+                VStack(spacing: 4) {
+                    Text(context.date, style: .time)
+                        .font(.system(size: 30, weight: .bold))
+                        .foregroundColor(.white)
+
+                    Text(context.date, style: .date)
+                        .font(.system(size: 18, weight: .medium))
+                        .foregroundColor(.white.opacity(0.8))
+                }
+            }
         }
         .padding(.top, 50)
     }
@@ -101,7 +105,6 @@ struct CircularGlowingRingChargingAnimationView: View {
             
             RingParticleEmitter(ringRadius: 100)
         }
-        .clipped()
     }
 }
 

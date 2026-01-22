@@ -17,7 +17,8 @@ class ChargingAnimationManager {
             ChargingAnimation(type: .bubbleRing),
             ChargingAnimation(type: .circularGlowingRing),
             ChargingAnimation(type: .circularNoiseRing),
-            ChargingAnimation(type: .angularGlowingRing)
+            ChargingAnimation(type: .angularGlowingRing),
+            ChargingAnimation(type: .rainDropBucket)
         ]
     }
     

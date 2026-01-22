@@ -9,6 +9,6 @@ import Combine
 
 class TabRouter: ObservableObject {
     
-    @Published var selectedTab: Int = 3
+    @Published var selectedTab: Int = 0
     static let shared = TabRouter()
 }
