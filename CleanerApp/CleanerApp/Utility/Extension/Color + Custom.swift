@@ -50,24 +50,8 @@ extension LinearGradient {
     static var blueBg: LinearGradient {
         LinearGradient(
             colors: [
-                //Color(hex: "0A84FF"),
-                //Color(hex: "4D9FFF")
-                
-//                Color(hex: "0A84FF"),
-//                Color(hex: "4D9FFF"),
-//                Color(hex: "E9F3FF"),
-//                Color(hex: "F7FBFF")
-           
-//                Color(hex: "076FDB"),
-//                Color(hex: "3E8EEB"),
-//                Color(hex: "D7E7FD"),
-//                Color(hex: "EAF2FA"),
-//                Color(hex: "076FDB")
-                
-                Color(hex: "055EC4"),
-                Color(hex: "367FD6"),
-                Color(hex: "A9C9F1"),
-                Color(hex: "A9C9F1")
+                Color(hex: "12224E"),
+                Color(hex: "020417")
             ],
             startPoint: .top,
             endPoint: .bottom

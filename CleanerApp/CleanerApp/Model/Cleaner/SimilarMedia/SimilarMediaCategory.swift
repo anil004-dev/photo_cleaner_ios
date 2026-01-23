@@ -41,6 +41,10 @@ class SimilarMediaCategoryModel: ObservableObject, Identifiable {
         }
     }
     
+    var formattedSize: String {
+        Utility.formattedSize(byte: totalSize)
+    }
+    
     var totalMediaCount: Int {
         arrSimilarMedias.reduce(0) { sum, similar in
             sum + similar.arrMediaItems.count
@@ -79,6 +83,10 @@ struct SimilarMedia: Identifiable {
     
     var totalSize: Int64 {
         arrMediaItems.reduce(0) { $0 + $1.fileSize }
+    }
+    
+    var formattedSize: String {
+        Utility.formattedSize(byte: totalSize)
     }
     
     static func == (lhs: SimilarMedia, rhs: SimilarMedia) -> Bool {

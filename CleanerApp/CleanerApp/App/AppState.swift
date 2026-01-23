@@ -10,6 +10,8 @@ import Foundation
 
 enum AppFlow {
     case none
+    case welcome
+    case onboarding
     case home
 }
 
@@ -28,6 +30,19 @@ class AppState: ObservableObject {
     }
     
     func updateFlow() {
+        if UserDefaultManager.isWalkThroughCompleted {
+            flow = .home
+        } else {
+            if PhotoLibraryManager.shared.isPermissionGranted() {
+                flow = .onboarding
+            } else {
+                flow = .welcome
+            }
+        }
+    }
+    
+    func navigateToHomeFlow() {
+        NavigationManager.shared.resetNavigation()
         flow = .home
     }
     

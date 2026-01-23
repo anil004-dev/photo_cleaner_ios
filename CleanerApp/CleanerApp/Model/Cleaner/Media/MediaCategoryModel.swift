@@ -73,14 +73,31 @@ struct MediaItem: Identifiable {
     let id = UUID()
     let asset: PHAsset
     let type: MediaType
-    let fileSize: Int64
+    var fileSize: Int64
     let assetId: String
-    let filename: String
+    var filename: String
     let creationDate: Date?
     let isFavourite: Bool
     let mediaTypeRaw: Int
     let mediaSubtypesRaw: UInt
     var thumbnailURL: URL?
+    
+    var formattedDate: String? {
+        return creationDate?.formatted(.dateTime.day().month(.abbreviated))
+    }
+    
+    init(asset: PHAsset, type: MediaType, fileSize: Int64, assetId: String, filename: String, creationDate: Date?, isFavourite: Bool, mediaTypeRaw: Int, mediaSubtypesRaw: UInt, thumbnailURL: URL? = nil) {
+        self.asset = asset
+        self.type = type
+        self.fileSize = fileSize
+        self.assetId = assetId
+        self.filename = filename
+        self.creationDate = creationDate
+        self.isFavourite = isFavourite
+        self.mediaTypeRaw = mediaTypeRaw
+        self.mediaSubtypesRaw = mediaSubtypesRaw
+        self.thumbnailURL = thumbnailURL
+    }
     
     static func == (lhs: MediaItem, rhs: MediaItem) -> Bool {
         lhs.id == rhs.id

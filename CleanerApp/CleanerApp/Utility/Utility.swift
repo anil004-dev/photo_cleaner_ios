@@ -33,4 +33,13 @@ class Utility {
        let size = items.reduce(0) { $0 + $1.fileSize }
         return formattedSize(byte: size)
     }
+    
+    class func formatStorage(bytes: Float) -> String {
+        let formatter = ByteCountFormatter()
+        formatter.allowedUnits = [.useKB, .useMB, .useGB, .useTB, .useAll]
+        formatter.countStyle = .decimal
+        formatter.includesUnit = true
+        formatter.isAdaptive = true
+        return formatter.string(fromByteCount: Int64(bytes))
+    }
 }

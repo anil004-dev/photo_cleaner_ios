@@ -13,6 +13,11 @@ final class PhotoLibraryManager {
     static let shared = PhotoLibraryManager()
     private init() {}
     
+    func isPermissionGranted() -> Bool {
+        let status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
+        return status == .authorized || status == .limited
+    }
+    
     func requestAuthorization() async -> PHAuthorizationStatus {
         let status = await PHPhotoLibrary.requestAuthorization(for: .readWrite)
         return status
@@ -37,19 +42,16 @@ final class PhotoLibraryManager {
                 return true
             } else {
                 CNAlertManager.shared.showAlert(
-                    title: "Access Denied",
-                    message: "Photo Library access was not granted. You can continue using other features or enable access later in Settings."
+                    title: "Photo Access Denied",
+                    message: "Photo Library access was not granted. please allow access to your Photo Library in Settings."
                 )
-                
                 return false
             }
         case .denied, .restricted:
             CNAlertManager.shared.showAlert(
-                title: "Photo Library Access Needed",
-                message: "To use this feature, please enable Photo Library access in Settings. You can continue without it.",
-                leftButtonTitle: "Cancel",
-                leftButtonRole: .none,
-                rightButtonTitle: "Go to Settings",
+                title: "Photo Access Required",
+                message: "Please allow access to your Photo Library in Settings.",
+                rightButtonTitle: "Open Settings",
                 rightButtonRole: .none,
                 rightButtonAction: {
                     Utility.openSettings()
@@ -58,11 +60,9 @@ final class PhotoLibraryManager {
             return false
         @unknown default:
             CNAlertManager.shared.showAlert(
-                title: "Photo Library Access Needed",
-                message: "To use this feature, please enable Photo Library access in Settings. You can continue without it.",
-                leftButtonTitle: "Cancel",
-                leftButtonRole: .none,
-                rightButtonTitle: "Go to Settings",
+                title: "Photo Access Required",
+                message: "Please allow access to your Photo Library in Settings.",
+                rightButtonTitle: "Open Settings",
                 rightButtonRole: .none,
                 rightButtonAction: {
                     Utility.openSettings()

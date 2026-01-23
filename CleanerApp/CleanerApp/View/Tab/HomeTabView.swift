@@ -11,7 +11,7 @@ struct HomeTabView: View {
     let homeViewModel: HomeViewModel
     
     @StateObject var tabRouter: TabRouter = TabRouter.shared
-    @StateObject var navigationManager: NavigationManager = NavigationManager.shared
+    @EnvironmentObject var navigationManager: NavigationManager 
     
     var body: some View {
         TabView(selection: $tabRouter.selectedTab) {

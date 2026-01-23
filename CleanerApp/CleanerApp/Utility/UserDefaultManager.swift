@@ -27,6 +27,9 @@ enum ChargingAnimationType: Int, CaseIterable {
 
 
 struct UDKeys {
+    
+    static let isWalkThroughCompleted = "isWalkThroughCompleted"
+    
     // widgets
     static let appGroupId = "group.com.storage.blast.app"
     static let batteryLevel = "batteryLevel"
@@ -52,6 +55,20 @@ final class UserDefaultManager {
     // MARK: - App Group Storage
     static let userDefault = UserDefaults(suiteName: UDKeys.appGroupId) ?? UserDefaults.standard
     
+    static var isWalkThroughCompleted: Bool {
+        get {
+            return userDefault.bool(forKey: UDKeys.isWalkThroughCompleted)
+        }
+        set {
+            userDefault.setValue(newValue, forKey: UDKeys.isWalkThroughCompleted)
+        }
+    }
+}
+
+
+// MARK: - WIDGET
+
+extension UserDefaultManager {
     static var batteryLevel: Int {
         get {
             return userDefault.integer(forKey: UDKeys.batteryLevel)

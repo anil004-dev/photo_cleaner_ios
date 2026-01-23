@@ -25,3 +25,4 @@ extension String {
         trimmingCharacters(in: .whitespacesAndNewlines)
     }
 }
+

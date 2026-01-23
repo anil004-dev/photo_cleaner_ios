@@ -16,6 +16,7 @@ struct CleanerApp: App {
     @StateObject var appState: AppState = AppState.shared
     @StateObject var alertManager: CNAlertManager = CNAlertManager.shared
     @StateObject var mediaDatabase: MediaDatabase = MediaDatabase.shared
+    @StateObject var navigationManager: NavigationManager = NavigationManager.shared
     
     init() {
         _ = BatteryMonitor.shared
@@ -34,7 +35,9 @@ struct CleanerApp: App {
             ZStack {
                 ZStack {
                     rootView(appFlow: appState.flow)
+                        .transition(.opacity)
                 }
+                .animation(.easeInOut(duration: 0.35), value: appState.flow)
                 .fullScreenCover(isPresented: $appState.showChargingAnimation) {
                     if let animationType = UserDefaultManager.selectedChargingAnimation {
                         ChargingAnimationView(animationType: animationType)
@@ -68,6 +71,7 @@ struct CleanerApp: App {
             }
         }
         .environmentObject(alertManager)
+        .environmentObject(navigationManager)
         .environmentObject(mediaDatabase)
     }
     
@@ -76,6 +80,15 @@ struct CleanerApp: App {
         switch appFlow {
         case .none:
             EmptyView()
+        case .welcome:
+            NavigationStack(path: $navigationManager.path) {
+                WelcomeView()
+                    .navigationDestination(for: NavigationDestination.self) { destination in
+                        NavigationRouter.destinationView(for: destination)
+                    }
+            }
+        case .onboarding:
+            OnboardingView()
         case .home:
             HomeTabView(homeViewModel: appState.homeViewModel)
         }

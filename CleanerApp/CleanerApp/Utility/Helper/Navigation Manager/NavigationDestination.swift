@@ -9,6 +9,8 @@ import SwiftUI
 
 enum NavigationDestination: Hashable {
     case none
+    case onboardingView
+    
     case mediaListView(destination: MediaListDestination)
     case mediaPreviewView(destination: MediaPreviewDestination)
     case similarMediaListView(destination: SimilarMediaListDestination)

@@ -10,7 +10,7 @@ import SwiftUI
 
 final class HomeViewModel: ObservableObject {
     
-    var mediaDatabase: MediaDatabase?
+    @Published var mediaDatabase: MediaDatabase?
     
     func onAppear(mediaDatabase: MediaDatabase) {
         self.mediaDatabase = mediaDatabase

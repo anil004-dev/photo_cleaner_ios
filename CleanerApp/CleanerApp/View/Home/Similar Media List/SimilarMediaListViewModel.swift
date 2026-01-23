@@ -34,7 +34,17 @@ class SimilarMediaListViewModel: ObservableObject {
         }
     }
     
-    func btnAllSelectItem(similar: SimilarMedia) {
+    func btnDeselectAllItems(similar: SimilarMedia) {
+        withAnimation {
+            arrSelectedItems.removeAll { selected in
+                similar.arrMediaItems.contains { item in
+                    item.assetId == selected.assetId
+                }
+            }
+        }
+    }
+    
+    func btnSelectAllItems(similar: SimilarMedia) {
         withAnimation {
             let firstItem = similar.arrMediaItems.first
             let arrMediaItems = similar.arrMediaItems.dropFirst()
@@ -56,7 +66,13 @@ class SimilarMediaListViewModel: ObservableObject {
         }
     }
     
-    func btnSelectAllAction() {
+    func btnDeselectAllAction() {
+        withAnimation {
+            arrSelectedItems = []
+        }
+    }
+    
+    private func btnSelectAllAction() {
         withAnimation {
             let selected = similarMediaCategory.arrSimilarMedias.flatMap { group in
                 Array(group.arrMediaItems.dropFirst())

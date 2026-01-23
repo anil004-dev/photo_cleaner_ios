@@ -14,6 +14,9 @@ enum NavigationRouter {
         switch navDestination {
         case .none:
             EmptyView()
+        case .onboardingView:
+            OnboardingView()
+            
         case .mediaListView(let destination):
             MediaItemsListView(viewModel: destination.viewModel)
         case .mediaPreviewView(let destination):
