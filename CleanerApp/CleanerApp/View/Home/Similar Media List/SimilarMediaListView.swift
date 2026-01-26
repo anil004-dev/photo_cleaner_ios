@@ -159,7 +159,10 @@ extension SimilarMediaListView {
                         mediaItem: mediaItem,
                         isBest: index == 0,
                         isSelected: viewModel.arrSelectedItems.contains { $0.assetId == mediaItem.assetId },
-                        size: itemWidth
+                        size: itemWidth,
+                        onTap: {
+                            viewModel.openMediaPreview(media: mediaItem, similarMedia: similarMedia)
+                        }
                     )
                 }
             }
@@ -169,7 +172,7 @@ extension SimilarMediaListView {
     }
     
     @ViewBuilder
-    private func mediaItemCard(mediaItem: MediaItem, isBest: Bool, isSelected: Bool, size: CGFloat) -> some View {
+    private func mediaItemCard(mediaItem: MediaItem, isBest: Bool, isSelected: Bool, size: CGFloat, onTap: @escaping (() -> Void)) -> some View {
         let width = size
         let height = size
         
@@ -222,6 +225,7 @@ extension SimilarMediaListView {
             }
         }
         .frame(width: size, height: size)
+        .onTapGesture(perform: onTap)
     }
 }
 

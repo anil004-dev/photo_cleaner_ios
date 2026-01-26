@@ -369,7 +369,6 @@ final class SimilarMediaManager {
                     await scoreSemaphore.wait()
                     defer { Task { await scoreSemaphore.signal() } }
 
-                    // ✅ Check score cache first
                     if let cachedScore = await ScoreCache.shared.get(item.assetId) {
                         return (item, cachedScore)
                     }

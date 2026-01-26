@@ -24,7 +24,7 @@ struct HomeView: View {
         }
         .navigationTitle("Home")
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar(.visible, for: .navigationBar)
+        .toolbar(.hidden, for: .navigationBar)
         .onAppear {
             viewModel.onAppear(mediaDatabase: mediaDatabase)
         }
@@ -33,8 +33,9 @@ struct HomeView: View {
     private var homeSection: some View {
         VStack(alignment: .leading, spacing: 0) {
             ScrollView(.vertical) {
-                VStack(alignment: .leading, spacing: 0) {
+                VStack(alignment: .leading, spacing: 20) {
                     storageSection
+                    mediaSection
                 }
                 .frame(maxWidth: .infinity)
             }
@@ -47,6 +48,12 @@ struct HomeView: View {
             
             VStack(alignment: .center, spacing: 0) {
                 HStack(alignment: .center, spacing: 0) {
+                    let totalStorage = mediaDatabase.totalStorage
+                    let freeStorage = mediaDatabase.freeStorage
+                    
+                    let usedStorage = totalStorage - freeStorage
+                    let usedStoragePerc = Int((usedStorage / totalStorage) * 100)
+                    
                     VStack(alignment: .leading, spacing: 0) {
                         Image(systemName: "externaldrive.fill")
                             .resizable()
@@ -58,26 +65,30 @@ struct HomeView: View {
                         CNText(title: "STORAGE USED", color: .white, font: .system(size: 15, weight: .bold, design: .default), alignment: .leading)
                             .padding(.bottom, 5)
                         
-                        let totalStorage = mediaDatabase.totalStorage
-                        let freeStorage = mediaDatabase.freeStorage
-
-                        let usedStorage = totalStorage - freeStorage
-                        let usedStoragePerc = Int((usedStorage / totalStorage) * 100)
-                        
                         CNText(title: "\(mediaDatabase.formattedUsedStorage) of \(mediaDatabase.formattedTotalStorage)", color: .white, font: .system(size: 14, weight: .regular, design: .default), alignment: .leading)
                             .padding(.bottom, 20)
                         
-                        HStack(alignment: .bottom, spacing: 20) {
+                        HStack(alignment: .bottom, spacing: 10) {
                             CNText(title: "\(usedStoragePerc)%", color: .white, font: .system(size: 36, weight: .semibold, design: .default), alignment: .leading)
                             
                             CNText(title: "\(mediaDatabase.formattedFreeStorage) FREE", color: .white, font: .system(size: 12, weight: .regular, design: .default), alignment: .leading)
+                                .padding(.bottom, 6)
                         }
+                        .frame(alignment: .bottom)
                     }
                     
-                    VStack(spacing: 0) {
+                    Spacer(minLength: 0)
+                    
+                    ZStack {
+                        CNCircularProgressView(progress: Double(usedStorage / totalStorage))
                         
+                        Image(.icDb)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 87, height: 87)
                     }
-                    .frame(width: 123, height: 123)
+                    .frame(width: 120, height: 120)
+                    .padding(.trailing, 5)
                 }
                 .padding(18)
             }
@@ -90,92 +101,91 @@ struct HomeView: View {
     }
     
     
-//    private var homeSection: some View {
-//        VStack(alignment: .leading, spacing: 0) {
-//            if viewModel.mediaDatabase?.scanState == .scanning {
-//                Label("Scanning..", systemImage: "progress.indicator")
-//                    .padding(.vertical, 10)
-//                    .padding(.horizontal, 10)
-//            }
-//            
-//            ScrollView(.vertical) {
-//                if let mediaDatabase = viewModel.mediaDatabase {
-//                    LazyVStack(alignment: .leading, spacing: 20) {
-//                        
-//                        MediaCategoryCell(
-//                            category: mediaDatabase.photos,
-//                            onTap: {
-//                                viewModel.btnCategoryAction(category: mediaDatabase.photos)
-//                            }
-//                        )
-//                        
-//                        MediaCategoryCell(
-//                            category: mediaDatabase.screenshots,
-//                            onTap: {
-//                                viewModel.btnCategoryAction(category: mediaDatabase.screenshots)
-//                            }
-//                        )
-//                        
-//                        MediaCategoryCell(
-//                            category: mediaDatabase.livePhotos,
-//                            onTap: {
-//                                viewModel.btnCategoryAction(category: mediaDatabase.livePhotos)
-//                            }
-//                        )
-//                        
-//                        MediaCategoryCell(
-//                            category: mediaDatabase.videos,
-//                            onTap: {
-//                                viewModel.btnCategoryAction(category: mediaDatabase.videos)
-//                            }
-//                        )
-//                        
-//                        MediaCategoryCell(
-//                            category: mediaDatabase.screenRecordings,
-//                            onTap: {
-//                                viewModel.btnCategoryAction(category: mediaDatabase.screenRecordings)
-//                            }
-//                        )
-//                        
-//                        MediaCategoryCell(
-//                            category: mediaDatabase.largeVideos,
-//                            onTap: {
-//                                viewModel.btnCategoryAction(category: mediaDatabase.largeVideos)
-//                            }
-//                        )
-//                        
-//                        SimilarCategoryCell(
-//                            category: mediaDatabase.similarPhotos,
-//                            onTap: {
-//                                viewModel.btnSimilarMediaAction(category: mediaDatabase.similarPhotos)
-//                            }
-//                        )
-//                        
-//                        SimilarCategoryCell(
-//                            category: mediaDatabase.similarScreenshots,
-//                            onTap: {
-//                                viewModel.btnSimilarMediaAction(category: mediaDatabase.similarScreenshots)
-//                            }
-//                        )
-//                        
-//                        SimilarCategoryCell(
-//                            category: mediaDatabase.duplicatePhotos,
-//                            onTap: {
-//                                viewModel.btnSimilarMediaAction(category: mediaDatabase.duplicatePhotos)
-//                            }
-//                        )
-//                        
-//                        SimilarCategoryCell(
-//                            category: mediaDatabase.duplicateScreenshots,
-//                            onTap: {
-//                                viewModel.btnSimilarMediaAction(category: mediaDatabase.duplicateScreenshots)
-//                            }
-//                        )
-//                    }
-//                    .padding(.horizontal, 20)
-//                    .padding(.bottom, 20)
-//                }
-//            }
-//        }
-//    }
+    private var mediaSection: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            if viewModel.mediaDatabase?.scanState == .scanning {
+                Label("Scanning..", systemImage: "progress.indicator")
+                    .padding(.vertical, 10)
+                    .padding(.horizontal, 10)
+            }
+            
+            ScrollView(.vertical) {
+                if let mediaDatabase = viewModel.mediaDatabase {
+                    LazyVStack(alignment: .leading, spacing: 25) {
+                        
+                        SimilarCategoryCell(
+                            category: mediaDatabase.duplicatePhotos,
+                            onTap: {
+                                viewModel.btnSimilarMediaAction(category: mediaDatabase.duplicatePhotos)
+                            }
+                        )
+                        
+                        SimilarCategoryCell(
+                            category: mediaDatabase.similarPhotos,
+                            onTap: {
+                                viewModel.btnSimilarMediaAction(category: mediaDatabase.similarPhotos)
+                            }
+                        )
+                        
+                        SimilarCategoryCell(
+                            category: mediaDatabase.duplicateScreenshots,
+                            onTap: {
+                                viewModel.btnSimilarMediaAction(category: mediaDatabase.duplicateScreenshots)
+                            }
+                        )
+                        
+                        SimilarCategoryCell(
+                            category: mediaDatabase.similarScreenshots,
+                            onTap: {
+                                viewModel.btnSimilarMediaAction(category: mediaDatabase.similarScreenshots)
+                            }
+                        )
+                        
+                        MediaCategoryCell(
+                            category: mediaDatabase.photos,
+                            onTap: {
+                                viewModel.btnCategoryAction(category: mediaDatabase.photos)
+                            }
+                        )
+                        
+                        MediaCategoryCell(
+                            category: mediaDatabase.screenshots,
+                            onTap: {
+                                viewModel.btnCategoryAction(category: mediaDatabase.screenshots)
+                            }
+                        )
+                        
+                        MediaCategoryCell(
+                            category: mediaDatabase.livePhotos,
+                            onTap: {
+                                viewModel.btnCategoryAction(category: mediaDatabase.livePhotos)
+                            }
+                        )
+                        
+                        MediaCategoryCell(
+                            category: mediaDatabase.videos,
+                            onTap: {
+                                viewModel.btnCategoryAction(category: mediaDatabase.videos)
+                            }
+                        )
+                        
+                        MediaCategoryCell(
+                            category: mediaDatabase.screenRecordings,
+                            onTap: {
+                                viewModel.btnCategoryAction(category: mediaDatabase.screenRecordings)
+                            }
+                        )
+                        
+                        MediaCategoryCell(
+                            category: mediaDatabase.largeVideos,
+                            onTap: {
+                                viewModel.btnCategoryAction(category: mediaDatabase.largeVideos)
+                            }
+                        )
+                    }
+                    .padding(.bottom, 20)
+                }
+            }
+        }
+    }
 }

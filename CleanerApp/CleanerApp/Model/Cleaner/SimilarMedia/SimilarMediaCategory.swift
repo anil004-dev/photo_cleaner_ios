@@ -55,6 +55,45 @@ class SimilarMediaCategoryModel: ObservableObject, Identifiable {
         self.type = type
     }
     
+    func setSimilarMedias(similarMedias: [SimilarMedia]) {
+        arrSimilarMedias = similarMedias
+        //calculateSize()
+    }
+    
+    func calculateSize() {
+        
+//        guard !arrSimilarMedias.isEmpty else { return }
+//        
+//        
+//        Task(priority: .utility) {
+//            
+//            var updatedGroups = self.arrSimilarMedias
+//            
+//            await withTaskGroup(of: (Int, Int, Int64).self) { taskGroup in
+//                
+//                for (groupIndex, similarGroup) in self.arrSimilarMedias.enumerated() {
+//                    
+//                    for (itemIndex, item) in similarGroup.arrMediaItems.enumerated() {
+//                        taskGroup.addTask {
+//                            let size = await item.asset.fileSizeAsync(completion: <#(Int64) -> Void#>)
+//                            return (groupIndex, itemIndex, size)
+//                        }
+//                    }
+//                }
+//                
+//                for await (groupIndex, itemIndex, size) in taskGroup {
+//                    updatedGroups[groupIndex]
+//                        .arrMediaItems[itemIndex]
+//                        .fileSize = size
+//                }
+//            }
+//            
+//            await MainActor.run {
+//                self.arrSimilarMedias = updatedGroups
+//            }
+//        }
+    }
+    
     static func == (lhs: SimilarMediaCategoryModel, rhs: SimilarMediaCategoryModel) -> Bool {
         lhs.id == rhs.id
     }
@@ -64,7 +103,7 @@ class SimilarMediaCategoryModel: ObservableObject, Identifiable {
     }
 }
 
-struct SimilarMedia: Identifiable {
+struct SimilarMedia: Identifiable, Hashable {
     let id = UUID()
     
     /// Display title (ex: "5 Similar Photos")

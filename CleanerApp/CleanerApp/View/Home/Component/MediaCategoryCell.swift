@@ -12,61 +12,57 @@ struct MediaCategoryCell: View {
     let onTap: () -> Void
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            VStack(alignment: .leading, spacing: 10) {
-                CNText(title: category.title, color: .white, font: .system(size: 16, weight: .medium), alignment: .leading)
+        mediaSection
+    }
+    
+    private var mediaSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            VStack(alignment: .leading, spacing: 3) {
+                HStack(alignment: .center, spacing: 8) {
+                    CNText(title: category.title, color: .white, font: .system(size: 20, weight: .bold), alignment: .leading)
+                    
+                    Image(systemName: "chevron.right")
+                        .resizable()
+                        .scaledToFit()
+                        .fontWeight(.bold)
+                        .foregroundStyle(Color(hex: "80828A"))
+                        .frame(width: 8, height: 13)
+                }
                 
                 HStack(alignment: .center, spacing: 0) {
-                    let items = category.items.sorted { ($0.creationDate ?? .distantPast) > ($1.creationDate ?? .distantPast) }
-                    let firstItem = items.first
-                    let size = CGSize(width: 90, height: 90)
+                    CNText(title: "\(category.count) \(category.title) • ", color: Color(hex: "80818A"), font: .system(size: 12, weight: .semibold, design: .default), alignment: .leading)
                     
-                    if let firstItem {
-                        HStack(alignment: .center, spacing: 20) {
-                            CNMediaThumbImage(mediaItem: firstItem, size: size)
-                                .cornerRadius(10)
-                            
-                            if items.count >= 2 {
-                                let secondItem = items[1]
-                                CNMediaThumbImage(mediaItem: secondItem, size: size)
-                                    .cornerRadius(10)
-                            }
-                        }
-                    }
-                    
-                    if firstItem != nil {
-                        Spacer(minLength: 20)
-                    }
-                    
-                    HStack(alignment: .center, spacing: 10) {
-                        VStack(alignment: .leading, spacing: 5) {
-                            CNText(title: Utility.formattedSize(byte: category.totalSize), color: .white, font: .system(size: 13, weight: .medium, design: .default), alignment: .leading)
-                            
-                            CNText(title: "\(category.count) \(category.title)", color: .white, font: .system(size: 12, weight: .regular, design: .default), alignment: .leading)
-                        }
-                        
-                        Image(systemName: "chevron.right")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(height: 10)
-                    }
-                    .padding(5)
-                    .frame(alignment: .leading)
-                    .background(Color.blue)
-                    .clipShape(RoundedRectangle(cornerRadius: 5))
-                    
-                    if firstItem == nil {
-                        Spacer(minLength: 0)
-                    }
+                    CNText(title: "\(category.formattedSize)", color: .white, font: .system(size: 12, weight: .semibold, design: .default), alignment: .leading)
                 }
             }
-            .padding(15)
+            .padding(.horizontal, 25)
+            
+            let mediaItems = category.items
+            
+            if let first = mediaItems.first {
+                let totalHorizontalPadding: CGFloat = 20 * 2
+                let itemSpacing: CGFloat = 10
+                let numberOfColumns: CGFloat = 2
+                let availableWidth = UIScreen.main.bounds.width - totalHorizontalPadding - (itemSpacing * (numberOfColumns - 1))
+                let itemWidth = availableWidth / numberOfColumns
+                
+                HStack(alignment: .center, spacing: 10) {
+                    
+                    CNMediaThumbImage(mediaItem: first, size: CGSize(width: itemWidth, height: itemWidth))
+                        .cornerRadius(22)
+                    
+                    if mediaItems.count >= 2 {
+                        let second = mediaItems[1]
+                        
+                        CNMediaThumbImage(mediaItem: second, size: CGSize(width: itemWidth, height: itemWidth))
+                            .cornerRadius(22)
+                    }
+                }
+                .padding(.horizontal, 20)
+            }
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.darkBlueCellBg)
-        .clipShape(RoundedRectangle(cornerRadius: 8))
-        .onTapGesture {
-            onTap()
-        }
+        .background(Color.bgDarkBlue)
+        .clipShape(Rectangle())
+        .onTapGesture(perform: onTap)
     }
 }

@@ -11,7 +11,9 @@ import Foundation
 
 class MediaPreviewViewModel: ObservableObject {
     
-    var mediaCategory: MediaCategoryModel
+    var title: String
+    var mediaType: MediaType
+    
     @Published var arrItems: [MediaItem] = []
     @Published var arrSelectedItems: [MediaItem] = []
     @Published var currentIndex: Int = 0
@@ -20,8 +22,9 @@ class MediaPreviewViewModel: ObservableObject {
     var onDeleteBtnAction: (([MediaItem]) -> Void)
     var removeItems: (([MediaItem]) -> Void)
     
-    init(mediaCategory: MediaCategoryModel, arrItems: [MediaItem], currentMediaItem: MediaItem, arrSelectedItems: [MediaItem], onDoneBtnAction: @escaping ([MediaItem]) -> Void, onDeleteBtnAction: @escaping ([MediaItem]) -> Void, removeItems: @escaping (([MediaItem]) -> Void)) {
-        self.mediaCategory = mediaCategory
+    init(title: String, mediaType: MediaType, arrItems: [MediaItem], currentMediaItem: MediaItem, arrSelectedItems: [MediaItem], onDoneBtnAction: @escaping ([MediaItem]) -> Void, onDeleteBtnAction: @escaping ([MediaItem]) -> Void, removeItems: @escaping (([MediaItem]) -> Void)) {
+        self.title = title
+        self.mediaType = mediaType
         self._arrItems = Published(initialValue: arrItems)
         self._arrSelectedItems = Published(initialValue: arrSelectedItems)
         self.onDoneBtnAction = onDoneBtnAction

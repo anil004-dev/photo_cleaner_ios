@@ -48,7 +48,7 @@ class AppState: ObservableObject {
     
     func updateChargingState(isCharging: Bool) {
         DispatchQueue.main.async {
-            if isCharging, UserDefaultManager.selectedChargingAnimation != nil {
+            if isCharging, UserDefaultManager.selectedChargingAnimation != ChargingAnimationType.none {
                 AppState.shared.showChargingAnimation = true
             } else {
                 AppState.shared.showChargingAnimation = false

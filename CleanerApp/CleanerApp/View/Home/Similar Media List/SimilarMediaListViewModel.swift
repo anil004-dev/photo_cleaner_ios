@@ -17,11 +17,11 @@ class SimilarMediaListViewModel: ObservableObject {
     
     init(similarMediaCategory: SimilarMediaCategoryModel) {
         _similarMediaCategory = Published(initialValue: similarMediaCategory)
+        btnSelectAllAction()
     }
     
     func onAppear(mediaDatabase: MediaDatabase) {
         self.mediaDatabase = mediaDatabase
-        self.btnSelectAllAction()
     }
     
     func btnSelectItem(media: MediaItem) {
@@ -109,5 +109,31 @@ class SimilarMediaListViewModel: ObservableObject {
         } catch {
             return
         }
+    }
+    
+    func openMediaPreview(media: MediaItem, similarMedia: SimilarMedia) {
+        let viewModel = MediaPreviewViewModel(
+            title: similarMediaCategory.title,
+            mediaType: .photos,
+            arrItems: similarMedia.arrMediaItems,
+            currentMediaItem: media,
+            arrSelectedItems: arrSelectedItems,
+            onDoneBtnAction: { [weak self] arrSelectedItems in
+                guard let self = self else { return }
+                self.arrSelectedItems = arrSelectedItems
+                NavigationManager.shared.pop()
+            },
+            onDeleteBtnAction: { [weak self] arrSelectedItems in
+                guard let self = self else { return }
+                self.arrSelectedItems = arrSelectedItems
+                self.btnDeleteAction()
+            },
+            removeItems: { [weak self] arrItems in
+                guard let self = self else { return }
+                self.arrSelectedItems.removeAll { item in arrItems.contains(where: { $0.assetId == item.assetId }) }
+            }
+        )
+        
+        NavigationManager.shared.push(to: .mediaPreviewView(destination: MediaPreviewDestination(viewModel: viewModel)))
     }
 }

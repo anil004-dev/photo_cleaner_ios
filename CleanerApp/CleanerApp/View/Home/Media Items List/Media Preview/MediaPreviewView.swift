@@ -18,7 +18,7 @@ struct MediaPreviewView: View {
                 mediaPreviewSection
             }
         }
-        .navigationTitle(viewModel.mediaCategory.title)
+        .navigationTitle(viewModel.title)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar(.visible, for: .navigationBar)
         .toolbar(.hidden, for: .tabBar)
@@ -57,7 +57,7 @@ struct MediaPreviewView: View {
                     .id(viewModel.currentIndex)
                     
                     HStack(alignment: .center, spacing: 0) {
-                        if viewModel.mediaCategory.type == .largeVideos {
+                        if viewModel.mediaType == .largeVideos {
                             let estimatedSize = VideoCompressor.shared.estimatedSizeRange(mediaItem: mediaItem, quality: .medium)
                             let formattedSize = estimatedSize
                             
@@ -71,7 +71,7 @@ struct MediaPreviewView: View {
                         
                         Spacer()
                         
-                        if viewModel.mediaCategory.type == .largeVideos {
+                        if viewModel.mediaType == .largeVideos {
                             Button {
                                 viewModel.btnCompressVideo(mediaItem: mediaItem)
                             } label: {

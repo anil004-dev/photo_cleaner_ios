@@ -100,28 +100,8 @@ final class MediaDatabase: ObservableObject {
         }
     }
     
-    func fetchMediaCategory(type: MediaType) -> MediaCategoryModel {
-        switch type {
-        case .photos: return photos
-        case .screenshots: return screenshots
-        case .livePhotos: return livePhotos
-        case .videos: return videos
-        case .screenRecordings: return screenRecordings
-        case .largeVideos: return largeVideos
-        }
-    }
-    
-    func fetchSimilarMediaCategory(type: SimilarMediaType) -> SimilarMediaCategoryModel {
-        switch type {
-        case .similarPhotos: return similarPhotos
-        case .similarScreenshots: return similarScreenshots
-        case .duplicatePhotos: return duplicatePhotos
-        case .duplicateScreenshots: return duplicateScreenshots
-        }
-    }
-    
     private func fetchItems(type: MediaType, completion: @escaping ([MediaItem]) -> Void) {
-        DispatchQueue.global(qos: .userInitiated).async {
+        DispatchQueue.global(qos: .background).async {
             
             let options = PHFetchOptions()
             options.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
@@ -198,108 +178,109 @@ final class MediaDatabase: ObservableObject {
     }
     
     private func fetchAllItems() {
-        fetchPhotos()
-        
-        let fetchAllGrp = DispatchGroup()
-        let fetchImageGrp = DispatchGroup()
-        
-        
-        fetchAllGrp.enter()
-        fetchImageGrp.enter()
-        fetchPhotos {
-            fetchAllGrp.leave()
-            fetchImageGrp.leave()
+
+        let group = DispatchGroup()
+
+        func enter() { group.enter() }
+        func leave() { group.leave() }
+
+        enter()
+        fetchPhotos { items in
+            DispatchQueue.main.async {
+                self.photos.setItems(arrItems: items)
+            }
+            
+            leave()
         }
-        
-        fetchAllGrp.enter()
-        fetchImageGrp.enter()
-        fetchScreenshots {
-            fetchAllGrp.leave()
-            fetchImageGrp.leave()
+
+        enter()
+        fetchScreenshots { items in
+            DispatchQueue.main.async {
+                self.screenshots.setItems(arrItems: items)
+            }
+            
+            leave()
         }
-        
-        fetchAllGrp.enter()
-        fetchLivePhotos { fetchAllGrp.leave() }
-        
-        fetchAllGrp.enter()
-        fetchVideos { fetchAllGrp.leave() }
-        
-        fetchAllGrp.enter()
-        fetchScreenRecordings { fetchAllGrp.leave() }
-        
-        fetchAllGrp.enter()
-        fetchLargeVideos { fetchAllGrp.leave() }
-        
-        fetchAllGrp.notify(queue: .main) {
-            print("✅ Scan finished")
+
+        enter()
+        fetchLivePhotos { items in
+            DispatchQueue.main.async {
+                self.livePhotos.setItems(arrItems: items)
+            }
+           
+            leave()
         }
-        
-        fetchImageGrp.notify(queue: .global()) {
-            self.fetchSimilarMedias {
-                DispatchQueue.main.async {
+
+        enter()
+        fetchVideos { items in
+            DispatchQueue.main.async {
+                self.videos.setItems(arrItems: items)
+            }
+           
+            leave()
+        }
+
+        enter()
+        fetchScreenRecordings { items in
+            DispatchQueue.main.async {
+                self.screenRecordings.setItems(arrItems: items)
+            }
+           
+            leave()
+        }
+
+        enter()
+        fetchLargeVideos { items in
+            DispatchQueue.main.async {
+                self.largeVideos.setItems(arrItems: items)
+            }
+           
+            leave()
+        }
+
+        group.notify(queue: .global(qos: .background)) {
+            Task(priority: .background) {
+                self.fetchSimilarMedias()
+                await MainActor.run {
                     self.scanState = .completed
                 }
             }
         }
     }
     
-    private func fetchPhotos(completion: (() -> Void)? = nil) {
+    private func fetchPhotos(completion: (([MediaItem]) -> Void)? = nil) {
         fetchItems(type: .photos) { items in
-            
-            DispatchQueue.main.async {
-                withAnimation { self.photos.items = items }
-                completion?()
-            }
+            completion?(items)
         }
     }
     
-    private func fetchScreenshots(completion: (() -> Void)? = nil) {
+    private func fetchScreenshots(completion: (([MediaItem]) -> Void)? = nil) {
         fetchItems(type: .screenshots) { items in
-            
-            DispatchQueue.main.async {
-                withAnimation { self.screenshots.items = items }
-                completion?()
-            }
+            completion?(items)
         }
     }
     
-    private func fetchLivePhotos(completion: (() -> Void)? = nil) {
+    private func fetchLivePhotos(completion: (([MediaItem]) -> Void)? = nil) {
         fetchItems(type: .livePhotos) { items in
-            
-            DispatchQueue.main.async {
-                withAnimation { self.livePhotos.items = items }
-                completion?()
-            }
+            completion?(items)
         }
     }
     
-    private func fetchVideos(completion: (() -> Void)? = nil) {
+    private func fetchVideos(completion: (([MediaItem]) -> Void)? = nil) {
         fetchItems(type: .videos) { items in
-            
-            DispatchQueue.main.async {
-                withAnimation { self.videos.items = items }
-                completion?()
-            }
+            completion?(items)
         }
     }
     
-    private func fetchScreenRecordings(completion: (() -> Void)? = nil) {
+    private func fetchScreenRecordings(completion: (([MediaItem]) -> Void)? = nil) {
         fetchItems(type: .screenRecordings) { items in
-            
-            DispatchQueue.main.async {
-                withAnimation { self.screenRecordings.items = items }
-                completion?()
-            }
+            completion?(items)
         }
     }
     
-    private func fetchLargeVideos(completion: (() -> Void)? = nil) {
+    private func fetchLargeVideos(completion: (([MediaItem]) -> Void)? = nil) {
         fetchItems(type: .largeVideos) { items in
-            
-            DispatchQueue.main.async {
-                withAnimation { self.largeVideos.items = items }
-                completion?()
-            }
+            completion?(items)
         }
     }
     
@@ -308,47 +289,47 @@ final class MediaDatabase: ObservableObject {
         let photos = self.photos.items
         let screenshots = self.screenshots.items
         
-        Task(priority: .userInitiated) {
+        Task(priority: .background) {
             
             await withTaskGroup(of: (Int, [SimilarMedia]).self) { (group: inout TaskGroup<(Int, [SimilarMedia])>) in
                 
                 // 0 = similar photos
                 group.addTask {
-                    let res: [SimilarMedia] =
+                    let similarMedias: [SimilarMedia] =
                     await SimilarMediaManager.shared
                         .findSimilarMediaGroups(in: photos)
                     
-                    return (0, res)
+                    return (0, similarMedias)
                 }
                 
                 // 1 = similar screenshots
                 group.addTask {
-                    let res: [SimilarMedia] =
+                    let similarMedias: [SimilarMedia] =
                     await SimilarMediaManager.shared
                         .findSimilarMediaGroups(in: screenshots)
                     
-                    return (1, res)
+                    return (1, similarMedias)
                 }
                 
                 // 2 = duplicate photos
                 group.addTask {
-                    let res: [SimilarMedia] =
+                    let similarMedias: [SimilarMedia] =
                     await DuplicateMediaManager.shared
                         .findExactDuplicateGroups(in: photos)
                     
-                    return (2, res)
+                    return (2, similarMedias)
                 }
                 
                 // 3 = duplicate screenshots
                 group.addTask {
-                    let res: [SimilarMedia] =
+                    let similarMedias: [SimilarMedia] =
                     await DuplicateMediaManager.shared
                         .findExactDuplicateGroups(in: screenshots)
                     
-                    return (3, res)
+                    return (3, similarMedias)
                 }
                 
-                for await (type, groups) in group {
+                for await (type, similarMedias) in group {
                     
                     await MainActor.run {
                         
@@ -356,16 +337,16 @@ final class MediaDatabase: ObservableObject {
                             
                             switch type {
                             case 0:
-                                self.similarPhotos.arrSimilarMedias = groups
+                                self.similarPhotos.setSimilarMedias(similarMedias: similarMedias)
                                 
                             case 1:
-                                self.similarScreenshots.arrSimilarMedias = groups
+                                self.similarScreenshots.setSimilarMedias(similarMedias: similarMedias)
                                 
                             case 2:
-                                self.duplicatePhotos.arrSimilarMedias = groups
+                                self.duplicatePhotos.setSimilarMedias(similarMedias: similarMedias)
                                 
                             case 3:
-                                self.duplicateScreenshots.arrSimilarMedias = groups
+                                self.duplicateScreenshots.setSimilarMedias(similarMedias: similarMedias)
                                 
                             default:
                                 break
@@ -406,22 +387,6 @@ final class MediaDatabase: ObservableObject {
         let item = MediaItem(asset: asset, type: type ?? assumedType, fileSize: fileSize, assetId: asset.localIdentifier, filename: fileName, creationDate: asset.creationDate, isFavourite: asset.isFavorite, mediaTypeRaw: asset.mediaType.rawValue, mediaSubtypesRaw: asset.mediaSubtypes.rawValue, thumbnailURL: url)
         
         return item
-    }
-    
-    func calculateFileSize(for asset: PHAsset, completion: @escaping (Int64, String) -> Void) {
-        DispatchQueue.global(qos: .background).async {
-            var size: Int64 = 0
-            var filename: String = asset.value(forKey: "filename") as? String ?? ""
-            
-            if let resource = PHAssetResource.assetResources(for: asset).first {
-                size = (resource.value(forKey: "fileSize") as? Int64) ?? 0
-                filename = resource.originalFilename
-            } else if asset.mediaType == .image {
-                size = Int64(asset.pixelWidth) * Int64(asset.pixelHeight) * 4
-            }
-            
-            completion(size, filename)
-        }
     }
     
     func deleteMediaItems(_ items: [MediaItem]) throws {
@@ -471,6 +436,26 @@ final class MediaDatabase: ObservableObject {
 
 // MARK: - Operations
 extension MediaDatabase {
+    
+    func fetchMediaCategory(type: MediaType) -> MediaCategoryModel {
+        switch type {
+        case .photos: return photos
+        case .screenshots: return screenshots
+        case .livePhotos: return livePhotos
+        case .videos: return videos
+        case .screenRecordings: return screenRecordings
+        case .largeVideos: return largeVideos
+        }
+    }
+    
+    func fetchSimilarMediaCategory(type: SimilarMediaType) -> SimilarMediaCategoryModel {
+        switch type {
+        case .similarPhotos: return similarPhotos
+        case .similarScreenshots: return similarScreenshots
+        case .duplicatePhotos: return duplicatePhotos
+        case .duplicateScreenshots: return duplicateScreenshots
+        }
+    }
     
     @MainActor
     private func applyChunk(_ chunk: [MediaType: [MediaItem]]) {
@@ -534,7 +519,6 @@ extension MediaDatabase {
         let thumbURL = thumbnailPath(for: phAsset)
         
         if FileManager.default.fileExists(atPath: thumbURL.path) {
-            print("📁 Using existing thumbnail:", thumbURL.lastPathComponent)
             return thumbURL
         }
         
@@ -558,7 +542,6 @@ extension MediaDatabase {
         
         do {
             try data.write(to: thumbURL)
-            print("✅ Thumbnail saved:", thumbURL.lastPathComponent)
             return thumbURL
         } catch {
             print("❌ Failed to save thumbnail:", error)

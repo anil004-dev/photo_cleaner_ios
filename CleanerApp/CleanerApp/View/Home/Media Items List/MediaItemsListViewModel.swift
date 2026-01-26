@@ -64,7 +64,8 @@ class MediaItemsListViewModel: ObservableObject {
     
     func openMediaPreview(media: MediaItem) {
         let viewModel = MediaPreviewViewModel(
-            mediaCategory: mediaCategory,
+            title: mediaCategory.title,
+            mediaType: mediaCategory.type,
             arrItems: arrItems,
             currentMediaItem: media,
             arrSelectedItems: arrSelectedItems,

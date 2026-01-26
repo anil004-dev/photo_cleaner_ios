@@ -54,9 +54,52 @@ final class MediaCategoryModel: ObservableObject, Identifiable {
     var title: String { type.title }
     var count: Int { items.count }
     var totalSize: Int64 { items.reduce(0) { $0 + $1.fileSize } }
+    var formattedSize: String {
+        Utility.formattedSize(byte: totalSize)
+    }
     
     init(type: MediaType) {
         self.type = type
+    }
+    
+    func setItems(arrItems: [MediaItem]) {
+        items = arrItems
+        calculateSize()
+    }
+    
+    func calculateSize() {
+
+        guard !items.isEmpty else { return }
+
+        let queue = DispatchQueue(
+            label: "media.size.queue",
+            qos: .utility,
+            attributes: .concurrent
+        )
+
+        let semaphore = DispatchSemaphore(value: 4)
+        let group = DispatchGroup()
+
+        var updatedItems = items
+
+        for (index, item) in items.enumerated() {
+
+            group.enter()
+            semaphore.wait()
+
+            queue.async {
+
+                let size = item.asset.fileSizeSync()
+                updatedItems[index].fileSize = size
+
+                semaphore.signal()
+                group.leave()
+            }
+        }
+
+        group.notify(queue: .main) {
+            self.items = updatedItems
+        }
     }
     
     static func == (lhs: MediaCategoryModel, rhs: MediaCategoryModel) -> Bool {
@@ -69,7 +112,7 @@ final class MediaCategoryModel: ObservableObject, Identifiable {
 }
 
 // MARK: - Media Item
-struct MediaItem: Identifiable {
+struct MediaItem: Identifiable, Hashable {
     let id = UUID()
     let asset: PHAsset
     let type: MediaType
