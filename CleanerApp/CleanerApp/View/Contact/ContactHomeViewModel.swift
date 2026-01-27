@@ -8,46 +8,40 @@
 import Combine
 import Foundation
 import SwiftUI
- 
+import Contacts
+
 class ContactHomeViewModel: ObservableObject {
     
-    @Published var arrMenuSection: [ContactSection] = [
-        ContactSection(
-            title: "Contact to Manage",
-            arrMenu: [
-                ContactMenu(imageName: "", title: "Duplicates", subTitle: "Names - Numbers - Emails", contactCount: 0),
-                ContactMenu(imageName: "", title: "Incompleted Contacts", subTitle: "No Names - Numbers - Emails", contactCount: 0)
-            ]
-        ),
-        ContactSection(
-            title: "Full Directory",
-            arrMenu: [
-                ContactMenu(imageName: "",  title: "All Contacts", subTitle: "", contactCount: 0)
-            ]
-        ),
-        ContactSection(
-            title: "Safekeeping",
-            arrMenu: [
-                ContactMenu(imageName: "",  title: "Backups", subTitle: "", contactCount: 0)
-            ]
-        )
+    @Published var arrContactMenu: [ContactMenu] = [
+        ContactMenu(imageName: .icDuplicateContacts, title: "Duplicate Contacts", subTitle: "", contactCount: 0),
+        ContactMenu(imageName: .icIncompleteContact, title: "Incompletes", subTitle: "", contactCount: 0),
+        ContactMenu(imageName: .icAllContacts, title: "All Contacts", subTitle: "", contactCount: 0),
+        ContactMenu(imageName: .icBackupContact, title: "Backup Contacts", subTitle: "", contactCount: 0)
     ]
     
     @Published var arrContacts: [ContactModel] = []
     @Published var duplicateContact: DuplicateContactModel = DuplicateContactModel()
     @Published var incompleteContact: IncompleteContactModel = IncompleteContactModel()
     
+    @Published var showPermissionSection: Bool? = nil
+    
     func onAppear() {
         fetchContacts()
     }
     
     func fetchContacts() {
-        DispatchQueue.main.async {
-            CNLoader.show()
+        if ContactManager.shared.getPermissionStatus() == .authorized {
+            self.showPermissionSection = false
         }
         
         Task {
-            if await ContactManager.shared.checkPermission() {
+            if await ContactManager.shared.checkPermission(showAlert: false) {
+                self.showPermissionSection = false
+                
+                DispatchQueue.main.async {
+                    CNLoader.show()
+                }
+                
                 do {
                     let contacts = try await ContactDatabase.shared.fetchAllContacts()
                     CNLoader.dismiss()
@@ -60,29 +54,40 @@ class ContactHomeViewModel: ObservableObject {
                         message: error.localizedDescription
                     )
                 }
+            } else {
+                self.showPermissionSection = true
             }
         }
     }
     
     func setContacts(contacts: [ContactModel]) {
         duplicateContact = ContactDatabase.shared.buildDuplicateModel(from: contacts)
-        arrMenuSection[0].arrMenu[0].contactCount = duplicateContact.count
+        arrContactMenu[0].subTitle = "\(duplicateContact.contactCount) duplicates"
+        arrContactMenu[0].contactCount = duplicateContact.contactCount
         
         incompleteContact = ContactDatabase.shared.buildIncompleteModel(from: contacts)
-        arrMenuSection[0].arrMenu[1].contactCount = incompleteContact.count
+        arrContactMenu[1].subTitle = "\(incompleteContact.contactCount) incomplete"
+        arrContactMenu[1].contactCount = incompleteContact.contactCount
         
         arrContacts = contacts
-        arrMenuSection[1].arrMenu[0].contactCount = contacts.count
+        arrContactMenu[2].subTitle = "\(contacts.count) contacts"
+        arrContactMenu[2].contactCount = contacts.count
         
-        arrMenuSection[2].arrMenu[0].contactCount = ContactDatabase.shared.fetchBackups().count
+        let backupCount = ContactDatabase.shared.fetchBackups().count
+        arrContactMenu[3].subTitle = "\(backupCount) backups"
+        arrContactMenu[3].contactCount = backupCount
+    }
+    
+    func btnGoToSettingsAction() {
+        Utility.openSettings()
     }
     
     func btnMenuAction(menu: ContactMenu) {
-        if menu.title == "Duplicates" {
-            openDuplicateContactMenuView()
+        if menu.title == "Duplicate Contacts" {
+            openDuplicateContactGroupView()
         }
         
-        if menu.title == "Incompleted Contacts" {
+        if menu.title == "Incompletes" {
             openIncompleteContactMenuView()
         }
         
@@ -90,21 +95,21 @@ class ContactHomeViewModel: ObservableObject {
             openAllContactsView()
         }
         
-        if menu.title == "Backups" {
+        if menu.title == "Backup Contacts" {
             openBackupContactView()
         }
     }
     
-    func openDuplicateContactMenuView() {
-        guard duplicateContact.count != 0 else { return }
-        let viewModel = DuplicateContactMenuViewModel(duplicateContact: duplicateContact)
-        NavigationManager.shared.push(to: .duplicateContactMenuView(destination: DuplicateContactMenuDestination(viewModel: viewModel)))
+    func openDuplicateContactGroupView() {
+        guard duplicateContact.contactCount != 0 else { return }
+        let viewModel = DuplicateContactGroupViewModel(duplicateContact: duplicateContact)
+        NavigationManager.shared.push(to: .duplicateContactGroupView(destination: DuplicateContactGroupViewDestination(viewModel: viewModel)))
     }
     
     func openIncompleteContactMenuView() {
-        guard incompleteContact.count != 0 else { return }
-        let viewModel = IncompleteContactMenuViewModel(incompleteContact: incompleteContact)
-        NavigationManager.shared.push(to: .incompleteContactMenuView(destination: IncompleteContactMenuDestination(viewModel: viewModel)))
+        guard incompleteContact.contactCount != 0 else { return }
+        let viewModel = IncompleteContactListViewModel(incompleteContact: incompleteContact)
+        NavigationManager.shared.push(to: .incompleteContactListView(destination: IncompleteContactListDestination(viewModel: viewModel)))
     }
     
     func openAllContactsView() {

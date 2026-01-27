@@ -10,92 +10,132 @@ import SwiftUI
 struct ContactHomeView: View {
     
     @StateObject var viewModel = ContactHomeViewModel()
+    @Environment(\.modelContext) var context
     
     var body: some View {
         ZStack {
-            LinearGradient.blueBg.ignoresSafeArea()
-            //Color.cnThemeBg.ignoresSafeArea()
+            Color.bgDarkBlue.ignoresSafeArea()
             
             VStack(alignment: .leading, spacing: 0) {
                 contactHomeSection
             }
         }
-        .navigationTitle("Contact Menu")
+        .navigationTitle("Contact Cleaner")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar(.visible, for: .navigationBar)
         .onAppear {
+            ContactBackupManager.shared.configure(with: context)
             viewModel.onAppear()
         }
     }
     
     private var contactHomeSection: some View {
         VStack(alignment: .leading, spacing: 0) {
-            ScrollView(.vertical) {
-                VStack(alignment: .leading, spacing: 0) {
-                    ForEach(viewModel.arrMenuSection) { menu in
-                        menuSection(
-                            section: menu,
-                            onRowTap: { menu in
-                                viewModel.btnMenuAction(menu: menu)
-                            }
-                        )
-                    }
+            if let showPermissionSection = viewModel.showPermissionSection {
+                if showPermissionSection {
+                    permissionSection
+                } else {
+                    contactMenuSection
                 }
-                .padding(.horizontal, 20)
+            } else {
+                titleSection
+                    .padding(.horizontal, 20)
+                    .padding(.top, 8)
+                
+                Spacer()
             }
+        }
+    }
+    
+    private var permissionSection: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            VStack(alignment: .center, spacing: 0) {
+                titleSection
+                    .padding(.top, 8)
+                
+                Spacer()
+                
+                Image(.imgContactPermission)
+                    .resizable()
+                    .scaledToFit()
+                    .padding(.horizontal, 10)
+                    .padding(.bottom, 96)
+                
+                CNText(title: "Need Access to Your Contacts", color: .white, font: .system(size: 24, weight: .bold, design: .default), alignment: .center)
+                    .padding(.bottom, 8)
+                
+                CNText(title: "Cleaner AI requires contact access to\nwork properly. You can enable this in\nSettings.", color: .white, font: .system(size: 17, weight: .regular, design: .default), alignment: .center)
+                    .padding(.bottom, 30)
+                
+                CNButton(title: "Go to Settings") {
+                    viewModel.btnGoToSettingsAction()
+                }
+                .padding(.bottom, 30)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.horizontal, 20)
+        }
+    }
+    
+    private var titleSection: some View {
+        HStack(alignment: .center, spacing: 0) {
+            CNText(title: "Cleanup Storage", color: .white, font: .system(size: 24, weight: .bold, design: .default), alignment: .leading)
+            
+            Spacer()
+        }
+        .frame(maxWidth: .infinity)
+    }
+    
+    private var contactMenuSection: some View {
+        ScrollView(.vertical) {
+            VStack(alignment: .leading, spacing: 12) {
+                ForEach(viewModel.arrContactMenu) { menu in
+                    menuRow(
+                        menu: menu,
+                        onTap: {
+                            viewModel.btnMenuAction(menu: menu)
+                        }
+                    )
+                }
+            }
+            .padding(.horizontal, 20)
         }
     }
 }
 
 extension ContactHomeView {
     
-    @ViewBuilder private func menuSection(section: ContactSection, onRowTap: @escaping ((ContactMenu) -> Void)) -> some View {
-        VStack(alignment: .leading, spacing: 0) {
-            CNText(title: section.title, color: .white, font: .system(size: 15, weight: .semibold, design: .default))
-                .padding(.vertical, 15)
-            
-            VStack(alignment: .leading, spacing: 15) {
-                ForEach(section.arrMenu) { menu in
-                    menuRow(
-                        menu: menu,
-                        onTap: {
-                            onRowTap(menu)
-                        }
-                    )
-                }
-            }
-        }
-    }
     
     @ViewBuilder private func menuRow(menu: ContactMenu, onTap: @escaping (() -> Void)) -> some View {
         VStack(alignment: .leading, spacing: 0) {
-            VStack(alignment: .leading, spacing: 0) {
-                HStack(alignment: .center, spacing: 15) {
-                    VStack(alignment: .leading, spacing: 10) {
-                        CNText(title: menu.title, color: .white, font: .system(size: 17, weight: .semibold, design: .default))
-                        
-                        CNText(title: menu.subTitle, color: .white, font: .system(size: 14, weight: .regular, design: .default))
-                    }
+            HStack(alignment: .center, spacing: 15) {
+                Image(menu.imageName)
+                    .resizable()
+                    .scaledToFit()
+                    .foregroundStyle(.white)
+                    .frame(width: 30, height: 30)
+                
+                VStack(alignment: .leading, spacing: 5) {
+                    CNText(title: menu.title, color: .white, font: .system(size: 20, weight: .semibold, design: .default))
                     
-                    Spacer(minLength: 0)
-                    
-                    HStack(alignment: .center, spacing: 5) {
-                        CNText(title: "\(menu.contactCount)", color: .white, font: .system(size: 15, weight: .medium, design: .default), alignment: .trailing)
-                        
-                        Image(systemName: "chevron.right")
-                            .resizable()
-                            .scaledToFit()
-                            .foregroundStyle(.white)
-                            .frame(width: 20, height: 20)
-                    }
-                    
+                    CNText(title: menu.subTitle, color: .white, font: .system(size: 13, weight: .regular, design: .default))
                 }
+                .padding(.vertical, 18)
+                
+                Spacer(minLength: 0)
+                
+                Image(systemName: "chevron.right")
+                    .resizable()
+                    .scaledToFit()
+                    .fontWeight(.bold)
+                    .foregroundStyle(Color(hex: "EBEBF5").opacity(0.6))
+                    .frame(width: 11, height: 16)
             }
-            .padding(15)
+            .padding(.horizontal, 18)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color.darkBlueCellBg)
-        .clipShape(RoundedRectangle(cornerRadius: 10))
+        .clipShape(RoundedRectangle(cornerRadius: 21))
         .onTapGesture {
             onTap()
         }

@@ -8,6 +8,7 @@
 import SwiftUI
 import SDWebImage
 import SDWebImagePhotosPlugin
+import SwiftData
 
 
 @main
@@ -73,6 +74,7 @@ struct CleanerApp: App {
         .environmentObject(alertManager)
         .environmentObject(navigationManager)
         .environmentObject(mediaDatabase)
+        .modelContainer(ModelContainer.shared)
     }
     
     @ViewBuilder

@@ -17,7 +17,7 @@ struct CNCircularProgressView: View {
             
             Circle()
                 .stroke(
-                    Color(hex: "262626"),
+                    Color(hex: "414351"),
                     lineWidth: 15
                 )
             

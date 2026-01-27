@@ -32,19 +32,60 @@ struct HomeView: View {
     
     private var homeSection: some View {
         VStack(alignment: .leading, spacing: 0) {
-            ScrollView(.vertical) {
-                VStack(alignment: .leading, spacing: 20) {
-                    storageSection
-                    mediaSection
+            if viewModel.showPermissionSection {
+                permissionSection
+            } else {
+                ScrollView(.vertical) {
+                    VStack(alignment: .leading, spacing: 20) {
+                        storageSection
+                        mediaSection
+                    }
+                    .frame(maxWidth: .infinity)
                 }
-                .frame(maxWidth: .infinity)
             }
         }
     }
     
+    private var titleSection: some View {
+        HStack(alignment: .center, spacing: 0) {
+            CNText(title: "Cleanup Storage", color: .white, font: .system(size: 24, weight: .bold, design: .default), alignment: .leading)
+            
+            Spacer()
+        }
+        .frame(maxWidth: .infinity)
+    }
+    
+    private var permissionSection: some View {
+        VStack(alignment: .center, spacing: 0) {
+            titleSection
+                .padding(.top, 8)
+            
+            Spacer()
+            
+            Image(.imgPhotosRing)
+                .resizable()
+                .scaledToFit()
+                .padding(.horizontal, 20)
+                .padding(.bottom, 50)
+            
+            CNText(title: "Allow Access to Photos", color: .white, font: .system(size: 24, weight: .bold, design: .default), alignment: .center)
+                .padding(.bottom, 8)
+            
+            CNText(title: "This allows us to find duplicate photos\nand videos so you can safely free up\nstorage.", color: .white, font: .system(size: 17, weight: .regular, design: .default), alignment: .center)
+                .padding(.bottom, 30)
+            
+            CNButton(title: "Go to Settings") {
+                viewModel.btnGoToSettingsAction()
+            }
+            .padding(.bottom, 30)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.horizontal, 20)
+    }
+    
     private var storageSection: some View {
         VStack(alignment: .leading, spacing: 11) {
-            CNText(title: "Cleanup Storage", color: .white, font: .system(size: 24, weight: .bold, design: .default), alignment: .leading)
+            titleSection
             
             VStack(alignment: .center, spacing: 0) {
                 HStack(alignment: .center, spacing: 0) {
@@ -93,7 +134,7 @@ struct HomeView: View {
                 .padding(18)
             }
             .frame(maxWidth: .infinity)
-            .background(Color(hex: "12131C"))
+            .background(Color(hex: "1B1D2B"))
             .clipShape(RoundedRectangle(cornerRadius: 29))
         }
         .padding(.horizontal, 20)

@@ -14,12 +14,9 @@ enum NavigationDestination: Hashable {
     case mediaListView(destination: MediaListDestination)
     case mediaPreviewView(destination: MediaPreviewDestination)
     case similarMediaListView(destination: SimilarMediaListDestination)
-    case duplicateContactMenuView(destination: DuplicateContactMenuDestination)
     case duplicateContactGroupView(destination: DuplicateContactGroupViewDestination)
     case duplicateMergePreview(destination: DuplicateMergePreviewDestination)
-    case incompleteContactMenuView(destination: IncompleteContactMenuDestination)
     case incompleteContactListView(destination: IncompleteContactListDestination)
-    case editIncompleteContactView(destination: EditIncompleteContactDestination)
     case backupContactView
     case allContactsView
     case chargingAnimationPreviewView(destination: ChargingAnimationPreviewDestination)
@@ -64,19 +61,6 @@ struct SimilarMediaListDestination: Hashable {
     }
 }
 
-struct DuplicateContactMenuDestination: Hashable {
-    let id = UUID()
-    let viewModel: DuplicateContactMenuViewModel
-    
-    static func == (lhs: DuplicateContactMenuDestination, rhs: DuplicateContactMenuDestination) -> Bool {
-        lhs.id == rhs.id
-    }
-    
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-    }
-}
-
 struct DuplicateContactGroupViewDestination: Hashable {
     let id = UUID()
     let viewModel: DuplicateContactGroupViewModel
@@ -104,19 +88,6 @@ struct DuplicateMergePreviewDestination: Hashable {
     }
 }
 
-struct IncompleteContactMenuDestination: Hashable {
-    let id = UUID()
-    let viewModel: IncompleteContactMenuViewModel
-    
-    static func == (lhs: IncompleteContactMenuDestination, rhs: IncompleteContactMenuDestination) -> Bool {
-        lhs.id == rhs.id
-    }
-    
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-    }
-}
-
 struct IncompleteContactListDestination: Hashable {
     let id = UUID()
     let viewModel: IncompleteContactListViewModel
@@ -130,18 +101,6 @@ struct IncompleteContactListDestination: Hashable {
     }
 }
 
-struct EditIncompleteContactDestination: Hashable {
-    let id = UUID()
-    let viewModel: EditIncompleteContactViewModel
-    
-    static func == (lhs: EditIncompleteContactDestination, rhs: EditIncompleteContactDestination) -> Bool {
-        lhs.id == rhs.id
-    }
-    
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-    }
-}
 
 struct ChargingAnimationPreviewDestination: Hashable {
     let id = UUID()

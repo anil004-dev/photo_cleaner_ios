@@ -21,15 +21,14 @@ struct IncompleteContactModel: Identifiable {
     var arrNoNumber: IncompleteContact = IncompleteContact(type: .noNumber)
     var arrNoEmail: IncompleteContact = IncompleteContact(type: .noEmail)
     
-    var count: Int {
-        arrNoName.arrContactGroup.count +
-        arrNoNumber.arrContactGroup.count +
-        arrNoEmail.arrContactGroup.count
+    var arrContacts: [ContactModel] = []
+    
+    var isAllSelected: Bool {
+        arrContacts.allSatisfy({ $0.isSelected })
     }
+    
     var contactCount: Int {
-        arrNoName.contactCount +
-        arrNoNumber.contactCount +
-        arrNoEmail.contactCount
+        arrContacts.count
     }
 }
 

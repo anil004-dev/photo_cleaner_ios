@@ -57,7 +57,7 @@ class SimilarMediaCategoryModel: ObservableObject, Identifiable {
     
     func setSimilarMedias(similarMedias: [SimilarMedia]) {
         arrSimilarMedias = similarMedias
-        //calculateSize()
+        calculateSize()
     }
     
     func calculateSize() {

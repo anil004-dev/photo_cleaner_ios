@@ -23,18 +23,12 @@ enum NavigationRouter {
             MediaPreviewView(viewModel: destination.viewModel)
         case .similarMediaListView(let destination):
             SimilarMediaListView(viewModel: destination.viewModel)
-        case .duplicateContactMenuView(let destination):
-            DuplicateContactMenuView(viewModel: destination.viewModel)
         case .duplicateContactGroupView(let destination):
             DuplicateContactGroupView(viewModel: destination.viewModel)
         case .duplicateMergePreview(let destination):
             DuplicateMergePreview(viewModel: destination.viewModel)
-        case .incompleteContactMenuView(let destination):
-            IncompleteContactMenuView(viewModel: destination.viewModel)
         case .incompleteContactListView(let destination):
             IncompleteContactListView(viewModel: destination.viewModel)
-        case .editIncompleteContactView(let destination):
-            EditIncompleteContactView(viewModel: destination.viewModel)
         case .backupContactView:
             BackupContactView()
         case .allContactsView:

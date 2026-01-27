@@ -95,11 +95,16 @@ class ContactDatabase {
         let duplicateNumber = DuplicateContact(type: .duplicateNumber, arrContactGroup: phoneGroups)
         let emailGroups = findDuplicateEmails(in: contacts).map { ContactGroup(arrContacts: $0) }
         let duplicateEmail = DuplicateContact(type: .duplicateEmail, arrContactGroup: emailGroups)
-
+        let unifiedGroups = findUnifiedDuplicateGroups(in: contacts)
+        let contactGroups = unifiedGroups.map {
+            ContactGroup(arrContacts: $0)
+        }
+        
         return DuplicateContactModel(
             arrDuplicateName: duplicateName,
             arrDuplicateNumber: duplicateNumber,
-            arrDuplicateEmail: duplicateEmail
+            arrDuplicateEmail: duplicateEmail,
+            arrContactGroup: contactGroups
         )
     }
 
@@ -123,7 +128,8 @@ class ContactDatabase {
         return IncompleteContactModel(
             arrNoName: incompleteName,
             arrNoNumber: incompleteNumber,
-            arrNoEmail: incompleteEmail
+            arrNoEmail: incompleteEmail,
+            arrContacts: contacts
         )
     }
     
@@ -212,79 +218,99 @@ class ContactDatabase {
 
     
     // MARK: - Backup (VCF)
-    func generateVCF() async -> (url: URL?, error: String?) {
+    func generateVCF() async -> (ContactBackupModel?, String?) {
+
         do {
-            let cnContacts = try await fetchAllContacts().map { $0.raw }
-            
+            // 1️⃣ Fetch contacts
+            let cnContacts = try await fetchAllContacts().map(\.raw)
+
             guard !cnContacts.isEmpty else {
                 return (
                     nil,
                     "No contacts available to back up. Please make sure you have at least one contact saved."
                 )
             }
-            
+
+            // 2️⃣ Generate VCF data
             let vcardData = try CNContactVCardSerialization.data(with: cnContacts)
-            
+
+            // 3️⃣ Prepare file URL
             let fileName = backupFileName()
             let backupDirectory = try backupDirectoryURL()
             let fileURL = backupDirectory.appendingPathComponent(fileName)
-            
-            try vcardData.write(to: fileURL, options: [.atomicWrite])
-            return (fileURL, nil)
-            
-        } catch let error as NSError {
-            // Debug log (keep technical details out of UI)
-            print("❌ VCF generation failed:", error)
-            
-            // User-friendly messages
-            if error.domain == CNErrorDomain {
-                return (
-                    nil,
-                    "Contacts access is not available. Please allow contact access in Settings and try again."
-                )
-            }
-            
-            if error.domain == NSCocoaErrorDomain {
-                return (
-                    nil,
-                    "Unable to save the backup file. Please make sure there is enough storage space on your device."
-                )
-            }
-            
-            return (
-                nil,
-                "Something went wrong while creating the backup. Please try again."
+
+            // 4️⃣ Write atomically
+            try vcardData.write(to: fileURL, options: .atomic)
+
+            // 5️⃣ Save backup record (async-safe)
+            let backup = try await addBackupAsync(
+                name: formattedBackupDate(),
+                url: fileURL,
+                count: cnContacts.count
             )
+
+            return (backup, nil)
+
+        } catch {
+            print("❌ VCF generation failed:", error)
+
+            return (nil, mapBackupError(error))
         }
     }
-    func fetchBackups() -> [BackupModel] {
-        do {
-            let backupDirectory = try backupDirectoryURL()
+    
+    private func formattedBackupDate() -> String {
+        let f = DateFormatter()
+        f.locale = .init(identifier: "en_US_POSIX")
+        f.dateFormat = "dd MMM yyyy, HH:mm"
+        return f.string(from: Date())
+    }
+
+    private func mapBackupError(_ error: Error) -> String {
+        
+        let nsError = error as NSError
+        
+        if nsError.domain == CNErrorDomain {
+            return "Contacts access is not available. Please allow contact access in Settings and try again."
+        }
+        
+        if nsError.domain == NSCocoaErrorDomain {
+            return "Unable to save the backup file. Please make sure there is enough storage space on your device."
+        }
+        
+        if error is ContactBackupManager.BackupError {
+            return "Unable to create a backup. Please try again."
+        }
+        
+        return "Something went wrong while creating the backup. Please try again."
+    }
+    
+    private func addBackupAsync(
+        name: String,
+        url: URL,
+        count: Int
+    ) async throws -> ContactBackupModel {
+        
+        try await withCheckedThrowingContinuation { continuation in
             
-            let files = try FileManager.default.contentsOfDirectory(
-                at: backupDirectory,
-                includingPropertiesForKeys: [.creationDateKey],
-                options: [.skipsHiddenFiles]
-            )
-            
-            return files
-                .filter { $0.pathExtension.lowercased() == "vcf" }
-                .sorted {
-                    let date1 = (try? $0.resourceValues(forKeys: [.creationDateKey]).creationDate) ?? .distantPast
-                    let date2 = (try? $1.resourceValues(forKeys: [.creationDateKey]).creationDate) ?? .distantPast
-                    return date1 > date2
-                }
-                .map {
-                    BackupModel(
-                        name: $0.lastPathComponent,
-                        url: $0
+            ContactBackupManager.shared.addBackup(
+                name: name,
+                url: url,
+                contactCount: count
+            ) { backup, error in
+                
+                if let backup = backup {
+                    continuation.resume(returning: backup)
+                } else {
+                    continuation.resume(
+                        throwing: error ?? ContactBackupManager.BackupError.failedToSave
                     )
                 }
-            
-        } catch {
-            print("❌ Failed to fetch backups:", error)
-            return []
+            }
         }
+    }
+    
+    func fetchBackups() -> [ContactBackupModel] {
+        return ContactBackupManager.shared.fetchAllBackups()
     }
 }
 
@@ -307,24 +333,15 @@ extension ContactDatabase {
         try store.execute(saveRequest)
     }
     
-    func deleteContact(contact: ContactModel) -> Bool {
-        let store = CNContactStore()
+    func deleteContacts(contacts: [ContactModel]) throws {
+        let saveRequest = CNSaveRequest()
         
-        do {
-            // Make mutable copy from the raw CNContact
-            let mutable = contact.raw.mutableCopy() as! CNMutableContact
-            
-            // Build save request
-            let request = CNSaveRequest()
-            request.delete(mutable)
-            
-            // Execute delete
-            try store.execute(request)
-            
-            return true
-        } catch {
-            return false
+        for model in contacts {
+            let mutable = model.raw.mutableCopy() as! CNMutableContact
+            saveRequest.delete(mutable)
         }
+        
+        try store.execute(saveRequest)
     }
 
     func saveEditedContact(_ model: ContactModel) throws {
@@ -484,6 +501,142 @@ extension ContactDatabase {
             .filter { $0.count > 1 }
     }
     
+    func findUnifiedDuplicateGroups(in contacts: [ContactModel]) -> [[ContactModel]] {
+
+        // id -> contact
+        let contactMap = Dictionary(uniqueKeysWithValues: contacts.map {
+            ($0.id, $0)
+        })
+
+        // adjacency list
+        var graph = [String: Set<String>]()
+
+        // MARK: - Connect two contacts
+        func connect(_ a: ContactModel, _ b: ContactModel) {
+
+            graph[a.id, default: []].insert(b.id)
+            graph[b.id, default: []].insert(a.id)
+        }
+
+        // MARK: - 1️⃣ Group by Name
+
+        var nameMap = [String: [ContactModel]]()
+
+        for c in contacts {
+
+            let fullName = [
+                c.givenName,
+                c.raw.middleName,
+                c.familyName
+            ]
+            .map { $0.trimmingCharacters(in: .whitespaces) }
+            .filter { !$0.isEmpty }
+            .joined(separator: " ")
+            .lowercased()
+
+            guard !fullName.isEmpty else { continue }
+
+            nameMap[fullName, default: []].append(c)
+        }
+
+        for group in nameMap.values where group.count > 1 {
+
+            let first = group[0]
+
+            for c in group.dropFirst() {
+                connect(first, c)
+            }
+        }
+
+        // MARK: - 2️⃣ Group by Phone
+
+        var phoneMap = [String: [ContactModel]]()
+
+        for c in contacts {
+
+            for phone in c.phoneNumbers {
+
+                let normalized = phone.normalizedPhone()
+                guard !normalized.isEmpty else { continue }
+
+                phoneMap[normalized, default: []].append(c)
+            }
+        }
+
+        for group in phoneMap.values where group.count > 1 {
+
+            let first = group[0]
+
+            for c in group.dropFirst() {
+                connect(first, c)
+            }
+        }
+
+        // MARK: - 3️⃣ Group by Email
+
+        var emailMap = [String: [ContactModel]]()
+
+        for c in contacts {
+
+            for email in c.emailAddresses {
+
+                let key = email
+                    .trimmingCharacters(in: .whitespacesAndNewlines)
+                    .lowercased()
+
+                guard !key.isEmpty else { continue }
+
+                emailMap[key, default: []].append(c)
+            }
+        }
+
+        for group in emailMap.values where group.count > 1 {
+
+            let first = group[0]
+
+            for c in group.dropFirst() {
+                connect(first, c)
+            }
+        }
+
+        // MARK: - 4️⃣ DFS to build final groups
+
+        var visited = Set<String>()
+        var result: [[ContactModel]] = []
+
+        for id in contactMap.keys {
+
+            guard !visited.contains(id) else { continue }
+
+            var stack = [id]
+            var component: [ContactModel] = []
+
+            while let current = stack.popLast() {
+
+                guard !visited.contains(current) else { continue }
+
+                visited.insert(current)
+
+                if let contact = contactMap[current] {
+                    component.append(contact)
+                }
+
+                for neighbor in graph[current] ?? [] {
+                    if !visited.contains(neighbor) {
+                        stack.append(neighbor)
+                    }
+                }
+            }
+
+            if component.count > 1 {
+                result.append(component)
+            }
+        }
+
+        return result
+    }
+
+
     // MARK: - Incomplete Contacts
     
     func noNameContacts(_ list: [ContactModel]) -> [ContactModel] {

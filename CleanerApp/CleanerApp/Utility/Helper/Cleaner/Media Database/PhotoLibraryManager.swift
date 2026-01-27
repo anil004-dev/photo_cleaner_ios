@@ -23,7 +23,7 @@ final class PhotoLibraryManager {
         return status
     }
     
-    func checkPermission() async -> Bool {
+    func checkPermission(showAlert: Bool = true) async -> Bool {
         let status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
         
         switch status {
@@ -41,33 +41,39 @@ final class PhotoLibraryManager {
             if status == .authorized || status == .limited {
                 return true
             } else {
-                CNAlertManager.shared.showAlert(
-                    title: "Photo Access Denied",
-                    message: "Photo Library access was not granted. please allow access to your Photo Library in Settings."
-                )
+                if showAlert {
+                    CNAlertManager.shared.showAlert(
+                        title: "Photo Access Denied",
+                        message: "Photo Library access was not granted. please allow access to your Photo Library in Settings."
+                    )
+                }
                 return false
             }
         case .denied, .restricted:
-            CNAlertManager.shared.showAlert(
-                title: "Photo Access Required",
-                message: "Please allow access to your Photo Library in Settings.",
-                rightButtonTitle: "Open Settings",
-                rightButtonRole: .none,
-                rightButtonAction: {
-                    Utility.openSettings()
-                }
-            )
+            if showAlert {
+                CNAlertManager.shared.showAlert(
+                    title: "Photo Access Required",
+                    message: "Please allow access to your Photo Library in Settings.",
+                    rightButtonTitle: "Open Settings",
+                    rightButtonRole: .none,
+                    rightButtonAction: {
+                        Utility.openSettings()
+                    }
+                )
+            }
             return false
         @unknown default:
-            CNAlertManager.shared.showAlert(
-                title: "Photo Access Required",
-                message: "Please allow access to your Photo Library in Settings.",
-                rightButtonTitle: "Open Settings",
-                rightButtonRole: .none,
-                rightButtonAction: {
-                    Utility.openSettings()
-                }
-            )
+            if showAlert {
+                CNAlertManager.shared.showAlert(
+                    title: "Photo Access Required",
+                    message: "Please allow access to your Photo Library in Settings.",
+                    rightButtonTitle: "Open Settings",
+                    rightButtonRole: .none,
+                    rightButtonAction: {
+                        Utility.openSettings()
+                    }
+                )
+            }
             return false
         }
     }

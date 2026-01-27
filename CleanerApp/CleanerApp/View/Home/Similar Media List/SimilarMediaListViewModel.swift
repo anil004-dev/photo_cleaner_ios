@@ -24,6 +24,33 @@ class SimilarMediaListViewModel: ObservableObject {
         self.mediaDatabase = mediaDatabase
     }
     
+    func deleteItems(mediaItems: [MediaItem], completion: @escaping (() -> Void)) {
+        do {
+            try mediaDatabase?.deleteMediaItems(mediaItems)
+            let selectedIds = Set(mediaItems.map { $0.assetId })
+            completion()
+            
+            similarMediaCategory.arrSimilarMedias = similarMediaCategory.arrSimilarMedias.compactMap { group in
+                let filteredItems = group.arrMediaItems.filter { !selectedIds.contains($0.assetId) }
+                guard filteredItems.count > 1 else {
+                    return nil
+                }
+                
+                return SimilarMedia(
+                    title: group.title,
+                    bestMediaAssetId: filteredItems.first!.assetId,
+                    arrMediaItems: filteredItems
+                )
+            }
+            
+            if similarMediaCategory.arrSimilarMedias.isEmpty {
+                NavigationManager.shared.pop()
+            }
+        } catch {
+            return
+        }
+    }
+    
     func btnSelectItem(media: MediaItem) {
         withAnimation {
             if let index = arrSelectedItems.firstIndex(where: { $0.id == media.id }) {
@@ -84,30 +111,8 @@ class SimilarMediaListViewModel: ObservableObject {
 
     func btnDeleteAction() {
         guard !arrSelectedItems.isEmpty else { return }
-        
-        do {
-            try mediaDatabase?.deleteMediaItems(arrSelectedItems)
-            let selectedIds = Set(arrSelectedItems.map { $0.assetId })
-            arrSelectedItems = []
-            
-            similarMediaCategory.arrSimilarMedias = similarMediaCategory.arrSimilarMedias.compactMap { group in
-                let filteredItems = group.arrMediaItems.filter { !selectedIds.contains($0.assetId) }
-                guard filteredItems.count > 1 else {
-                    return nil
-                }
-                
-                return SimilarMedia(
-                    title: group.title,
-                    bestMediaAssetId: filteredItems.first!.assetId,
-                    arrMediaItems: filteredItems
-                )
-            }
-            
-            if similarMediaCategory.arrSimilarMedias.isEmpty {
-                NavigationManager.shared.pop()
-            }
-        } catch {
-            return
+        deleteItems(mediaItems: arrSelectedItems) { [weak self] in
+            self?.arrSelectedItems = []
         }
     }
     
@@ -117,20 +122,34 @@ class SimilarMediaListViewModel: ObservableObject {
             mediaType: .photos,
             arrItems: similarMedia.arrMediaItems,
             currentMediaItem: media,
-            arrSelectedItems: arrSelectedItems,
-            onDoneBtnAction: { [weak self] arrSelectedItems in
-                guard let self = self else { return }
-                self.arrSelectedItems = arrSelectedItems
-                NavigationManager.shared.pop()
+            arrSelectedItems: similarMedia.arrMediaItems.filter({ arrSelectedItems.contains($0) }),
+            onDoneBtnAction: { [weak self] newSelectedItems in
+                guard let self else { return }
+
+                // Remove old versions
+                self.arrSelectedItems.removeAll { item in
+                    similarMedia.arrMediaItems.contains(where: { $0.assetId == item.assetId })
+                }
+
+                // Add updated ones
+                self.arrSelectedItems.append(contentsOf: newSelectedItems)
+
+                DispatchQueue.main.async {
+                    NavigationManager.shared.pop()
+                }
             },
             onDeleteBtnAction: { [weak self] arrSelectedItems in
                 guard let self = self else { return }
-                self.arrSelectedItems = arrSelectedItems
-                self.btnDeleteAction()
+                deleteItems(mediaItems: arrSelectedItems) { [weak self] in
+                    self?.arrSelectedItems.removeAll(where: { arrSelectedItems.contains($0) })
+                }
             },
             removeItems: { [weak self] arrItems in
                 guard let self = self else { return }
-                self.arrSelectedItems.removeAll { item in arrItems.contains(where: { $0.assetId == item.assetId }) }
+                
+                self.arrSelectedItems.removeAll { item in
+                    arrItems.contains(where: { $0.assetId == item.assetId })
+                }
             }
         )
         

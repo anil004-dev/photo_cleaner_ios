@@ -17,15 +17,19 @@ struct ContactSection: Identifiable {
 
 struct ContactMenu: Identifiable {
     let id = UUID()
-    let imageName: String
+    let imageName: ImageResource
     let title: String
-    let subTitle: String
+    var subTitle: String
     var contactCount: Int
 }
 
 struct ContactGroup: Identifiable {
     let id = UUID()
     var arrContacts: [ContactModel] = []
+    
+    var isAllSelected: Bool {
+        arrContacts.allSatisfy({ $0.isSelected })
+    }
 }
 
 struct ContactModel: Identifiable, Hashable {

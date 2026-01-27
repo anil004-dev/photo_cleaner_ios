@@ -10,7 +10,7 @@ import Foundation
 
 class BackupContactViewModel: ObservableObject {
     
-    @Published var arrBackups: [BackupModel] = []
+    @Published var arrBackups: [ContactBackupModel] = []
     @Published var showShareSheet: (sheet: Bool, url: URL?) = (false, nil)
 
     func onAppear() {
@@ -25,12 +25,13 @@ class BackupContactViewModel: ObservableObject {
         CNLoader.show()
         
         Task {
-            let (url, error) = await ContactDatabase.shared.generateVCF()
+            let (backup, error) = await ContactDatabase.shared.generateVCF()
             CNLoader.dismiss()
             
-            if let url {
-                showShareSheet.url = url
+            if let backup {
+                showShareSheet.url = backup.url
                 showShareSheet.sheet = true
+                
                 fetchBackups()
             } else {
                 CNAlertManager.shared.showAlert(
@@ -41,7 +42,7 @@ class BackupContactViewModel: ObservableObject {
         }
     }
     
-    func btnBackupRowAction(backup: BackupModel) {
+    func btnBackupRowAction(backup: ContactBackupModel) {
         showShareSheet.url = backup.url
         showShareSheet.sheet = true
     }

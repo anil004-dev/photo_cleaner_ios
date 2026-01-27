@@ -10,10 +10,11 @@ import Combine
 class WelcomeViewModel: ObservableObject {
     
     func btnGetStartedAction() {
+        UserDefaultManager.isPhotosPermissionRequested = true
+        
         Task {
-            if await PhotoLibraryManager.shared.checkPermission() {
-                NavigationManager.shared.push(to: .onboardingView)
-            }
+            _ = await PhotoLibraryManager.shared.checkPermission(showAlert: false)
+            NavigationManager.shared.push(to: .onboardingView)
         }
     }
 }

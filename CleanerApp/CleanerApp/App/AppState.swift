@@ -33,7 +33,7 @@ class AppState: ObservableObject {
         if UserDefaultManager.isWalkThroughCompleted {
             flow = .home
         } else {
-            if PhotoLibraryManager.shared.isPermissionGranted() {
+            if UserDefaultManager.isPhotosPermissionRequested {
                 flow = .onboarding
             } else {
                 flow = .welcome

@@ -64,41 +64,43 @@ final class MediaCategoryModel: ObservableObject, Identifiable {
     
     func setItems(arrItems: [MediaItem]) {
         items = arrItems
-        calculateSize()
+        //calculateSize()
     }
     
     func calculateSize() {
-
         guard !items.isEmpty else { return }
 
-        let queue = DispatchQueue(
-            label: "media.size.queue",
-            qos: .utility,
-            attributes: .concurrent
-        )
+        DispatchQueue.global(qos: .background).async {
 
-        let semaphore = DispatchSemaphore(value: 4)
-        let group = DispatchGroup()
+            let queue = DispatchQueue(
+                label: "media.size.queue",
+                qos: .utility,
+                attributes: .concurrent
+            )
 
-        var updatedItems = items
+            let semaphore = DispatchSemaphore(value: 4)
+            let group = DispatchGroup()
 
-        for (index, item) in items.enumerated() {
+            var updatedItems = self.items
 
-            group.enter()
-            semaphore.wait()
+            for (index, item) in self.items.enumerated() {
 
-            queue.async {
+                group.enter()
+                semaphore.wait()
 
-                let size = item.asset.fileSizeSync()
-                updatedItems[index].fileSize = size
+                queue.async {
 
-                semaphore.signal()
-                group.leave()
+                    let size = item.asset.fileSizeSync()
+                    updatedItems[index].fileSize = size
+
+                    semaphore.signal()
+                    group.leave()
+                }
             }
-        }
 
-        group.notify(queue: .main) {
-            self.items = updatedItems
+            group.notify(queue: .main) {
+                self.items = updatedItems
+            }
         }
     }
     
@@ -143,11 +145,11 @@ struct MediaItem: Identifiable, Hashable {
     }
     
     static func == (lhs: MediaItem, rhs: MediaItem) -> Bool {
-        lhs.id == rhs.id
+        lhs.assetId == rhs.assetId
     }
     
     func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
+        hasher.combine(assetId)
     }
 }
 

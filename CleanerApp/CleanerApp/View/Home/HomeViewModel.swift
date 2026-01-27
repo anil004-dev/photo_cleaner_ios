@@ -11,10 +11,15 @@ import SwiftUI
 final class HomeViewModel: ObservableObject {
     
     @Published var mediaDatabase: MediaDatabase?
+    @Published var showPermissionSection: Bool = false
     
     func onAppear(mediaDatabase: MediaDatabase) {
         self.mediaDatabase = mediaDatabase
         self.fetchMedias()
+    }
+    
+    func btnGoToSettingsAction() {
+        Utility.openSettings()
     }
     
     func btnCategoryAction(category: MediaCategoryModel) {
@@ -31,10 +36,17 @@ final class HomeViewModel: ObservableObject {
 extension HomeViewModel {
     
     func fetchMedias() {
-        Task {
-            if await PhotoLibraryManager.shared.checkPermission() {
-                mediaDatabase?.startScan()
+        if PhotoLibraryManager.shared.isPermissionGranted() {
+            Task {
+                if await PhotoLibraryManager.shared.checkPermission(showAlert: false) {
+                    mediaDatabase?.startScan()
+                    showPermissionSection = false
+                } else {
+                    showPermissionSection = true
+                }
             }
+        } else {
+            showPermissionSection = true
         }
     }
 }

@@ -29,6 +29,7 @@ enum ChargingAnimationType: Int, CaseIterable {
 struct UDKeys {
     
     static let isWalkThroughCompleted = "isWalkThroughCompleted"
+    static let isPhotosPermissionRequested = "isPhotosPermissionRequested"
     
     // widgets
     static let appGroupId = "group.com.storage.blast.app"
@@ -61,6 +62,15 @@ final class UserDefaultManager {
         }
         set {
             userDefault.setValue(newValue, forKey: UDKeys.isWalkThroughCompleted)
+        }
+    }
+    
+    static var isPhotosPermissionRequested: Bool {
+        get {
+            return userDefault.bool(forKey: UDKeys.isPhotosPermissionRequested)
+        }
+        set {
+            userDefault.setValue(newValue, forKey: UDKeys.isPhotosPermissionRequested)
         }
     }
 }

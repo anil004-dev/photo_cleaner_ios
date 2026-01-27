@@ -12,7 +12,7 @@ struct MediaPreviewView: View {
     
     var body: some View {
         ZStack {
-            Color.cnThemeBg.ignoresSafeArea()
+            Color.bgDarkBlue.ignoresSafeArea()
             
             VStack(alignment: .leading, spacing: 0) {
                 mediaPreviewSection
@@ -27,7 +27,7 @@ struct MediaPreviewView: View {
                 Button {
                     viewModel.btnDoneAction()
                 } label: {
-                    CNText(title: "Done", color: .white, font: .system(size: 14, weight: .medium, design: .default))
+                    CNText(title: "Done", color: .white, font: .system(size: 16, weight: .semibold, design: .default))
                 }
             }
         }
@@ -37,10 +37,7 @@ struct MediaPreviewView: View {
         VStack(alignment: .leading, spacing: 0) {
             currentMediaPreviewSection
             mediaListSection
-            
-            if !viewModel.arrSelectedItems.isEmpty {
-                deleteButton
-            }
+            deleteButton
         }
     }
     
@@ -86,11 +83,10 @@ struct MediaPreviewView: View {
                         Button {
                             viewModel.selectItem(media: mediaItem)
                         } label: {
-                            Image(systemName: isSelected ? "checkmark.square.fill" : "square")
+                            Image(isSelected ? .icSquareChecked : .icSquareUnchecked)
                                 .resizable()
                                 .scaledToFit()
-                                .foregroundStyle(isSelected ? .blue : .white)
-                                .frame(width: 20, height: 20)
+                                .frame(width: 35, height: 35)
                         }
                     }
                     .padding(15)
@@ -105,7 +101,7 @@ struct MediaPreviewView: View {
                 
             HStack(alignment: .center, spacing: 0) {
                 Spacer(minLength: 0)
-                CNText(title: "\(viewModel.currentIndex+1)/\(viewModel.arrItems.count)", color: .white, font: .system(size: 14, weight: .regular, design: .default))
+                CNText(title: "\(viewModel.currentIndex+1)/\(viewModel.arrItems.count)", color: .white, font: .system(size: 14, weight: .semibold, design: .default))
                 Spacer(minLength: 0)
             }
             .padding(.vertical, 20)
@@ -143,15 +139,20 @@ struct MediaPreviewView: View {
     
     private var deleteButton: some View {
         VStack(alignment: .center, spacing: 20) {
-            CNText(title: Utility.getSizeOfMedia(items: viewModel.arrSelectedItems), color: .black, font: .system(size: 12, weight: .regular, design: .default))
+            let size = Utility.getSizeOfMedia(items: viewModel.arrSelectedItems)
+            let count = "\(viewModel.arrSelectedItems.count) Items"
             
-            CNButton(title: "Delete (\(viewModel.arrSelectedItems.count))") {
-                NavigationManager.shared.pop()
-                viewModel.onDeleteBtnAction(viewModel.arrSelectedItems)
-            }
+            CNDeleteMediaButton(
+                title: "Delete Selected", message: "\(count) • \(size)",
+                onTap: {
+                    NavigationManager.shared.pop()
+                    viewModel.onDeleteBtnAction(viewModel.arrSelectedItems)
+                }
+            )
         }
-        .padding(.horizontal, 20)
-        .padding(.vertical, 15)
+        .padding(.horizontal, 10)
+        .padding(.top, 15)
+        .padding(.bottom, 24)
     }
 }
 
@@ -175,11 +176,10 @@ extension MediaPreviewView {
                     onTap()
                 }
                 
-                Image(systemName: isSelected ? "checkmark.square.fill" : "square")
+                Image(isSelected ? .icSquareChecked : .icSquareUnchecked)
                     .resizable()
                     .scaledToFit()
-                    .foregroundStyle(isSelected ? .blue : .white)
-                    .frame(width: 20, height: 20)
+                    .frame(width: 35, height: 35)
                     .padding(5)
                     .clipShape(Rectangle())
                     .zIndex(500)

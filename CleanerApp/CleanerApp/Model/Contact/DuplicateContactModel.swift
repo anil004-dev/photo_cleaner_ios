@@ -20,14 +20,9 @@ struct DuplicateContactModel: Identifiable {
     var arrDuplicateNumber: DuplicateContact = DuplicateContact(type: .duplicateNumber)
     var arrDuplicateEmail: DuplicateContact = DuplicateContact(type: .duplicateEmail)
     
-    var count: Int {
-        arrDuplicateName.arrContactGroup.count +
-        arrDuplicateNumber.arrContactGroup.count +
-        arrDuplicateEmail.arrContactGroup.count
-    }
-    
+    var arrContactGroup: [ContactGroup] = []
     var contactCount: Int {
-        return arrDuplicateName.arrContactGroup.count + arrDuplicateNumber.arrContactGroup.count + arrDuplicateEmail.arrContactGroup.count
+        arrContactGroup.reduce(0) { sum, group in  sum + group.arrContacts.count }
     }
 }
 

@@ -9,12 +9,12 @@ import Combine
 
 class DuplicateContactGroupViewModel: ObservableObject {
     
-    @Published var duplicateContact: DuplicateContact = DuplicateContact(type: .duplicateName)
+    @Published var duplicateContact: DuplicateContactModel
     @Published var arrContactGroupToMerge: [ContactGroup] = []
     @Published var contactToMergeCount: Int = 0
     @Published var isMergeButtonEnable: Bool = false
     
-    init(duplicateContact: DuplicateContact) {
+    init(duplicateContact: DuplicateContactModel) {
         self._duplicateContact = Published(wrappedValue: duplicateContact)
         updateMergeButton()
     }
@@ -49,6 +49,60 @@ class DuplicateContactGroupViewModel: ObservableObject {
         updateMergeButton()
     }
     
+    func openPreviewScreen() {
+        guard !arrContactGroupToMerge.isEmpty else { return }
+        let viewModel = DuplicateMergePreviewModel(arrContactGroup: arrContactGroupToMerge)
+        NavigationManager.shared.push(to: .duplicateMergePreview(destination: DuplicateMergePreviewDestination(viewModel: viewModel)))
+    }
+    
+    func btnSelectAll(contactGroup: ContactGroup) {
+        arrContactGroupToMerge.removeAll { $0.id == contactGroup.id }
+
+        guard let groupIndex = duplicateContact.arrContactGroup.firstIndex(where: { $0.id == contactGroup.id }) else {
+            return
+        }
+        let group = duplicateContact.arrContactGroup[groupIndex]
+        
+        for index in 0..<group.arrContacts.count {
+            duplicateContact.arrContactGroup[groupIndex].arrContacts[index].isSelected = true
+        }
+        
+        arrContactGroupToMerge.append(duplicateContact.arrContactGroup[groupIndex])
+        updateMergeButton()
+    }
+    
+    func btnDeselectAll(contactGroup: ContactGroup) {
+        arrContactGroupToMerge.removeAll { $0.id == contactGroup.id }
+
+        guard let groupIndex = duplicateContact.arrContactGroup.firstIndex(where: { $0.id == contactGroup.id }) else {
+            return
+        }
+        let group = duplicateContact.arrContactGroup[groupIndex]
+        
+        for index in 0..<group.arrContacts.count {
+            duplicateContact.arrContactGroup[groupIndex].arrContacts[index].isSelected = false
+        }
+        
+        updateMergeButton()
+    }
+    
+    func btnSelectAllAction() {
+        arrContactGroupToMerge.removeAll()
+        
+        duplicateContact.arrContactGroup.forEach { group in
+            btnSelectAll(contactGroup: group)
+        }
+    }
+
+    
+    func btnDeselectAllAction() {
+        arrContactGroupToMerge.removeAll()
+
+        duplicateContact.arrContactGroup.forEach { group in
+            btnDeselectAll(contactGroup: group)
+        }
+    }
+    
     func updateMergeButton() {
         // 1. No groups → disable
         guard !arrContactGroupToMerge.isEmpty else {
@@ -64,11 +118,5 @@ class DuplicateContactGroupViewModel: ObservableObject {
         contactToMergeCount = arrContactGroupToMerge
             .flatMap { $0.arrContacts }
             .count
-    }
-
-    func openPreviewScreen() {
-        guard !arrContactGroupToMerge.isEmpty else { return }
-        let viewModel = DuplicateMergePreviewModel(arrContactGroup: arrContactGroupToMerge)
-        NavigationManager.shared.push(to: .duplicateMergePreview(destination: DuplicateMergePreviewDestination(viewModel: viewModel)))
     }
 }

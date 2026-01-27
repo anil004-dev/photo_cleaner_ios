@@ -106,7 +106,7 @@ struct SimilarMediaListView: View {
             let size = Utility.getSizeOfMedia(items: viewModel.arrSelectedItems)
             let count = "\(viewModel.arrSelectedItems.count) Items"
             
-            CNDeleteButton(title: "Delete Selected", message: "\(count) • \(size)", onTap: viewModel.btnDeleteAction)
+            CNDeleteMediaButton(title: "Delete Selected", message: "\(count) • \(size)", onTap: viewModel.btnDeleteAction)
         }
         .padding(.horizontal, 10)
         .padding(.bottom, 24)
@@ -157,7 +157,7 @@ extension SimilarMediaListView {
                     
                     mediaItemCard(
                         mediaItem: mediaItem,
-                        isBest: index == 0,
+                        isBest: mediaItem.assetId == similarMedia.bestMediaAssetId,
                         isSelected: viewModel.arrSelectedItems.contains { $0.assetId == mediaItem.assetId },
                         size: itemWidth,
                         onTap: {
@@ -226,43 +226,5 @@ extension SimilarMediaListView {
         }
         .frame(width: size, height: size)
         .onTapGesture(perform: onTap)
-    }
-}
-
-struct CNDeleteButton: View {
-    let title: String
-    let message: String
-    let onTap: (() -> Void)
-    
-    var body: some View {
-        VStack(alignment: .center, spacing: 0) {
-            VStack(alignment: .center, spacing: 12) {
-                Button {
-                    onTap()
-                } label: {
-                    HStack(alignment: .center, spacing: 8) {
-                        Image(systemName: "trash")
-                            .resizable()
-                            .scaledToFit()
-                            .foregroundStyle(.white)
-                            .frame(width: 19, height: 21)
-                        
-                        CNText(title: title, color: .white, font: .system(size: 18, weight: .semibold, design: .default), alignment: .center)
-                    }
-                    .frame(height: 58)
-                    .frame(maxWidth: .infinity)
-                    .background(Color(hex: "F34235"))
-                    .clipShape(RoundedRectangle(cornerRadius: 16))
-                }
-                
-                CNText(title: message, color: .white, font: .system(size: 20, weight: .bold, design: .default), alignment: .center)
-            }
-            .padding(.horizontal, 16)
-            .padding(.top, 16)
-            .padding(.bottom, 12)
-        }
-        .frame(maxWidth: .infinity, alignment: .center)
-        .background(Color(hex: "232531"))
-        .clipShape(RoundedRectangle(cornerRadius: 20))
     }
 }
