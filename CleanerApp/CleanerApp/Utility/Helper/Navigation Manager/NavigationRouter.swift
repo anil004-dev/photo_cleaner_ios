@@ -21,6 +21,9 @@ enum NavigationRouter {
             MediaItemsListView(viewModel: destination.viewModel)
         case .mediaPreviewView(let destination):
             MediaPreviewView(viewModel: destination.viewModel)
+        case .stillPhotoPreviewView(let destination):
+            StillPhotoPreviewView(viewModel: destination.viewModel)
+            
         case .similarMediaListView(let destination):
             SimilarMediaListView(viewModel: destination.viewModel)
         case .duplicateContactGroupView(let destination):

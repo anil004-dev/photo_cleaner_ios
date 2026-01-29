@@ -40,8 +40,19 @@ struct CNDeleteMediaButton: View {
             .padding(.top, 16)
             .padding(.bottom, 12)
         }
+        .ifiOS26Unavailable { view in
+            view
+                .background(Color(hex: "232531"))
+                .clipShape(RoundedRectangle(cornerRadius: 20))
+        }
+        .ifiOS26Available { view in
+            if #available(iOS 26.0, *) {
+                view
+                    .background(Color(hex: "232531").opacity(0.5))
+                    .glassEffect(.clear, in: RoundedRectangle(cornerRadius: 20))
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
+            }
+        }
         .frame(maxWidth: .infinity, alignment: .center)
-        .background(Color(hex: "232531"))
-        .clipShape(RoundedRectangle(cornerRadius: 20))
     }
 }

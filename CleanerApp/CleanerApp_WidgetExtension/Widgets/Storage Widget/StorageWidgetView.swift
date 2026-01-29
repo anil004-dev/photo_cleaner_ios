@@ -64,16 +64,13 @@ struct StorageWidgetView: View {
         switch family {
         case .systemSmall:
             SmallStorageWidgetView(storageInfo: entry)
-                .containerBackground(Color.black, for: .widget)
+                .containerBackground(Color.btnBlue, for: .widget)
         case .systemMedium:
             MediumStorageWidgetView(storageInfo: entry)
-                .containerBackground(Color.black, for: .widget)
-        case .systemLarge:
-            LargeStorageWidgetView(storageInfo: entry)
-                .containerBackground(Color.black, for: .widget)
+                .containerBackground(Color.btnBlue, for: .widget)
         default:
-            LargeStorageWidgetView(storageInfo: entry)
-                .containerBackground(Color.black, for: .widget)
+            SmallStorageWidgetView(storageInfo: entry)
+                .containerBackground(Color.btnBlue, for: .widget)
         }
     }
 }
@@ -83,7 +80,40 @@ struct SmallStorageWidgetView: View {
 
     var body: some View {
         ZStack {
-            StorageRingView(storageInfo: storageInfo)
+            VStack(alignment: .leading, spacing: 0) {
+                HStack(alignment: .top, spacing: 10) {
+                    Image(systemName: "externaldrive.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .foregroundStyle(.white)
+                        .frame(width: 39, height: 29)
+                    
+                    Spacer(minLength: 0)
+                    
+                    CNText(title: "\(Utility.formatStorage(bytes: UserDefaultManager.freeStorage)) FREE", color: .white, font: .system(size: 12, weight: .regular, design: .default), alignment: .trailing)
+                }
+                
+                Spacer()
+                
+                let totalStorage = storageInfo.totalStorage
+                let freeStorage = storageInfo.freeStorage
+                
+                let usedStorage = totalStorage - freeStorage
+                let usedStoragePerc = Int((usedStorage / totalStorage) * 100)
+                
+                Spacer()
+                
+                VStack(alignment: .leading, spacing: 5) {
+                    CNText(title: "STORAGE USED", color: .white, font: .system(size: 15, weight: .bold, design: .default), alignment: .leading)
+                    
+                    CNText(title: "\(Utility.formatStorage(bytes: UserDefaultManager.usedStorage)) of \(Utility.formatStorage(bytes: UserDefaultManager.totalStorage))", color: .white, font: .system(size: 14, weight: .regular, design: .default), alignment: .leading, minimumScale: 0.8)
+                }
+                
+                Spacer()
+                
+                CNText(title: "\(usedStoragePerc)%", color: .white, font: .system(size: 36, weight: .semibold, design: .default), alignment: .leading)
+                    .padding(.bottom, -7)
+            }
         }
     }
 }
@@ -92,44 +122,58 @@ struct MediumStorageWidgetView: View {
     let storageInfo: StorageInfoEntry
 
     var body: some View {
-        ZStack {
-            HStack(spacing: 15) {
-                StorageRingView(storageInfo: storageInfo)
-                StorageGraphView(storageInfo: storageInfo)
-            }
-        }
-    }
-}
-
-
-struct LargeStorageWidgetView: View {
-    let storageInfo: StorageInfoEntry
-
-    var body: some View {
-        ZStack {
-            VStack(spacing: 15) {
-                StorageRingView(storageInfo: storageInfo)
-                    .frame(height: 125)
-                
-                StorageGraphView(storageInfo: storageInfo)
-                
-                VStack(alignment: .leading, spacing: 10) {
-                    CNText(title: "Storage", color: .white, font: .system(size: 15, weight: .semibold, design: .default), alignment: .leading)
+        HStack(alignment: .center) {
+            let totalStorage = storageInfo.totalStorage
+            let freeStorage = storageInfo.freeStorage
+            
+            let usedStorage = totalStorage - freeStorage
+            let usedStoragePerc = Int((usedStorage / totalStorage) * 100)
+            
+            VStack(alignment: .leading, spacing: 0) {
+                HStack(alignment: .top, spacing: 10) {
+                    Image(systemName: "externaldrive.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .foregroundStyle(.white)
+                        .frame(width: 39, height: 29)
                     
-                    HStack(alignment: .center, spacing: 5) {
-                        CNText(title: "Min", color: .white, font: .system(size: 12, weight: .regular, design: .default), alignment: .leading)
-                        let progress: CGFloat = {
-                            guard storageInfo.totalStorage > 0 else { return 0 }
-                            return CGFloat(storageInfo.usedStorage / storageInfo.totalStorage)
-                        }()
-
-                        ThickProgressBar(progress: progress, height: 10, label: "\(Int(storageInfo.usedStoragePercentage))%")
-                        
-                        CNText(title: "Max", color: .white, font: .system(size: 12, weight: .regular, design: .default), alignment: .trailing)
-                    }
+                    Spacer(minLength: 0)
                 }
-                .padding(.bottom, 20)
+                
+                Spacer()
+                
+                Spacer()
+                
+                VStack(alignment: .leading, spacing: 5) {
+                    CNText(title: "STORAGE USED", color: .white, font: .system(size: 15, weight: .bold, design: .default), alignment: .leading)
+                    
+                    CNText(title: "\(Utility.formatStorage(bytes: usedStorage)) of \(Utility.formatStorage(bytes: totalStorage))", color: .white, font: .system(size: 14, weight: .regular, design: .default), alignment: .leading, minimumScale: 0.8)
+                }
+                
+                Spacer()
+                
+                HStack(alignment: .bottom, spacing: 10) {
+                    CNText(title: "\(usedStoragePerc)%", color: .white, font: .system(size: 36, weight: .semibold, design: .default), alignment: .leading)
+                        .padding(.bottom, -7)
+                    
+                    CNText(title: "\(Utility.formatStorage(bytes: freeStorage)) FREE", color: .white, font: .system(size: 12, weight: .regular, design: .default), alignment: .trailing)
+                    
+                    Spacer(minLength: 0)
+                }
             }
+            
+            Spacer(minLength: 0)
+            
+            ZStack {
+                CNCircularProgressView(progress: Double(usedStorage / totalStorage), lineWidth: 12)
+                
+                Image(.icDbBlue)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 85, height: 85)
+                    .clipShape(Circle())
+            }
+            .frame(width: 110, height: 110)
         }
     }
 }

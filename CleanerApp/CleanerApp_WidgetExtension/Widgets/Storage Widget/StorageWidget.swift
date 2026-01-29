@@ -15,6 +15,6 @@ struct StorageWidget: Widget {
         StaticConfiguration(kind: kind, provider: StorageInfoProvider()) { entry in
             StorageWidgetView(entry: entry)
         }
-        .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
+        .supportedFamilies([.systemSmall, .systemMedium])
     }
 }

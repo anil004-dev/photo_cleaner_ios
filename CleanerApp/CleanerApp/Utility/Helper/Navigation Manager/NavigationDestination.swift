@@ -20,6 +20,7 @@ enum NavigationDestination: Hashable {
     case backupContactView
     case allContactsView
     case chargingAnimationPreviewView(destination: ChargingAnimationPreviewDestination)
+    case stillPhotoPreviewView(destination: StillPhotoPreviewDestination)
 }
 
 struct MediaListDestination: Hashable {
@@ -40,6 +41,19 @@ struct MediaPreviewDestination: Hashable {
     let viewModel: MediaPreviewViewModel
     
     static func == (lhs: MediaPreviewDestination, rhs: MediaPreviewDestination) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+}
+
+struct StillPhotoPreviewDestination: Hashable {
+    let id = UUID()
+    let viewModel: StillPhotoPreviewModel
+    
+    static func == (lhs: StillPhotoPreviewDestination, rhs: StillPhotoPreviewDestination) -> Bool {
         lhs.id == rhs.id
     }
     

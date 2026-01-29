@@ -10,7 +10,8 @@ import SDWebImageSwiftUI
 import Photos
 
 struct CNMediaThumbImage: View {
-    let mediaItem: MediaItem
+    var url: URL? = nil
+    var mediaItem: MediaItem? = nil
     let size: CGSize
     var contentMode: ContentMode = .fill
     
@@ -18,7 +19,7 @@ struct CNMediaThumbImage: View {
         let thumbnailSize = CGSize(width: size.width * 2, height: size.height * 2)
         
         WebImage(
-            url: mediaItem.thumbnailURL,
+            url: url ?? mediaItem?.thumbnailURL ?? URL(string: "")!,
             context: [
                 .imageThumbnailPixelSize: thumbnailSize,
                 .imageScaleFactor : UIScreen.main.scale

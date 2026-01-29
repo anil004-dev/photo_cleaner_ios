@@ -63,7 +63,7 @@ class ContactDatabase {
                 )
             }
             
-            return result
+            return result.sorted { ($0.displayName ?? "") < ($1.displayName ?? "") }
         }.value
     }
     
@@ -96,9 +96,8 @@ class ContactDatabase {
         let emailGroups = findDuplicateEmails(in: contacts).map { ContactGroup(arrContacts: $0) }
         let duplicateEmail = DuplicateContact(type: .duplicateEmail, arrContactGroup: emailGroups)
         let unifiedGroups = findUnifiedDuplicateGroups(in: contacts)
-        let contactGroups = unifiedGroups.map {
-            ContactGroup(arrContacts: $0)
-        }
+        let contactGroups = unifiedGroups.map { ContactGroup(arrContacts: $0) }
+                    .sorted(by: { ($0.arrContacts.first?.displayName ?? "") <  ($1.arrContacts.first?.displayName ?? "") })
         
         return DuplicateContactModel(
             arrDuplicateName: duplicateName,
@@ -121,15 +120,18 @@ class ContactDatabase {
         let incompleteNumber = IncompleteContact(type: .noNumber, arrContactGroup: numberGroups)
         
         // 3. No Email
-        let noEmail = noEmailContacts(contacts)
+        /*let noEmail = noEmailContacts(contacts)
         let emailGroups = noEmail.map { ContactGroup(arrContacts: [$0]) }
-        let incompleteEmail = IncompleteContact(type: .noEmail, arrContactGroup: emailGroups)
+        let incompleteEmail = IncompleteContact(type: .noEmail, arrContactGroup: emailGroups)*/
+        
+        let allContact = (noName + noNumber).unique{ $0.id }
+            .sorted { ($0.displayName ?? "") < ($1.displayName ?? "")}
         
         return IncompleteContactModel(
             arrNoName: incompleteName,
             arrNoNumber: incompleteNumber,
-            arrNoEmail: incompleteEmail,
-            arrContacts: contacts
+            arrNoEmail: IncompleteContact(type: .noEmail),
+            arrContacts: allContact
         )
     }
     

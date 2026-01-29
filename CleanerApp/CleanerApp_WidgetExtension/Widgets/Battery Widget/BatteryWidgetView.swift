@@ -54,16 +54,13 @@ struct BatteryWidgetView: View {
         switch family {
         case .systemSmall:
             SmallBatteryWidgetView(batteryInfo: entry)
-                .containerBackground(Color.black, for: .widget)
+                .containerBackground(Color.btnBlue, for: .widget)
         case .systemMedium:
             MediumBatteryWidgetView(batteryInfo: entry)
-                .containerBackground(Color.black, for: .widget)
-        case .systemLarge:
-            LargeBatteryWidgetView(batteryInfo: entry)
-                .containerBackground(Color.black, for: .widget)
+                .containerBackground(Color.btnBlue, for: .widget)
         default:
-            LargeBatteryWidgetView(batteryInfo: entry)
-                .containerBackground(Color.black, for: .widget)
+            SmallBatteryWidgetView(batteryInfo: entry)
+                .containerBackground(Color.btnBlue, for: .widget)
         }
     }
 }
@@ -73,7 +70,27 @@ struct SmallBatteryWidgetView: View {
 
     var body: some View {
         ZStack {
-            BatteryRingView(batteryInfo: batteryInfo)
+            VStack(alignment: .center, spacing: 16) {
+                let batteryLevel = batteryInfo.batteryLevel
+                
+                HStack(alignment: .center, spacing: 0) {
+                    CNText(title: "BATTERY", color: .white, font: .system(size: 15, weight: .bold, design: .default), alignment: .leading)
+                    
+                    Spacer(minLength: 0)
+                    
+                    CNText(title: "\(batteryLevel)%", color: .white, font: .system(size: 15, weight: .bold, design: .default), alignment: .leading)
+                }
+                
+                ZStack {
+                    CNCircularProgressView(progress: Double(batteryLevel) / 100, lineWidth: 10)
+                    
+                    Image(.icPowerBlue)
+                        .resizable()
+                        .scaledToFit()
+                        .padding(10)
+                        .clipShape(Circle())
+                }
+            }
         }
     }
 }
@@ -82,39 +99,45 @@ struct MediumBatteryWidgetView: View {
     let batteryInfo: BatteryInfoEntry
 
     var body: some View {
-        ZStack {
-            HStack(spacing: 15) {
-                BatteryRingView(batteryInfo: batteryInfo)
-                BatteryDetailView(batteryInfo: batteryInfo)
-            }
-        }
-    }
-}
-
-struct LargeBatteryWidgetView: View {
-    let batteryInfo: BatteryInfoEntry
-
-    var body: some View {
-        ZStack {
-            VStack(spacing: 15) {
-                BatteryRingView(batteryInfo: batteryInfo)
-                    .frame(height: 125)
-                
-                BatteryDetailView(batteryInfo: batteryInfo)
-                
-                VStack(alignment: .leading, spacing: 10) {
-                    CNText(title: "Brightness", color: .white, font: .system(size: 15, weight: .semibold, design: .default), alignment: .leading)
+        HStack(alignment: .center) {
+            let batteryLevel = batteryInfo.batteryLevel
+            let isLowPowerModeOn = batteryInfo.isLowPowerModeOn
+            
+            VStack(alignment: .leading, spacing: 0) {
+                VStack(alignment: .leading, spacing: 8) {
+                    Image(systemName: "bolt.circle.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .foregroundStyle(.white)
+                        .frame(width: 38, height: 38)
                     
-                    HStack(alignment: .center, spacing: 5) {
-                        CNText(title: "Min", color: .white, font: .system(size: 12, weight: .regular, design: .default), alignment: .leading)
-                        
-                        ThickProgressBar(progress: CGFloat(batteryInfo.brightnessLevel) / 100, height: 10, label: "\(Int(batteryInfo.brightnessLevel))%")
-                        
-                        CNText(title: "Max", color: .white, font: .system(size: 12, weight: .regular, design: .default), alignment: .trailing)
-                    }
+                    CNText(title: "Low Power Mode: \(isLowPowerModeOn ? "ON" : "OFF")", color: .white, font: .system(size: 15, weight: .regular, design: .default), alignment: .leading)
+                    
                 }
-                .padding(.bottom, 20)
+                
+                Spacer()
+                
+                VStack(alignment: .leading, spacing: 0) {
+                    CNText(title: "BATTERY USAGE", color: .white, font: .system(size: 15, weight: .bold, design: .default), alignment: .leading)
+                    
+                    CNText(title: "\(batteryLevel)%", color: .white, font: .system(size: 36, weight: .semibold, design: .default), alignment: .leading, minimumScale: 0.8)
+                }
+                .padding(.bottom, -7)
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            
+            Spacer()
+            
+            ZStack {
+                CNCircularProgressView(progress: Double(batteryLevel) / 100, lineWidth: 12)
+                
+                Image(.icPowerBlue)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 85, height: 85)
+                    .clipShape(Circle())
+            }
+            .frame(width: 110, height: 110)
         }
     }
 }

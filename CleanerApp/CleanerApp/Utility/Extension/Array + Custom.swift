@@ -12,6 +12,15 @@ extension Array {
         guard size > 0 else { return [Array(self)] }
         return stride(from: 0, to: count, by: size).map { Array(self[$0..<Swift.min($0 + size, count)]) }
     }
+    
+        
+    func unique<T: Hashable>(by key: (Element) -> T) -> [Element] {
+        var seen = Set<T>()
+        
+        return filter { element in
+            seen.insert(key(element)).inserted
+        }
+    }
 }
 
 extension Array where Element == SimilarMedia {

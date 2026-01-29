@@ -20,4 +20,26 @@ extension View {
             self
         }
     }
+    
+    @ViewBuilder
+    func ifiOS26Available<Content: View>(
+        @ViewBuilder _ transform: (Self) -> Content
+    ) -> some View {
+        if #available(iOS 26.0, *) {
+            transform(self)
+        } else {
+            self
+        }
+    }
+    
+    @ViewBuilder
+    func ifiOS26Unavailable<Content: View>(
+        @ViewBuilder _ transform: (Self) -> Content
+    ) -> some View {
+        if #available(iOS 26.0, *) {
+            self
+        } else {
+            transform(self)
+        }
+    }
 }
