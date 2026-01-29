@@ -55,7 +55,7 @@ class SimilarMediaListViewModel: ObservableObject {
                 
                 return SimilarMedia(
                     title: group.title,
-                    bestMediaAssetId: filteredItems.first!.assetId,
+                    bestMediaAssetId: group.bestMediaAssetId,
                     arrMediaItems: filteredItems
                 )
             }
@@ -90,13 +90,12 @@ class SimilarMediaListViewModel: ObservableObject {
     
     func btnSelectAllItems(similar: SimilarMedia) {
         withAnimation {
-            let firstItem = similar.arrMediaItems.first
-            let arrMediaItems = similar.arrMediaItems.dropFirst()
+            let arrMediaItems = similar.arrMediaItems.filter { $0.assetId != similar.bestMediaAssetId }
             arrSelectedItems.append(contentsOf: arrMediaItems)
             
             var seen = Set<String>()
             arrSelectedItems = arrSelectedItems.filter { item in
-                if firstItem?.assetId == item.assetId {
+                if similar.bestMediaAssetId == item.assetId {
                     return false
                 }
                 
@@ -119,7 +118,7 @@ class SimilarMediaListViewModel: ObservableObject {
     func btnSelectAllAction() {
         withAnimation {
             let selected = similarMediaCategory.arrSimilarMedias.flatMap { group in
-                Array(group.arrMediaItems.dropFirst())
+                Array(group.arrMediaItems.filter { $0.assetId != group.bestMediaAssetId })
             }
             
             arrSelectedItems = selected

@@ -99,12 +99,12 @@ struct AllContactsView: View {
                 }
                 .transition(.move(edge: .bottom))
             }
-            
+        }
+        .safeAreaInset(edge: .bottom) {
             if !viewModel.arrContactToDelete.isEmpty {
                 deleteButton
             }
         }
-        
         .animation(.easeInOut, value: viewModel.arrContactToDelete.isEmpty)
     }
     
@@ -172,6 +172,8 @@ struct AllContactsView: View {
                         .scaledToFit()
                         .foregroundStyle(isSelected ? .blue : .white)
                         .frame(width: 26, height: 26)
+                        .shadow(color: .black.opacity(0.5), radius: 8, x: 0, y: 0)
+                        .animation(.easeInOut(duration: 0.1), value: isSelected)
                 }
             }
             .padding(.vertical, 16)

@@ -6,9 +6,13 @@
 //
 
 import Combine
+import AVFoundation
 
 class TabRouter: ObservableObject {
     
     @Published var selectedTab: Int = 0
     static let shared = TabRouter()
+    
+    @Published var showVideoPlayerView: (sheet: Bool, player: AVPlayer?) = (false, nil)
+        
 }

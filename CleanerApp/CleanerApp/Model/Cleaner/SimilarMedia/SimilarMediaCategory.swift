@@ -30,7 +30,9 @@ enum SimilarMediaType: String, CaseIterable, Identifiable {
 class SimilarMediaCategoryModel: ObservableObject, Identifiable {
     let id = UUID()
     var type: SimilarMediaType
+    
     @Published var arrSimilarMedias: [SimilarMedia] = []
+    @Published var isScanning: Bool = true
     
     var title: String { type.title }
     var totalSize: Int64 {
@@ -57,42 +59,59 @@ class SimilarMediaCategoryModel: ObservableObject, Identifiable {
     
     func setSimilarMedias(similarMedias: [SimilarMedia]) {
         arrSimilarMedias = similarMedias
+        isScanning = false
         calculateSize()
     }
     
     func calculateSize() {
-        
-//        guard !arrSimilarMedias.isEmpty else { return }
-//        
-//        
-//        Task(priority: .utility) {
-//            
-//            var updatedGroups = self.arrSimilarMedias
-//            
-//            await withTaskGroup(of: (Int, Int, Int64).self) { taskGroup in
-//                
-//                for (groupIndex, similarGroup) in self.arrSimilarMedias.enumerated() {
-//                    
-//                    for (itemIndex, item) in similarGroup.arrMediaItems.enumerated() {
-//                        taskGroup.addTask {
-//                            let size = await item.asset.fileSizeAsync(completion: <#(Int64) -> Void#>)
-//                            return (groupIndex, itemIndex, size)
-//                        }
-//                    }
-//                }
-//                
-//                for await (groupIndex, itemIndex, size) in taskGroup {
-//                    updatedGroups[groupIndex]
-//                        .arrMediaItems[itemIndex]
-//                        .fileSize = size
-//                }
-//            }
-//            
-//            await MainActor.run {
-//                self.arrSimilarMedias = updatedGroups
-//            }
-//        }
+        guard !arrSimilarMedias.isEmpty else { return }
+
+        DispatchQueue.global(qos: .background).async {
+            for (i, media) in self.arrSimilarMedias.enumerated() {
+                for (j, item) in media.arrMediaItems.enumerated() {
+                    let size = item.asset.fileSizeSync()
+                    
+                    DispatchQueue.main.async {
+                        self.arrSimilarMedias[i].arrMediaItems[j].fileSize = size
+                    }
+                }
+            }
+        }
     }
+    
+    /*func calculateSize() {
+        
+        guard !arrSimilarMedias.isEmpty else { return }
+        
+        
+        Task(priority: .utility) {
+            
+            var updatedGroups = self.arrSimilarMedias
+            
+            await withTaskGroup(of: (Int, Int, Int64).self) { taskGroup in
+                
+                for (groupIndex, similarGroup) in self.arrSimilarMedias.enumerated() {
+                    
+                    for (itemIndex, item) in similarGroup.arrMediaItems.enumerated() {
+                        taskGroup.addTask {
+                            let size = await item.asset.fileSizeAsync(completion: <#(Int64) -> Void#>)
+                            return (groupIndex, itemIndex, size)
+                        }
+                    }
+                }
+                
+                for await (groupIndex, itemIndex, size) in taskGroup {
+                    updatedGroups[groupIndex]
+                        .arrMediaItems[itemIndex]
+                        .fileSize = size
+                }
+            }
+            
+            await MainActor.run {
+                self.arrSimilarMedias = updatedGroups
+            }
+        }
+    }*/
     
     static func == (lhs: SimilarMediaCategoryModel, rhs: SimilarMediaCategoryModel) -> Bool {
         lhs.id == rhs.id

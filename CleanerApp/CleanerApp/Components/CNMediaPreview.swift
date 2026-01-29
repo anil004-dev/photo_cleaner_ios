@@ -34,7 +34,9 @@ struct CNMediaPreview: View {
                 // VIDEO
                 else if mediaItem.type == .screenRecordings || mediaItem.type == .videos || mediaItem.type == .largeVideos, let player {
                     VideoPlayer(player: player)
-                        .onAppear { player.play() }
+                        .onAppear {
+                            player.play()
+                        }
                         .onDisappear {
                             self.player?.pause()
                             self.player = nil

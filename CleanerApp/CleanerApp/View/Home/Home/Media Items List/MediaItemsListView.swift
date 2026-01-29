@@ -54,9 +54,10 @@ struct MediaItemsListView: View {
                 titleSection
                 mediaItemListSection
             }
-            
-            if !viewModel.arrSelectedItems.isEmpty {
-                deleteButton
+            .safeAreaInset(edge: .bottom) {
+                if !viewModel.arrSelectedItems.isEmpty {
+                    deleteButton
+                }
             }
         }
         .animation(.easeInOut, value: viewModel.arrSelectedItems.isEmpty)
@@ -71,7 +72,7 @@ struct MediaItemsListView: View {
                     HStack(alignment: .top, spacing: 5) {
                         CNText(title: viewModel.mediaCategory.formattedSize, color: .white, font: .system(size: 12, weight: .semibold, design: .default), alignment: .leading)
                         
-                        CNText(title: "(\(viewModel.mediaCategory.count) Photos)", color: .textGray, font: .system(size: 12, weight: .semibold, design: .default), alignment: .leading)
+                        CNText(title: "(\(viewModel.mediaCategory.count) \(viewModel.mediaCategory.title))", color: .textGray, font: .system(size: 12, weight: .semibold, design: .default), alignment: .leading)
                     }
                 }
                 
@@ -107,12 +108,13 @@ struct MediaItemsListView: View {
     private var mediaItemListSection: some View {
         VStack(alignment: .leading, spacing: 0) {
             let type = viewModel.mediaCategory.type
-            let totalHorizontalPadding: CGFloat = 17 * 2
-            let itemSpacing: CGFloat = type == .screenshots ? 5 : 10
+            let isVideo = (type == .videos || type == .largeVideos || type == .screenRecordings)
+            let totalHorizontalPadding: CGFloat = (isVideo ? 6 : 17) * 2
+            let itemSpacing: CGFloat = type == .screenshots ? 5 : (isVideo ? 6 : 10)
             let numberOfColumns: CGFloat = type == .screenshots ? 3 : 2
             let availableWidth = UIScreen.main.bounds.width - totalHorizontalPadding - (itemSpacing * (numberOfColumns - 1))
             let itemWidth = availableWidth / numberOfColumns
-            let itemHeight = type == .screenshots ? itemWidth * 1.8 : (type == .videos || type == .largeVideos || type == .screenRecordings) ? itemWidth * 1.5 : itemWidth
+            let itemHeight = type == .screenshots ? itemWidth * 1.8 : (isVideo ? itemWidth * 1.5 : itemWidth)
             let columns = Array(
                 repeating: GridItem(.fixed(itemWidth), spacing: itemSpacing),
                 count: Int(numberOfColumns)
@@ -127,12 +129,12 @@ struct MediaItemsListView: View {
                             width: itemWidth,
                             height: itemHeight,
                             onTap: {
-                                viewModel.openMediaPreview(media: mediaItem)
+                                viewModel.btnMediaAction(media: mediaItem)
                             }
                         )
                     }
                 }
-                .padding(.horizontal, 17)
+                .padding(.horizontal, isVideo ? 6 : 17)
                 .padding(.vertical, 15)
             }
         }
@@ -161,13 +163,15 @@ extension MediaItemsListView {
         let height = height
         
         ZStack {
-            CNMediaThumbImage(
-                mediaItem: mediaItem,
-                size: CGSize(width: width, height: height)
-            )
-            .clipped()
-            .aspectRatio(1, contentMode: .fill)
-            .clipShape(RoundedRectangle(cornerRadius: 22))
+            VStack(alignment: .center, spacing: 0) {
+                CNMediaThumbImage(
+                    mediaItem: mediaItem,
+                    size: CGSize(width: width, height: height)
+                )
+                .clipShape(RoundedRectangle(cornerRadius: 22))
+            }
+            .background(Color.bgDarkBlue)
+            .onTapGesture(perform: onTap)
             
             VStack(alignment: .trailing, spacing: 0) {
                 if mediaItem.type == .livePhotos {
@@ -219,6 +223,8 @@ extension MediaItemsListView {
                             }
                             .frame(width: 26, height: 26)
                             .clipShape(Rectangle())
+                            .shadow(color: .black.opacity(0.5), radius: 8, x: 0, y: 0)
+                            .animation(.easeInOut(duration: 0.1), value: isSelected)
                         }
                         .padding(.horizontal, 13)
                         .padding(.vertical, 13)
@@ -230,3 +236,4 @@ extension MediaItemsListView {
         .onTapGesture(perform: onTap)
     }
 }
+

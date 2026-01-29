@@ -36,10 +36,11 @@ class Utility {
     
     class func formatStorage(bytes: Float) -> String {
         let formatter = ByteCountFormatter()
-        formatter.allowedUnits = [.useKB, .useMB, .useGB, .useTB, .useAll]
+        formatter.allowedUnits = [.useAll]
         formatter.countStyle = .decimal
         formatter.includesUnit = true
         formatter.isAdaptive = true
-        return formatter.string(fromByteCount: Int64(bytes))
+        formatter.allowsNonnumericFormatting = false
+        return formatter.string(fromByteCount: Int64(bytes.rounded()))
     }
 }

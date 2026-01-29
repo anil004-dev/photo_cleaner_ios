@@ -26,7 +26,10 @@ struct SimilarMediaListView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 let allItems = viewModel.similarMediaCategory.arrSimilarMedias
-                    .flatMap { $0.arrMediaItems.dropFirst() }
+                    .flatMap { media in
+                        media.arrMediaItems.filter { $0.assetId != media.bestMediaAssetId }
+                    }
+
 
                 let isSelectedAll = allItems.allSatisfy { item in
                     viewModel.arrSelectedItems.contains { $0.assetId == item.assetId }
@@ -64,7 +67,8 @@ struct SimilarMediaListView: View {
                 titleSection
                 mediaItemListSection
             }
-            
+        }
+        .safeAreaInset(edge: .bottom) {
             if !viewModel.arrSelectedItems.isEmpty {
                 deleteButton
             }
@@ -159,7 +163,6 @@ extension SimilarMediaListView {
             GridItem(.fixed(itemWidth), spacing: itemSpacing)
         ]
         
-        
         VStack(alignment: .leading, spacing: 15) {
             HStack(alignment: .center, spacing: 0) {
                 if let date = similarMedia.arrMediaItems.first?.formattedDate {
@@ -174,8 +177,7 @@ extension SimilarMediaListView {
                 
                 Spacer()
                 
-                let isSelectedAll = similarMedia.arrMediaItems.dropFirst().allSatisfy { item in
-                    viewModel.arrSelectedItems.contains { $0.assetId == item.assetId }
+                let isSelectedAll = similarMedia.arrMediaItems.filter { $0.assetId != similarMedia.bestMediaAssetId }.allSatisfy { item in viewModel.arrSelectedItems.contains { $0.assetId == item.assetId }
                 }
                 
                 CNText(title: isSelectedAll ? "Deselect All" : "Select All", color: .textGray, font: .system(size: 17, weight: .regular, design: .default), alignment: .leading)
@@ -191,9 +193,9 @@ extension SimilarMediaListView {
             
             LazyVGrid(columns: columns, spacing: itemSpacing) {
                 
-                ForEach(similarMedia.arrMediaItems.indices, id: \.self) { index in
+                ForEach(similarMedia.arrMediaItems, id: \.assetId) { mediaItem in
                     
-                    let mediaItem = similarMedia.arrMediaItems[index]
+                    //let mediaItem = similarMedia.arrMediaItems[index]
                     
                     mediaItemCard(
                         mediaItem: mediaItem,
@@ -217,15 +219,16 @@ extension SimilarMediaListView {
         let height = size
         
         ZStack {
-            CNMediaThumbImage(
-                mediaItem: mediaItem,
-                size: CGSize(width: width, height: height)
-            )
-            .clipped()
-            .aspectRatio(1, contentMode: .fill)
-            .clipShape(RoundedRectangle(cornerRadius: 22))
+            VStack(alignment: .center, spacing: 0) {
+                CNMediaThumbImage(
+                    mediaItem: mediaItem,
+                    size: CGSize(width: width, height: height)
+                )
+                .clipShape(RoundedRectangle(cornerRadius: 22))
+            }
+            .background(Color.bgDarkBlue)
             .onTapGesture(perform: onTap)
-            
+                
             VStack(alignment: .trailing, spacing: 0) {
                 if isBest {
                     HStack(alignment: .center, spacing: 0) {
@@ -259,14 +262,13 @@ extension SimilarMediaListView {
                             .resizable()
                             .scaledToFit()
                             .frame(width: 26, height: 26)
-                            .clipShape(Rectangle())
                     }
                     .frame(width: 26, height: 26)
-                    .clipShape(Rectangle())
+                    .shadow(color: .black.opacity(0.5), radius: 8, x: 0, y: 0)
+                    .animation(.easeInOut(duration: 0.1), value: isSelected)
                     .padding(.trailing, 10)
                     .padding(.bottom, 10)
                 }
-                .zIndex(999)
             }
         }
         .frame(width: size, height: size)

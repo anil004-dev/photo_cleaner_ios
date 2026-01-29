@@ -16,6 +16,6 @@ class StillPhotoPreviewModel: ObservableObject {
     
     init(arrImageURLs: [URL]) {
         self.arrImageURLs = arrImageURLs
-        self.selectedImageURL = arrImageURLs[0]
+        self.selectedImageURL = arrImageURLs[1]
     }
 }

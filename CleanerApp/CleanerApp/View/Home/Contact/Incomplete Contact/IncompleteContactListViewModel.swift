@@ -14,7 +14,6 @@ class IncompleteContactListViewModel: ObservableObject {
     @Published var incompleteContact: IncompleteContactModel = IncompleteContactModel()
     @Published var arrContactToDelete: [ContactModel] = []
     @Published var showEditContactView: (sheet: Bool, contact: CNContact?) = (false, nil)
-    @Published var refreshId = UUID()
     
     init(incompleteContact: IncompleteContactModel) {
         self._incompleteContact = Published(wrappedValue: incompleteContact)

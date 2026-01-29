@@ -34,67 +34,30 @@ struct MediaPreviewView: View {
     }
     
     private var mediaPreviewSection: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            currentMediaPreviewSection
-            mediaListSection
-            deleteButton
+        ZStack(alignment: .bottom) {
+            VStack(alignment: .leading, spacing: 0) {
+                currentMediaPreviewSection
+                mediaListSection
+            }
+            .safeAreaInset(edge: .bottom) {
+                if !viewModel.arrSelectedItems.isEmpty {
+                    deleteButton
+                }
+            }
         }
+        .animation(.easeInOut, value: viewModel.arrSelectedItems.isEmpty)
     }
     
     private var currentMediaPreviewSection: some View {
         GeometryReader { proxy in
             VStack(alignment: .leading, spacing: 0) {
                 let mediaItem = viewModel.arrItems[viewModel.currentIndex]
-                let isSelected = viewModel.arrSelectedItems.contains { $0.assetId == mediaItem.assetId }
                 
                 ZStack(alignment: .bottom) {
                     CNMediaPreview(
                         mediaItem: mediaItem
                     )
                     .id(viewModel.currentIndex)
-                    
-                    HStack(alignment: .center, spacing: 0) {
-                        if viewModel.mediaType == .largeVideos {
-                            let estimatedSize = VideoCompressor.shared.estimatedSizeRange(mediaItem: mediaItem, quality: .medium)
-                            let formattedSize = estimatedSize
-                            
-                            HStack(alignment: .center, spacing: 0) {
-                                CNText(title: formattedSize, color: .white, font: .system(size: 10, weight: .semibold, design: .default), alignment: .center)
-                                    .padding(5)
-                            }
-                            .background(Color.blue)
-                            .clipShape(RoundedRectangle(cornerRadius: 3))
-                        }
-                        
-                        Spacer()
-                        
-                        if viewModel.mediaType == .largeVideos {
-                            Button {
-                                viewModel.btnCompressVideo(mediaItem: mediaItem)
-                            } label: {
-                                CNText(title: "Compress", color: .white, font: .system(size: 10, weight: .semibold, design: .default), alignment: .center)
-                                    .padding(5)
-                                    .background(Color.blue)
-                                    .clipShape(RoundedRectangle(cornerRadius: 3))
-                            }
-                            .padding(.trailing, 10)
-                        }
-                        
-                        Button {
-                            viewModel.selectItem(media: mediaItem)
-                        } label: {
-                            Image(isSelected ? .icSquareChecked : .icSquareUnchecked)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 26, height: 26)
-                                .clipShape(Rectangle())
-                        }
-                        .frame(width: 26, height: 26)
-                        .clipShape(Rectangle())
-                        .padding(.trailing, 10)
-                        .padding(.bottom, 10)
-                    }
-                    .padding(15)
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -157,7 +120,7 @@ struct MediaPreviewView: View {
         }
         .padding(.horizontal, 10)
         .padding(.top, 15)
-        .padding(.bottom, 24)
+        .animation(.easeInOut, value: viewModel.arrSelectedItems)
     }
 }
 
@@ -188,6 +151,8 @@ extension MediaPreviewView {
                     .padding(5)
                     .clipShape(Rectangle())
                     .zIndex(500)
+                    .shadow(color: .black.opacity(0.5), radius: 8, x: 0, y: 0)
+                    .animation(.easeInOut(duration: 0.1), value: isSelected)
                     .onTapGesture {
                         onSelect()
                     }

@@ -35,5 +35,6 @@ struct CNMediaThumbImage: View {
             view.scaledToFit()
         }
         .frame(width: size.width, height: size.height)
+        .allowsHitTesting(false)
     }
 }

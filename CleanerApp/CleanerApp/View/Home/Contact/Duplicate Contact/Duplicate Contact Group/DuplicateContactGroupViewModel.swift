@@ -96,8 +96,6 @@ class DuplicateContactGroupViewModel: ObservableObject {
     
     func btnSelectAllAction() {
         withAnimation {
-            arrContactGroupToMerge.removeAll()
-            
             duplicateContact.arrContactGroup.forEach { group in
                 btnSelectAll(contactGroup: group)
             }

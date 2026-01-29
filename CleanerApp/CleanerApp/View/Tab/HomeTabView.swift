@@ -58,7 +58,26 @@ struct HomeTabView: View {
             .tabItem {
                 Label("Charging Animation", systemImage: "powerplug.portrait")
             }
+            
+            NavigationStack(path: $navigationManager.path) {
+                CompressVideoListView()
+                    .navigationDestination(for: NavigationDestination.self) { destination in
+                        NavigationRouter.destinationView(for: destination)
+                    }
+            }
+            .tag(4)
+            .tabItem {
+                Label("Compress Video", systemImage: "widget.small.badge.plus")
+            }
         }
         .tint(.white)
+        .fullScreenCover(isPresented: $tabRouter.showVideoPlayerView.sheet) {
+            if let player = tabRouter.showVideoPlayerView.player {
+                CNAVPlayerView(player: player) {
+                    tabRouter.showVideoPlayerView = (false, nil)
+                }
+                .presentationDetents([.large])
+            }
+        }
     }
 }

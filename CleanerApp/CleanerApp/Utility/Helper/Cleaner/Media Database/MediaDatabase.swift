@@ -29,6 +29,8 @@ final class MediaDatabase: ObservableObject {
     @Published var screenRecordings = MediaCategoryModel(type: .screenRecordings)
     @Published var largeVideos = MediaCategoryModel(type: .largeVideos)
     
+    @Published var allVideos = MediaCategoryModel(type: .videos)
+    
     @Published var similarPhotos = SimilarMediaCategoryModel(type: .similarPhotos)
     @Published var similarScreenshots = SimilarMediaCategoryModel(type: .similarScreenshots)
     
@@ -211,36 +213,30 @@ final class MediaDatabase: ObservableObject {
             leave()
         }
 
-        enter()
         fetchVideos { items in
             DispatchQueue.main.async {
                 self.videos.setItems(arrItems: items)
+                self.allVideos.setItems(arrItems: items)
             }
-           
-            leave()
         }
 
-        enter()
         fetchScreenRecordings { items in
             DispatchQueue.main.async {
                 self.screenRecordings.setItems(arrItems: items)
+                self.allVideos.setItems(arrItems: items)
             }
-           
-            leave()
         }
 
-        enter()
         fetchLargeVideos { items in
             DispatchQueue.main.async {
                 self.largeVideos.setItems(arrItems: items)
             }
-           
-            leave()
         }
 
         group.notify(queue: .global(qos: .background)) {
             Task(priority: .background) {
                 self.fetchSimilarMedias()
+                
                 await MainActor.run {
                     self.scanState = .completed
                 }
@@ -436,6 +432,26 @@ final class MediaDatabase: ObservableObject {
 
 // MARK: - Operations
 extension MediaDatabase {
+    
+    func makePlayer(from asset: PHAsset, completion: @escaping (AVPlayer) -> Void) {
+        
+        let options = PHVideoRequestOptions()
+        options.isNetworkAccessAllowed = true
+
+        PHImageManager.default().requestAVAsset(
+            forVideo: asset,
+            options: options
+        ) { avAsset, _, _ in
+
+            guard let avAsset else { return }
+
+            DispatchQueue.main.async {
+                let item = AVPlayerItem(asset: avAsset)
+                let player = AVPlayer(playerItem: item)
+                completion(player)
+            }
+        }
+    }
     
     func fetchMediaCategory(type: MediaType) -> MediaCategoryModel {
         switch type {

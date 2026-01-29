@@ -23,11 +23,13 @@ final class HomeViewModel: ObservableObject {
     }
     
     func btnCategoryAction(category: MediaCategoryModel) {
+        guard !category.isScanning else { return }
         let destination = MediaListDestination(viewModel: MediaItemsListViewModel(mediaCategory: category))
         NavigationManager.shared.push(to: .mediaListView(destination: destination))
     }
     
     func btnSimilarMediaAction(category: SimilarMediaCategoryModel) {
+        guard !category.isScanning else { return }
         let destination = SimilarMediaListDestination(viewModel: SimilarMediaListViewModel(similarMediaCategory: category))
         NavigationManager.shared.push(to: .similarMediaListView(destination: destination))
     }

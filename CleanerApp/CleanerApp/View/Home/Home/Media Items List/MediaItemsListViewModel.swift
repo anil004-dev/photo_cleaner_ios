@@ -87,6 +87,21 @@ class MediaItemsListViewModel: ObservableObject {
         NavigationManager.shared.push(to: .mediaPreviewView(destination: MediaPreviewDestination(viewModel: viewModel)))
     }
     
+    func openVideoPlayerView(media: MediaItem) {
+        mediaDatabase?.makePlayer(from: media.asset) { [weak self] player in
+            guard self != nil else { return }
+            TabRouter.shared.showVideoPlayerView = (true, player)
+        }
+    }
+    
+    func btnMediaAction(media: MediaItem) {
+        if media.type == .screenRecordings || media.type == .largeVideos || media.type == .videos {
+            openVideoPlayerView(media: media)
+        } else {
+            openMediaPreview(media: media)
+        }
+    }
+    
     func btnDeleteAction() {
         guard !arrSelectedItems.isEmpty else { return }
         

@@ -46,10 +46,12 @@ enum MediaItemSortType: String, CaseIterable {
 }
 
 // MARK: - Category Model
-final class MediaCategoryModel: ObservableObject, Identifiable {
+final class MediaCategoryModel: ObservableObject, Identifiable, Equatable {
     let id = UUID()
     let type: MediaType
+    
     @Published var items: [MediaItem] = []
+    @Published var isScanning: Bool = true
     
     var title: String { type.title }
     var count: Int { items.count }
@@ -64,10 +66,25 @@ final class MediaCategoryModel: ObservableObject, Identifiable {
     
     func setItems(arrItems: [MediaItem]) {
         items = arrItems
-        //calculateSize()
+        isScanning = false
+        calculateSize()
     }
     
     func calculateSize() {
+        guard !items.isEmpty else { return }
+
+        DispatchQueue.global(qos: .background).async {
+            for (index, item) in self.items.enumerated() {
+                let size = item.asset.fileSizeSync()
+                
+                DispatchQueue.main.async {
+                    self.items[index].fileSize = size
+                }
+            }
+        }
+    }
+    
+    /*func calculateSize() {
         guard !items.isEmpty else { return }
 
         DispatchQueue.global(qos: .background).async {
@@ -89,7 +106,6 @@ final class MediaCategoryModel: ObservableObject, Identifiable {
                 semaphore.wait()
 
                 queue.async {
-
                     let size = item.asset.fileSizeSync()
                     updatedItems[index].fileSize = size
 
@@ -102,7 +118,7 @@ final class MediaCategoryModel: ObservableObject, Identifiable {
                 self.items = updatedItems
             }
         }
-    }
+    }*/
     
     static func == (lhs: MediaCategoryModel, rhs: MediaCategoryModel) -> Bool {
         lhs.id == rhs.id

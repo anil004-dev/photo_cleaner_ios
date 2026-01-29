@@ -72,8 +72,10 @@ struct DuplicateContactGroupView: View {
                     }
                     .padding(20)
                 }
+                .transition(.move(edge: .bottom))
             }
-            
+        }
+        .safeAreaInset(edge: .bottom) {
             if !viewModel.arrContactGroupToMerge.isEmpty {
                 previewButton
             }
@@ -185,6 +187,8 @@ extension DuplicateContactGroupView {
                         .scaledToFit()
                         .foregroundStyle(isSelected ? .blue : .white)
                         .frame(width: 26, height: 26)
+                        .shadow(color: .black.opacity(0.5), radius: 8, x: 0, y: 0)
+                        .animation(.easeInOut(duration: 0.1), value: isSelected)
                 }
             }
             .padding(.vertical, 16)

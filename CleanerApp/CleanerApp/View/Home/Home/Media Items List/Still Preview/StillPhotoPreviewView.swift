@@ -100,6 +100,8 @@ struct StillPhotoPreviewView: View {
                     }
                     .frame(width: 26, height: 26)
                     .clipShape(Rectangle())
+                    .shadow(color: .black.opacity(0.5), radius: 8, x: 0, y: 0)
+                    .animation(.easeInOut(duration: 0.1), value: isSelected)
                     .padding(.trailing, 10)
                     .padding(.bottom, 10)
                 }
