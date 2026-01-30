@@ -39,12 +39,17 @@ extension HomeViewModel {
     
     func fetchMedias() {
         if PhotoLibraryManager.shared.isPermissionGranted() {
-            Task {
+            Task.detached {
                 if await PhotoLibraryManager.shared.checkPermission(showAlert: false) {
-                    mediaDatabase?.startScan()
-                    showPermissionSection = false
+                    await self.mediaDatabase?.startScan()
+                    
+                    await MainActor.run {
+                        self.showPermissionSection = false
+                    }
                 } else {
-                    showPermissionSection = true
+                    await MainActor.run {
+                        self.showPermissionSection = true
+                    }
                 }
             }
         } else {

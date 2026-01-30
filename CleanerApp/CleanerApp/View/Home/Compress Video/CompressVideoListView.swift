@@ -19,23 +19,17 @@ struct CompressVideoListView: View {
             }
         }
         .onAppear {
-            viewModel.onAppear(mediaDatabase: mediaDatabase)
+            viewModel.update(from: mediaDatabase)
+        }
+        .onChange(of: mediaDatabase.compressVideos.items) { _, _ in
+            viewModel.update(from: mediaDatabase)
         }
     }
     
     private var compressVideoListSection: some View {
         VStack(alignment: .leading, spacing: 0) {
-            if let mediaDatabase = viewModel.mediaDatabase {
-                titleSection(category: mediaDatabase.allVideos)
-                    .onChange(of: mediaDatabase.videos) { oldValue, newValue in
-                        viewModel.sortItems()
-                    }
-                    .onChange(of: mediaDatabase.screenshots) { oldValue, newValue in
-                        viewModel.sortItems()
-                    }
-                
-                videoListSection(category: mediaDatabase.allVideos)
-            }
+            titleSection(category: mediaDatabase.compressVideos)
+            videoListSection(category: mediaDatabase.compressVideos)
         }
     }
     
@@ -43,12 +37,12 @@ struct CompressVideoListView: View {
         VStack(alignment: .leading, spacing: 0) {
             HStack(alignment: .top, spacing: 0) {
                 VStack(alignment: .leading, spacing: 4) {
-                    CNText(title: "Compress Video", color: .white, font: .system(size: 36, weight: .bold, design: .default), alignment: .leading)
+                    CNText(title: category.title, color: .white, font: .system(size: 36, weight: .bold, design: .default), alignment: .leading)
                     
                     HStack(alignment: .top, spacing: 5) {
                         CNText(title: category.formattedSize, color: .white, font: .system(size: 12, weight: .semibold, design: .default), alignment: .leading)
                         
-                        CNText(title: "(\(category.count) \(category.title))", color: .textGray, font: .system(size: 12, weight: .semibold, design: .default), alignment: .leading)
+                        CNText(title: "(\(category.count) Videos)", color: .textGray, font: .system(size: 12, weight: .semibold, design: .default), alignment: .leading)
                     }
                 }
                 
@@ -97,12 +91,12 @@ struct CompressVideoListView: View {
             ScrollView(.vertical) {
                 LazyVGrid(columns: columns, spacing: itemSpacing) {
                     ForEach(viewModel.arrItems) { mediaItem in
-                        mediaItemCard(
+                        MediaItemCardView(
                             mediaItem: mediaItem,
                             width: itemWidth,
                             height: itemHeight,
-                            onTap: {
-                                viewModel.btnMediaAction(media: mediaItem)
+                            onTap: { compressInfo in
+                                viewModel.btnMediaAction(media: mediaItem, compressInfo: compressInfo)
                             }
                         )
                     }
@@ -116,13 +110,18 @@ struct CompressVideoListView: View {
     }
 }
 
-extension CompressVideoListView {
+
+struct MediaItemCardView: View {
+    @ObservedObject var mediaItem: MediaItem
+    let width: CGFloat
+    let height: CGFloat
+    let onTap: (VideoCompressionInfo) -> Void
     
-    @ViewBuilder
-    private func mediaItemCard(mediaItem: MediaItem, width: CGFloat, height: CGFloat, onTap: @escaping (() -> Void)) -> some View {
-        let width = width
-        let height = height
-        
+    var body: some View {
+        mediaItemCard()
+    }
+    
+    private func mediaItemCard() -> some View {
         ZStack {
             VStack(alignment: .center, spacing: 0) {
                 CNMediaThumbImage(
@@ -132,11 +131,7 @@ extension CompressVideoListView {
                 .clipShape(RoundedRectangle(cornerRadius: 22))
             }
             .background(Color.bgDarkBlue)
-            .onTapGesture(perform: onTap)
-           
-                
-            let formattedSize = "200 MB"
-                
+            
             ZStack(alignment: .bottom) {
                 VStack(alignment: .center, spacing: 0) {
                     Spacer()
@@ -149,27 +144,49 @@ extension CompressVideoListView {
                 
                 VStack(alignment: .center, spacing: 0) {
                     Spacer()
-                    Button {
-                        viewModel.btnCompressVideo(mediaItem: mediaItem)
-                    } label: {
-                        HStack(alignment: .center, spacing: 9) {
-                            CNText(title: "Save \(formattedSize)", color: .white, font: .system(size: 14, weight: .bold, design: .default), alignment: .center)
-                            
-                            Image(.icChevronDouble)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 14, height: 13)
+                    
+                    if mediaItem.compressionInfo == nil {
+                        ProgressView()
+                    } else if let compressInfo = mediaItem.compressionInfo {
+                        Button {
+                            onTap(compressInfo)
+                        } label: {
+                            HStack(alignment: .center, spacing: 9) {
+                                CNText(title: "Save \(compressInfo.formattedSavedSize)", color: .white, font: .system(size: 14, weight: .bold, design: .default), alignment: .center)
+                                
+                                Image(.icChevronDouble)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 14, height: 13)
+                            }
+                            .padding(10)
+                            .background(Color.btnBlue)
+                            .clipShape(RoundedRectangle(cornerRadius: 9))
                         }
-                        .padding(10)
-                        .background(Color.btnBlue)
-                        .clipShape(RoundedRectangle(cornerRadius: 9))
+                        .padding(11)
                     }
-                    .padding(11)
                 }
             }
         }
         .frame(width: width, height: height)
-        .onTapGesture(perform: onTap)
+        .onAppear {
+            calculateEstimateSize()
+        }
+        .onTapGesture {
+            if let compressInfo = mediaItem.compressionInfo {
+                onTap(compressInfo)
+            }
+        }
+        .onChange(of: mediaItem.fileSize) { _, _ in
+            calculateEstimateSize()
+        }
+    }
+    
+    private func calculateEstimateSize() {
+        if mediaItem.fileSize != 0, mediaItem.compressionInfo == nil {
+            Task {
+                mediaItem.compressionInfo = await VideoCompressorManager.shared.estimateSize(media: mediaItem, quality: .low)
+            }
+        }
     }
 }
-

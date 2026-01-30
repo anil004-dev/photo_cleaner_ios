@@ -29,7 +29,7 @@ final class MediaDatabase: ObservableObject {
     @Published var screenRecordings = MediaCategoryModel(type: .screenRecordings)
     @Published var largeVideos = MediaCategoryModel(type: .largeVideos)
     
-    @Published var allVideos = MediaCategoryModel(type: .videos)
+    @Published var compressVideos = MediaCategoryModel(type: .compressVideos)
     
     @Published var similarPhotos = SimilarMediaCategoryModel(type: .similarPhotos)
     @Published var similarScreenshots = SimilarMediaCategoryModel(type: .similarScreenshots)
@@ -154,6 +154,11 @@ final class MediaDatabase: ObservableObject {
                     minSize,
                     PHAssetMediaSubtype.videoScreenRecording.rawValue
                 )
+            case .compressVideos:
+                options.predicate = NSPredicate(
+                    format: "mediaType == %d",
+                    PHAssetMediaType.video.rawValue
+                )
             }
             
             let fetchResult = PHAsset.fetchAssets(with: options)
@@ -216,20 +221,24 @@ final class MediaDatabase: ObservableObject {
         fetchVideos { items in
             DispatchQueue.main.async {
                 self.videos.setItems(arrItems: items)
-                self.allVideos.setItems(arrItems: items)
             }
         }
 
         fetchScreenRecordings { items in
             DispatchQueue.main.async {
                 self.screenRecordings.setItems(arrItems: items)
-                self.allVideos.setItems(arrItems: items)
             }
         }
 
         fetchLargeVideos { items in
             DispatchQueue.main.async {
                 self.largeVideos.setItems(arrItems: items)
+            }
+        }
+        
+        fetchCompressVideos { items in
+            DispatchQueue.main.async {
+                self.compressVideos.setItems(arrItems: items)
             }
         }
 
@@ -276,6 +285,12 @@ final class MediaDatabase: ObservableObject {
     
     private func fetchLargeVideos(completion: (([MediaItem]) -> Void)? = nil) {
         fetchItems(type: .largeVideos) { items in
+            completion?(items)
+        }
+    }
+    
+    private func fetchCompressVideos(completion: (([MediaItem]) -> Void)? = nil) {
+        fetchItems(type: .compressVideos) { items in
             completion?(items)
         }
     }
@@ -372,15 +387,17 @@ final class MediaDatabase: ObservableObject {
             return .photos
         }
         
+        let type = type ?? assumedType
+        
         var url: URL? {
-            if type == .screenRecordings || type == .videos || type == .largeVideos {
+            if type == .screenRecordings || type == .videos || type == .largeVideos || type == .compressVideos {
                 return self.getThumbnailURL(phAsset: asset)
             } else {
                 return URL(string: "ph://\(asset.localIdentifier)")
             }
         }
         
-        let item = MediaItem(asset: asset, type: type ?? assumedType, fileSize: fileSize, assetId: asset.localIdentifier, filename: fileName, creationDate: asset.creationDate, isFavourite: asset.isFavorite, mediaTypeRaw: asset.mediaType.rawValue, mediaSubtypesRaw: asset.mediaSubtypes.rawValue, thumbnailURL: url)
+        let item = MediaItem(asset: asset, type: type, fileSize: fileSize, assetId: asset.localIdentifier, filename: fileName, creationDate: asset.creationDate, isFavourite: asset.isFavorite, mediaTypeRaw: asset.mediaType.rawValue, mediaSubtypesRaw: asset.mediaSubtypes.rawValue, thumbnailURL: url)
         
         return item
     }
@@ -401,6 +418,7 @@ final class MediaDatabase: ObservableObject {
         videos.items.removeAll(where: { item in items.contains(where: { $0.assetId == item.assetId }) })
         screenRecordings.items.removeAll(where: { item in items.contains(where: { $0.assetId == item.assetId }) })
         largeVideos.items.removeAll(where: { item in items.contains(where: { $0.assetId == item.assetId }) })
+        compressVideos.items.removeAll(where: { item in items.contains(where: { $0.assetId == item.assetId }) })
         
         similarPhotos.arrSimilarMedias = similarPhotos.arrSimilarMedias.compactMap { group in
             let filteredItems = group.arrMediaItems.filter { !selectedIds.contains($0.assetId) }
@@ -461,6 +479,7 @@ extension MediaDatabase {
         case .videos: return videos
         case .screenRecordings: return screenRecordings
         case .largeVideos: return largeVideos
+        case .compressVideos: return compressVideos
         }
     }
     
@@ -482,6 +501,7 @@ extension MediaDatabase {
             if let v = chunk[.videos] { videos.items.append(contentsOf: v) }
             if let v = chunk[.screenRecordings] { screenRecordings.items.append(contentsOf: v) }
             if let v = chunk[.largeVideos] { largeVideos.items.append(contentsOf: v) }
+            if let v = chunk[.compressVideos] { compressVideos.items.append(contentsOf: v) }
         }
     }
     
@@ -497,7 +517,7 @@ extension MediaDatabase {
     
     func saveImageToGallery(
         from tempURL: URL
-    ) async throws{
+    ) async throws {
         
         var placeholder: PHObjectPlaceholder?
         
@@ -526,6 +546,50 @@ extension MediaDatabase {
         }
         
         addMediaItem(phAsset: asset)
+    }
+    
+    func saveVideoToGallery(
+        from tempURL: URL
+    ) async throws {
+        
+        var placeholder: PHObjectPlaceholder?
+        
+        try await PHPhotoLibrary.shared().performChanges {
+            let request = PHAssetCreationRequest.forAsset()
+            request.addResource(with: .video, fileURL: tempURL, options: nil)
+            placeholder = request.placeholderForCreatedAsset
+        }
+        
+        guard let assetId = placeholder?.localIdentifier else {
+            throw NSError(
+                domain: "SaveVideo",
+                code: -1,
+                userInfo: [NSLocalizedDescriptionKey: "Failed to get asset identifier"]
+            )
+        }
+        
+        let result = PHAsset.fetchAssets(withLocalIdentifiers: [assetId], options: nil)
+        
+        guard let asset = result.firstObject else {
+            throw NSError(
+                domain: "SaveVideo",
+                code: -2,
+                userInfo: [NSLocalizedDescriptionKey: "Failed to fetch saved PHAsset"]
+            )
+        }
+        
+       
+        
+        addMediaItem(phAsset: asset)
+        
+        /*guard let resource = PHAssetResource.assetResources(for: asset).first else {
+            return
+        }
+        let mediaItem = createMediaItem(type: .videos, asset: asset, resource: resource)
+        let mediaItem2 = createMediaItem(type: .compressVideos, asset: asset, resource: resource)
+        allMediaItems.append(contentsOf: [mediaItem, mediaItem2])
+        applyChunk([mediaItem.type: [mediaItem]])
+        applyChunk([mediaItem2.type: [mediaItem2]])*/
     }
 }
 

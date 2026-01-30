@@ -16,6 +16,7 @@ struct CNMediaPreview: View {
     @State private var image: UIImage?
     @State private var livePhoto: PHLivePhoto?
     @State private var player: AVPlayer?
+    @State private var isLoading = false
 
     var body: some View {
         GeometryReader { proxy in
@@ -32,7 +33,7 @@ struct CNMediaPreview: View {
                 }
                 
                 // VIDEO
-                else if mediaItem.type == .screenRecordings || mediaItem.type == .videos || mediaItem.type == .largeVideos, let player {
+                else if mediaItem.type == .screenRecordings || mediaItem.type == .videos || mediaItem.type == .largeVideos || mediaItem.type == .compressVideos, let player {
                     VideoPlayer(player: player)
                         .onAppear {
                             player.play()
@@ -64,6 +65,9 @@ struct CNMediaPreview: View {
 extension CNMediaPreview {
     
     func load() {
+        guard !isLoading else { return }
+        isLoading = true
+        
         let asset = mediaItem.asset
         
         if mediaItem.type == .photos || mediaItem.type == .screenshots {
@@ -73,7 +77,7 @@ extension CNMediaPreview {
         }
         
         // VIDEO
-        if mediaItem.type == .screenRecordings || mediaItem.type == .videos || mediaItem.type == .largeVideos {
+        if mediaItem.type == .screenRecordings || mediaItem.type == .videos || mediaItem.type == .largeVideos || mediaItem.type == .compressVideos {
             PHImageManager.default().requestAVAsset(forVideo: asset, options: nil) { avAsset, _, _ in
                 if let urlAsset = avAsset as? AVURLAsset {
                     DispatchQueue.main.async {

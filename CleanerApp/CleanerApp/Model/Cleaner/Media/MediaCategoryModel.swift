@@ -18,7 +18,7 @@ enum MediaScanState {
 
 // MARK: - Media Types
 enum MediaType: String, CaseIterable, Identifiable {
-    case photos, screenshots, livePhotos, videos, screenRecordings, largeVideos
+    case photos, screenshots, livePhotos, videos, screenRecordings, largeVideos, compressVideos
     var id: String { rawValue }
     
     var title: String {
@@ -28,13 +28,15 @@ enum MediaType: String, CaseIterable, Identifiable {
         case .screenshots:
             return "Screenshots"
         case .livePhotos:
-            return "Live photos"
+            return "Live Photos"
         case .videos:
             return "Videos"
         case .screenRecordings:
-            return "Screen recordings"
+            return "Screen Recordings"
         case .largeVideos:
-            return "Large videos"
+            return "Large Videos"
+        case .compressVideos:
+            return "Compress Videos"
         }
     }
 }
@@ -65,7 +67,7 @@ final class MediaCategoryModel: ObservableObject, Identifiable, Equatable {
     }
     
     func setItems(arrItems: [MediaItem]) {
-        items = arrItems
+        items.append(contentsOf: arrItems)
         isScanning = false
         calculateSize()
     }
@@ -74,51 +76,20 @@ final class MediaCategoryModel: ObservableObject, Identifiable, Equatable {
         guard !items.isEmpty else { return }
 
         DispatchQueue.global(qos: .background).async {
-            for (index, item) in self.items.enumerated() {
+            for item in self.items.filter({ $0.fileSize == 0 }) {
+                let id = item.id
                 let size = item.asset.fileSizeSync()
                 
                 DispatchQueue.main.async {
-                    self.items[index].fileSize = size
+                    if let index = self.items.firstIndex(where: { $0.id == id }) {
+                        let item = self.items[index]
+                        item.fileSize = size
+                        self.items[index] = item
+                    }
                 }
             }
         }
     }
-    
-    /*func calculateSize() {
-        guard !items.isEmpty else { return }
-
-        DispatchQueue.global(qos: .background).async {
-
-            let queue = DispatchQueue(
-                label: "media.size.queue",
-                qos: .utility,
-                attributes: .concurrent
-            )
-
-            let semaphore = DispatchSemaphore(value: 4)
-            let group = DispatchGroup()
-
-            var updatedItems = self.items
-
-            for (index, item) in self.items.enumerated() {
-
-                group.enter()
-                semaphore.wait()
-
-                queue.async {
-                    let size = item.asset.fileSizeSync()
-                    updatedItems[index].fileSize = size
-
-                    semaphore.signal()
-                    group.leave()
-                }
-            }
-
-            group.notify(queue: .main) {
-                self.items = updatedItems
-            }
-        }
-    }*/
     
     static func == (lhs: MediaCategoryModel, rhs: MediaCategoryModel) -> Bool {
         lhs.id == rhs.id
@@ -130,11 +101,11 @@ final class MediaCategoryModel: ObservableObject, Identifiable, Equatable {
 }
 
 // MARK: - Media Item
-struct MediaItem: Identifiable, Hashable {
+class MediaItem: ObservableObject, Identifiable, Hashable {
     let id = UUID()
     let asset: PHAsset
     let type: MediaType
-    var fileSize: Int64
+    @Published var fileSize: Int64
     let assetId: String
     var filename: String
     let creationDate: Date?
@@ -142,6 +113,8 @@ struct MediaItem: Identifiable, Hashable {
     let mediaTypeRaw: Int
     let mediaSubtypesRaw: UInt
     var thumbnailURL: URL?
+    
+    @Published var compressionInfo: VideoCompressionInfo?
     
     var formattedDate: String? {
         return creationDate?.formatted(.dateTime.day().month(.abbreviated))

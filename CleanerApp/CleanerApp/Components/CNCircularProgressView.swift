@@ -36,3 +36,35 @@ struct CNCircularProgressView: View {
         }
     }
 }
+
+import SwiftUI
+
+struct CNGradientCircularProgressView: View {
+    
+    var progress: Double
+    var lineWidth: Double = 15
+    
+    var body: some View {
+        ZStack {
+            Circle()
+                .stroke(
+                    Color.white.opacity(0.15),
+                    lineWidth: lineWidth
+                )
+            
+            let purpleAngularGradient = AngularGradient(
+                gradient: Gradient(
+                    colors: [Color(hex: "383947"), Color.white, Color.white]
+                ),
+                center: .center,
+                startAngle: .degrees(0),
+                endAngle: .degrees(360.0 * progress)
+            )
+
+            Circle()
+                .trim(from: 0, to: CGFloat(progress))
+                .stroke(purpleAngularGradient, style: StrokeStyle(lineWidth: lineWidth, lineCap: .round))
+                .rotationEffect(Angle(degrees: -90))
+        }
+    }
+}

@@ -23,7 +23,7 @@ struct HomeTabView: View {
             }
             .tag(0)
             .tabItem {
-                Label("Home", systemImage: "house")
+                Label("Clean", image: "ic_clean")
             }
             
             NavigationStack(path: $navigationManager.path) {
@@ -34,18 +34,18 @@ struct HomeTabView: View {
             }
             .tag(1)
             .tabItem {
-                Label("Contact", systemImage: "person.crop.circle")
+                Label("Contacts", image: "ic_contact")
             }
             
             NavigationStack(path: $navigationManager.path) {
-                WidgetListView()
+                CompressVideoListView()
                     .navigationDestination(for: NavigationDestination.self) { destination in
                         NavigationRouter.destinationView(for: destination)
                     }
             }
             .tag(2)
             .tabItem {
-                Label("Widget", systemImage: "widget.small.badge.plus")
+                Label("Compress", image: "ic_compress")
             }
             
             NavigationStack(path: $navigationManager.path) {
@@ -56,21 +56,21 @@ struct HomeTabView: View {
             }
             .tag(3)
             .tabItem {
-                Label("Charging Animation", systemImage: "powerplug.portrait")
+                Label("Battery", image: "ic_battery")
             }
             
             NavigationStack(path: $navigationManager.path) {
-                CompressVideoListView()
+                SettingsView()
                     .navigationDestination(for: NavigationDestination.self) { destination in
                         NavigationRouter.destinationView(for: destination)
                     }
             }
             .tag(4)
             .tabItem {
-                Label("Compress Video", systemImage: "widget.small.badge.plus")
+                Label("More", image: "ic_more")
             }
+            
         }
-        .tint(.white)
         .fullScreenCover(isPresented: $tabRouter.showVideoPlayerView.sheet) {
             if let player = tabRouter.showVideoPlayerView.player {
                 CNAVPlayerView(player: player) {
@@ -78,6 +78,18 @@ struct HomeTabView: View {
                 }
                 .presentationDetents([.large])
             }
+        }
+        .onAppear {
+            let inline = UITabBarItemAppearance(style: .inline)
+            inline.selected.iconColor = UIColor(Color(hex: "0091FF"))
+            inline.normal.iconColor = .white
+            
+            let tabBarAppearance = UITabBarAppearance()
+            tabBarAppearance.configureWithOpaqueBackground()
+            tabBarAppearance.inlineLayoutAppearance = inline
+            
+            UITabBar().standardAppearance = tabBarAppearance
+            UITabBar().scrollEdgeAppearance = tabBarAppearance
         }
     }
 }

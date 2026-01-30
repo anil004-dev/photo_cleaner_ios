@@ -19,6 +19,38 @@ class Utility {
         let formatter = ByteCountFormatter()
         formatter.countStyle = .file
         return formatter.string(fromByteCount: byte)
+        
+//        guard byte > 0 else {
+//            return "0 KB"
+//        }
+//        
+//        let units = ["KB", "MB", "GB", "TB"]
+//        let base: Double = 1000
+//        
+//        var size = Double(byte)
+//        var unitIndex = -1
+//        
+//        while size >= base && unitIndex < units.count - 1 {
+//            size /= base
+//            unitIndex += 1
+//        }
+//        
+//        // Ensure minimum KB
+//        if unitIndex == -1 {
+//            size /= base
+//            unitIndex = 0
+//        }
+//        
+//        let formatter = NumberFormatter()
+//        formatter.numberStyle = .decimal
+//        formatter.maximumFractionDigits = 2
+//        formatter.minimumFractionDigits = 2
+//        
+//        let value =
+//        formatter.string(from: NSNumber(value: size))
+//        ?? String(format: "%.\(2)f", size)
+//        
+//        return "\(value) \(units[unitIndex])"
     }
     
     class func fileNameTimeStamp() -> String {
@@ -35,12 +67,21 @@ class Utility {
     }
     
     class func formatStorage(bytes: Float) -> String {
-        let formatter = ByteCountFormatter()
-        formatter.allowedUnits = [.useAll]
-        formatter.countStyle = .decimal
-        formatter.includesUnit = true
-        formatter.isAdaptive = true
-        formatter.allowsNonnumericFormatting = false
-        return formatter.string(fromByteCount: Int64(bytes.rounded()))
+        let measurement = Measurement(value: Double(bytes), unit: UnitInformationStorage.bytes)
+        let formatter = MeasurementFormatter()
+        
+        formatter.unitStyle = .medium
+        formatter.unitOptions = [.naturalScale]
+        formatter.numberFormatter.maximumFractionDigits = 0
+        formatter.numberFormatter.minimumFractionDigits = 0
+
+        return formatter.string(from: measurement)
+    }
+
+    class func appVersionString() -> String {
+        if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
+            return "Version: v\(version)"
+        }
+        return "Version: Unknown"
     }
 }

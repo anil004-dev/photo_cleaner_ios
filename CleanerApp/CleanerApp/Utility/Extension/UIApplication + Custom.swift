@@ -36,4 +36,11 @@ extension UIApplication {
 
         return baseVC
     }
+    
+    func keyWindow() -> UIWindow? {
+        return UIApplication.shared.connectedScenes
+            .compactMap({ $0 as? UIWindowScene })
+            .flatMap({ $0.windows })
+            .first(where: { $0.isKeyWindow })
+    }
 }

@@ -34,9 +34,8 @@ struct MediaItemsListView: View {
                             .scaledToFit()
                             .frame(width: 18, height: 18)
                         
-                        Button(viewModel.arrSelectedItems.count != viewModel.arrItems.count ?  "Select All" : "Deselect All") {
-                            viewModel.btnSelectAllAction()
-                        }
+                        Text(viewModel.arrSelectedItems.count != viewModel.arrItems.count ?  "Select All" : "Deselect All")
+                            .foregroundStyle(.white)
                     }
                     .padding(.horizontal, 10)
                     .clipShape(Rectangle())

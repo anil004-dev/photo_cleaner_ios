@@ -21,6 +21,9 @@ enum NavigationDestination: Hashable {
     case allContactsView
     case chargingAnimationPreviewView(destination: ChargingAnimationPreviewDestination)
     case stillPhotoPreviewView(destination: StillPhotoPreviewDestination)
+    case compressVideoOption(destination: CompressVideoOptionDestination)
+    case widgetListView
+    case speedTestView
 }
 
 struct MediaListDestination: Hashable {
@@ -121,6 +124,20 @@ struct ChargingAnimationPreviewDestination: Hashable {
     let viewModel: ChargingAnimationPreviewViewModel
     
     static func == (lhs: ChargingAnimationPreviewDestination, rhs: ChargingAnimationPreviewDestination) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+}
+
+struct CompressVideoOptionDestination: Hashable {
+    let id = UUID()
+    let mediaItem: MediaItem
+    let compressInfo: VideoCompressionInfo
+    
+    static func == (lhs: CompressVideoOptionDestination, rhs: CompressVideoOptionDestination) -> Bool {
         lhs.id == rhs.id
     }
     

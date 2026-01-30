@@ -38,11 +38,13 @@ struct CNWidgetEntryPointView: View {
 
 class Utility {
     class func formatStorage(bytes: Float) -> String {
-        let formatter = ByteCountFormatter()
-        formatter.allowedUnits = [.useKB, .useMB, .useGB, .useTB, .useAll]
-        formatter.countStyle = .decimal
-        formatter.includesUnit = true
-        formatter.isAdaptive = true
-        return formatter.string(fromByteCount: Int64(bytes))
+        let measurement = Measurement(value: Double(bytes), unit: UnitInformationStorage.bytes)
+        let formatter = MeasurementFormatter()
+        formatter.unitStyle = .medium
+        formatter.unitOptions = [.naturalScale]
+        formatter.numberFormatter.maximumFractionDigits = 0
+        formatter.numberFormatter.minimumFractionDigits = 0
+        
+        return formatter.string(from: measurement)
     }
 }

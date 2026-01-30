@@ -121,7 +121,7 @@ struct HomeView: View {
                     Spacer(minLength: 0)
                     
                     ZStack {
-                        CNCircularProgressView(progress: Double(usedStorage / totalStorage), lineWidth: 10)
+                        CNGradientCircularProgressView(progress: Double(usedStorage / totalStorage), lineWidth: 12)
                         
                         Image(.icDb)
                             .resizable()
