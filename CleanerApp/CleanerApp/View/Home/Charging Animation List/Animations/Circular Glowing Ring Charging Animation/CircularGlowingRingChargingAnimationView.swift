@@ -30,8 +30,6 @@ struct CircularGlowingRingChargingAnimationView: View {
     
     var body: some View {
         ZStack {
-            Color.black
-                .edgesIgnoringSafeArea(.all)
             
             VStack(alignment: .center, spacing: 0) {
                 dateAndTimeSection

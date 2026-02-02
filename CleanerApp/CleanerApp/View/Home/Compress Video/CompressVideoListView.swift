@@ -147,6 +147,7 @@ struct MediaItemCardView: View {
                     
                     if mediaItem.compressionInfo == nil {
                         ProgressView()
+                            .padding(11)
                     } else if let compressInfo = mediaItem.compressionInfo {
                         Button {
                             onTap(compressInfo)

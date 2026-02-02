@@ -14,15 +14,17 @@ struct ChargingAnimationView: View {
     var body: some View {
         NavigationStack {
             ZStack {
+                Color.black.ignoresSafeArea()
+                
                 VStack {
                     switch animationType {
                     case .none: EmptyView()
                     case .waterDrop:
                         WaterDropChargingAnimationView()
                     case .bubbleRing:
-                        BubbleRingAnimationPreview()
+                        BubbleRingAnimationView()
                     case .circularGlowingRing:
-                        CircularGlowingRingChargingAnimationPreview()
+                        CircularGlowingRingChargingAnimationView()
                     case .circularNoiseRing:
                         CircularNoiseRingAnimationView()
                     case .angularGlowingRing:
@@ -32,9 +34,10 @@ struct ChargingAnimationView: View {
                     }
                 }
             }
+            .ignoresSafeArea(edges: .bottom)
             .onAppear {
                 if !batteryMonitor.isCharging {
-                    AppState.shared.showChargingAnimation = false
+                    AppState.shared.updateChargingState(isCharging: false)
                 }
             }
             .toolbar {

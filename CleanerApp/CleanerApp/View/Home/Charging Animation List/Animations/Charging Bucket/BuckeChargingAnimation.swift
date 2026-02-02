@@ -8,21 +8,6 @@
 import SwiftUI
 import Combine
 
-struct ChargingBucketAnimationPreview: View {
-    
-    var body: some View {
-        VStack(alignment: .center, spacing: 0) {
-            ChargingBucketView()
-                .frame(height: 500)
-                .padding([.top, .leading, .trailing])
-        }
-        .background(Color.black.ignoresSafeArea())
-    }
-}
-
-import SwiftUI
-import Combine
-
 // MARK: - 3. MAIN VIEW
 struct ChargingBucketView: View {
     @StateObject var batteryMonitor = BatteryMonitor.shared
@@ -58,7 +43,6 @@ struct ChargingBucketView: View {
     
     var body: some View {
         ZStack {
-            Color.black.ignoresSafeArea()
             
             VStack {
                 // --- CLOUD SECTION ---
@@ -110,7 +94,7 @@ struct ChargingBucketView: View {
                     
                     ZStack {
                         // 1. WATER
-                        let progress = Double(batteryMonitor.level) / 100.0
+                        let progress = Double(batteryMonitor.level)
                         
                         WaveShapeV2(
                             progress: progress,

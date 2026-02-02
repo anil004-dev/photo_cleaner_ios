@@ -25,7 +25,6 @@ struct AngularRingAnimationView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                Color.black.edgesIgnoringSafeArea(.all)
                 
                 if isPreview == false {
                     VStack(alignment: .center, spacing: 0) {

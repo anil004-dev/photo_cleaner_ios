@@ -16,17 +16,6 @@ struct Raindrop: Identifiable {
     var y: CGFloat
 }
 
-struct WaterDropChargingAnimationPreview: View {
-    
-    var body: some View {
-        VStack(alignment: .center, spacing: 0) {
-            WaterDropChargingAnimationView()
-                .padding()
-        }
-        .background(Color.black.ignoresSafeArea())
-    }
-}
-
 // MARK: - Main Charging Animation View
 struct WaterDropChargingAnimationView: View {
 
@@ -42,7 +31,6 @@ struct WaterDropChargingAnimationView: View {
    
     var body: some View {
         ZStack {
-            Color.black.ignoresSafeArea()
 
             RoundedRectangle(cornerRadius: 32)
             .stroke(Color.white.opacity(0.25), lineWidth: 2)

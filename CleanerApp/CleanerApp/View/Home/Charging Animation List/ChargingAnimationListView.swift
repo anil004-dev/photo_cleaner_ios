@@ -97,7 +97,7 @@ struct ChargingAnimationListView: View {
             }
         }
         .frame(width: width, height: height)
-        .background(Color.black)
+        .background(Color(hex: "101026"))
         .clipShape(RoundedRectangle(cornerRadius: 20))
     }
 }

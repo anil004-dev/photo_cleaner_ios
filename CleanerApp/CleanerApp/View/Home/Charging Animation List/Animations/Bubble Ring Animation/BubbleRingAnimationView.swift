@@ -26,7 +26,6 @@ struct BubbleRingAnimationView: View {
 
     var body: some View {
         ZStack(alignment: .center) {
-            Color.black.ignoresSafeArea()
 
             VStack(spacing: 0) {
                 ZStack {

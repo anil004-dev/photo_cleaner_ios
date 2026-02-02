@@ -50,6 +50,8 @@ class SettingsViewModel: ObservableObject {
         ]
     )
     
+    @Published var showShareAppView: Bool = false
+    
     func btnOptionAction(option: SettingOption) {
         let title = option.title
         
@@ -88,22 +90,36 @@ class SettingsViewModel: ObservableObject {
     }
     
     func shareApp() {
-        
+        showShareAppView = true
     }
     
     func rateUs() {
-        
+        if let appReviewURL = URL(string: CNConstant.appReviewURL), UIApplication.shared.canOpenURL(appReviewURL) {
+            UIApplication.shared.open(appReviewURL)
+        }
     }
     
     func contactUs() {
+        let email = "bhautikamipara004@gmail.com"
+        let subject = "\(Utility.getAppName()) Contact Us"
+        let body = "Hello, I need help with..."
         
+        let emailString = "mailto:\(email)?subject=\(subject)&body=\(body)"
+        if let emailURL = emailString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+           let url = URL(string: emailURL),UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url)
+        }
     }
     
     func termsofServices() {
-        
+        if let url = URL(string: CNConstant.termsConditionURL) {
+            UIApplication.shared.open(url)
+        }
     }
     
     func privacyPolicy() {
-        
+        if let url = URL(string: CNConstant.privacyPolicyURL) {
+            UIApplication.shared.open(url)
+        }
     }
 }
