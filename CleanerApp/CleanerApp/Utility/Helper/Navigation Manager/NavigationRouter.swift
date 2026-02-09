@@ -29,6 +29,12 @@ enum NavigationRouter {
         case .similarMediaListView(let destination):
             SimilarMediaListView(viewModel: destination.viewModel)
             
+        case .compressVideoList:
+            CompressVideoListView()
+            
+        case .compressVideoOption(let destination):
+            CompressVideoOptionView(mediaItem: destination.mediaItem, compressInfo: destination.compressInfo)
+            
         case .duplicateContactGroupView(let destination):
             DuplicateContactGroupView(viewModel: destination.viewModel)
             
@@ -46,9 +52,6 @@ enum NavigationRouter {
             
         case .chargingAnimationPreviewView(let destination):
             ChargingAnimationPreviewView(viewModel: destination.viewModel)
-            
-        case .compressVideoOption(let destination):
-            CompressVideoOptionView(mediaItem: destination.mediaItem, compressInfo: destination.compressInfo)
             
         case .widgetListView:
             WidgetListView()

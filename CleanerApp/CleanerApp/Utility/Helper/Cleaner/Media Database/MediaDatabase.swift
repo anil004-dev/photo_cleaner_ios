@@ -578,8 +578,6 @@ extension MediaDatabase {
             )
         }
         
-       
-        
         addMediaItem(phAsset: asset)
         
         /*guard let resource = PHAssetResource.assetResources(for: asset).first else {

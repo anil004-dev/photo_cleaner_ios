@@ -10,6 +10,7 @@ import SwiftUI
 
 struct CNButton: View {
     let title: String
+    var bgColor: Color = Color.btnBlue
     var height: CGFloat = 51
     let onTap: (() -> ())
     
@@ -21,7 +22,7 @@ struct CNButton: View {
                 CNText(title: title, color: .white, font: .system(size: 18, weight: .semibold, design: .default), alignment: .center)
             }
             .frame(maxWidth: .infinity, minHeight: height, maxHeight: height, alignment: .center)
-            .background(Color.btnBlue)
+            .background(bgColor)
             .clipShape(RoundedRectangle(cornerRadius: 17))
             .shadow(color: .black.opacity(0.16), radius: 1, x: 0, y: 0)
         }

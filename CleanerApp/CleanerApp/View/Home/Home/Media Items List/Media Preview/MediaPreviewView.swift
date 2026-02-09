@@ -12,7 +12,7 @@ struct MediaPreviewView: View {
     
     var body: some View {
         ZStack {
-            Color.bgDarkBlue.ignoresSafeArea()
+            LinearGradient.orangeBg.ignoresSafeArea()
             
             VStack(alignment: .leading, spacing: 0) {
                 mediaPreviewSection
@@ -27,7 +27,7 @@ struct MediaPreviewView: View {
                 Button {
                     viewModel.btnDoneAction()
                 } label: {
-                    CNText(title: "Done", color: .white, font: .system(size: 16, weight: .semibold, design: .default))
+                    CNText(title: "Done", color: .txtBlack, font: .system(size: 16, weight: .semibold, design: .default))
                 }
             }
         }
@@ -39,29 +39,28 @@ struct MediaPreviewView: View {
                 currentMediaPreviewSection
                 mediaListSection
             }
-            .safeAreaInset(edge: .bottom) {
-                if !viewModel.arrSelectedItems.isEmpty {
-                    deleteButton
-                }
+        }
+        .safeAreaInset(edge: .bottom) {
+            if !viewModel.arrSelectedItems.isEmpty {
+                deleteButton
             }
         }
+        .ignoresSafeArea(.container, edges: .bottom)
         .animation(.easeInOut, value: viewModel.arrSelectedItems.isEmpty)
     }
     
     private var currentMediaPreviewSection: some View {
-        GeometryReader { proxy in
-            VStack(alignment: .leading, spacing: 0) {
-                let mediaItem = viewModel.arrItems[viewModel.currentIndex]
-                
-                ZStack(alignment: .bottom) {
-                    CNMediaPreview(
-                        mediaItem: mediaItem
-                    )
-                    .id(viewModel.currentIndex)
-                }
+        VStack(alignment: .leading, spacing: 0) {
+            let mediaItem = viewModel.arrItems[viewModel.currentIndex]
+            
+            ZStack(alignment: .bottom) {
+                CNMediaPreview(
+                    mediaItem: mediaItem
+                )
+                .id(viewModel.currentIndex)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
     
     private var mediaListSection: some View {
@@ -69,7 +68,7 @@ struct MediaPreviewView: View {
                 
             HStack(alignment: .center, spacing: 0) {
                 Spacer(minLength: 0)
-                CNText(title: "\(viewModel.currentIndex+1)/\(viewModel.arrItems.count)", color: .white, font: .system(size: 14, weight: .semibold, design: .default))
+                CNText(title: "\(viewModel.currentIndex+1)/\(viewModel.arrItems.count)", color: .txtBlack, font: .system(size: 14, weight: .semibold, design: .default))
                 Spacer(minLength: 0)
             }
             .padding(.vertical, 20)
@@ -102,6 +101,7 @@ struct MediaPreviewView: View {
                 .scrollIndicators(.hidden)
             }
             .frame(height: 100)
+            .padding(.bottom, 15)
         }
     }
     
@@ -118,8 +118,6 @@ struct MediaPreviewView: View {
                 }
             )
         }
-        .padding(.horizontal, 10)
-        .padding(.top, 15)
         .animation(.easeInOut, value: viewModel.arrSelectedItems)
     }
 }
@@ -144,7 +142,7 @@ extension MediaPreviewView {
                     onTap()
                 }
                 
-                Image(isSelected ? .icSquareChecked : .icSquareUnchecked)
+                Image(isSelected ? .icSquareCheckedNew : .icSquareUncheckedNew)
                     .resizable()
                     .scaledToFit()
                     .frame(width: 26, height: 26)

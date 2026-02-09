@@ -15,44 +15,32 @@ struct CNDeleteMediaButton: View {
     
     var body: some View {
         VStack(alignment: .center, spacing: 0) {
-            VStack(alignment: .center, spacing: 12) {
+            VStack(alignment: .center, spacing: 5) {
                 Button {
                     onTap()
                 } label: {
                     HStack(alignment: .center, spacing: 8) {
-                        Image(systemName: "trash")
+                        Image(.icBin)
                             .resizable()
                             .scaledToFit()
-                            .foregroundStyle(.white)
-                            .frame(width: 19, height: 21)
+                            .frame(width: 19, height: 22)
                         
                         CNText(title: title, color: .white, font: .system(size: 18, weight: .semibold, design: .default), alignment: .center)
                     }
                     .frame(height: 58)
                     .frame(maxWidth: .infinity)
                     .background(Color(hex: "F34235"))
-                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                    .clipShape(RoundedRectangle(cornerRadius: 29))
                 }
                 
-                CNText(title: message, color: .white, font: .system(size: 20, weight: .bold, design: .default), alignment: .center)
+                CNText(title: message, color: .txtBlack, font: .system(size: 16, weight: .medium, design: .default), alignment: .center)
             }
-            .padding(.horizontal, 16)
-            .padding(.top, 16)
-            .padding(.bottom, 12)
+            .padding(26)
+            .padding(.bottom, 10)
         }
-        .ifiOS26Unavailable { view in
-            view
-                .background(Color(hex: "232531"))
-                .clipShape(RoundedRectangle(cornerRadius: 20))
-        }
-        .ifiOS26Available { view in
-            if #available(iOS 26.0, *) {
-                view
-                    .background(Color(hex: "232531").opacity(0.5))
-                    .glassEffect(.clear, in: RoundedRectangle(cornerRadius: 20))
-                    .clipShape(RoundedRectangle(cornerRadius: 20))
-            }
-        }
-        .frame(maxWidth: .infinity, alignment: .center)
+        .background(Color.white)
+        .clipShape(UnevenRoundedRectangle(topLeadingRadius: 30, topTrailingRadius: 30))
+        .transition(.move(edge: .bottom))
+        .shadow(color: .black.opacity(0.11), radius: 8, x: 0, y: 0)
     }
 }

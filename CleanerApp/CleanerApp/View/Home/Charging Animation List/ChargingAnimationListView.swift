@@ -101,4 +101,3 @@ struct ChargingAnimationListView: View {
         .clipShape(RoundedRectangle(cornerRadius: 20))
     }
 }
-

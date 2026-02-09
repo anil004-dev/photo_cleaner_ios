@@ -39,6 +39,25 @@ enum MediaType: String, CaseIterable, Identifiable {
             return "Compress Videos"
         }
     }
+    
+    var subType: String {
+        switch self {
+        case .photos:
+            return "Photos"
+        case .screenshots:
+            return "Screenshots"
+        case .livePhotos:
+            return "Live Photos"
+        case .videos:
+            return "Videos"
+        case .screenRecordings:
+            return "Screen Recordings"
+        case .largeVideos:
+            return "Videos"
+        case .compressVideos:
+            return "Videos"
+        }
+    }
 }
 
 enum MediaItemSortType: String, CaseIterable {
@@ -51,6 +70,10 @@ enum MediaItemSortType: String, CaseIterable {
 final class MediaCategoryModel: ObservableObject, Identifiable, Equatable {
     let id = UUID()
     let type: MediaType
+    
+    var subType: String {
+        return type.subType
+    }
     
     @Published var items: [MediaItem] = []
     @Published var isScanning: Bool = true

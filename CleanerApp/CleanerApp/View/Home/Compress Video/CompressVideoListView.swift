@@ -14,44 +14,23 @@ struct CompressVideoListView: View {
     
     var body: some View {
         ZStack {
+            LinearGradient.orangeBg.ignoresSafeArea()
+            
             VStack(alignment: .leading, spacing: 0) {
                 compressVideoListSection
             }
         }
+        .toolbar(.hidden, for: .tabBar)
         .onAppear {
             viewModel.update(from: mediaDatabase)
         }
-        .onChange(of: mediaDatabase.compressVideos.items) { _, _ in
-            viewModel.update(from: mediaDatabase)
-        }
-    }
-    
-    private var compressVideoListSection: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            titleSection(category: mediaDatabase.compressVideos)
-            videoListSection(category: mediaDatabase.compressVideos)
-        }
-    }
-    
-    private func titleSection(category: MediaCategoryModel) -> some View {
-        VStack(alignment: .leading, spacing: 0) {
-            HStack(alignment: .top, spacing: 0) {
-                VStack(alignment: .leading, spacing: 4) {
-                    CNText(title: category.title, color: .white, font: .system(size: 36, weight: .bold, design: .default), alignment: .leading)
-                    
-                    HStack(alignment: .top, spacing: 5) {
-                        CNText(title: category.formattedSize, color: .white, font: .system(size: 12, weight: .semibold, design: .default), alignment: .leading)
-                        
-                        CNText(title: "(\(category.count) Videos)", color: .textGray, font: .system(size: 12, weight: .semibold, design: .default), alignment: .leading)
-                    }
-                }
-                
-                Spacer()
-                
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
                 Menu {
                     ForEach(MediaItemSortType.allCases, id: \.self) { sortType in
                         Button {
-                            viewModel.selectSortType(type: sortType)
+                            viewModel.sortType = sortType
+                            viewModel.sortItems()
                         } label: {
                             HStack {
                                 Text(sortType.rawValue)
@@ -67,17 +46,46 @@ struct CompressVideoListView: View {
                     Image(.icFilter)
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 45, height: 54)
+                        .frame(width: 35, height: 35)
+                        .clipShape(Circle())
                 }
             }
-            .padding(.horizontal, 17)
+        }
+        .onChange(of: mediaDatabase.compressVideos.items) { _, _ in
+            viewModel.update(from: mediaDatabase)
+        }
+    }
+    
+    private var compressVideoListSection: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            titleSection(category: mediaDatabase.compressVideos)
+            videoListSection(category: mediaDatabase.compressVideos)
+        }
+    }
+    
+    private func titleSection(category: MediaCategoryModel) -> some View {
+        VStack(alignment: .leading, spacing: 0) {
+            HStack(alignment: .center, spacing: 0) {
+                VStack(alignment: .leading, spacing: 4) {
+                    CNText(title: category.title, color: .txtBlack, font: .system(size: 34, weight: .bold, design: .default), alignment: .leading)
+                }
+                
+                Spacer()
+                
+                VStack(alignment: .trailing, spacing: 2) {
+                    CNText(title: category.formattedSize, color: .txtBlack, font: .system(size: 12, weight: .heavy, design: .default), alignment: .trailing)
+                    
+                    CNText(title: "\(category.count) \(category.subType)", color: Color(hex: "80818A"), font: .system(size: 12, weight: .semibold, design: .default), alignment: .trailing)
+                }
+            }
+            .padding(.horizontal, 18)
         }
         .padding(.top, 10)
     }
     
     private func videoListSection(category: MediaCategoryModel) -> some View {
         VStack(alignment: .leading, spacing: 0) {
-            let totalHorizontalPadding: CGFloat = 6 * 2
+            let totalHorizontalPadding: CGFloat = (6 + 12) * 2
             let itemSpacing: CGFloat = 6
             let numberOfColumns: CGFloat = 2
             let availableWidth = UIScreen.main.bounds.width - totalHorizontalPadding - (itemSpacing * (numberOfColumns - 1))
@@ -89,18 +97,34 @@ struct CompressVideoListView: View {
             )
             
             ScrollView(.vertical) {
-                LazyVGrid(columns: columns, spacing: itemSpacing) {
-                    ForEach(viewModel.arrItems) { mediaItem in
-                        MediaItemCardView(
-                            mediaItem: mediaItem,
-                            width: itemWidth,
-                            height: itemHeight,
-                            onTap: { compressInfo in
-                                viewModel.btnMediaAction(media: mediaItem, compressInfo: compressInfo)
-                            }
-                        )
+                LazyVStack(alignment: .leading, spacing: 0) {
+                    LazyVGrid(columns: columns, spacing: itemSpacing) {
+                        ForEach(viewModel.arrItems) { mediaItem in
+                            MediaItemCardView(
+                                mediaItem: mediaItem,
+                                width: itemWidth,
+                                height: itemHeight,
+                                onTap: { compressInfo in
+                                    viewModel.btnMediaAction(media: mediaItem, compressInfo: compressInfo)
+                                }
+                            )
+                        }
                     }
+                    .padding(12)
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(Color.white)
+                .clipShape(RoundedRectangle(cornerRadius: 18))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 18)
+                        .stroke(Color.primOrange, lineWidth: 2)
+                )
+                .background {
+                    RoundedRectangle(cornerRadius: 18)
+                        .fill(Color.primOrange)
+                        .offset(x: 3.5, y: 3.5)
+                }
+                .padding(1)
                 .padding(.horizontal, 6)
                 .padding(.vertical, 15)
             }
@@ -128,7 +152,6 @@ struct MediaItemCardView: View {
                     mediaItem: mediaItem,
                     size: CGSize(width: width, height: height)
                 )
-                .clipShape(RoundedRectangle(cornerRadius: 22))
             }
             .background(Color.bgDarkBlue)
             
@@ -161,7 +184,7 @@ struct MediaItemCardView: View {
                                     .frame(width: 14, height: 13)
                             }
                             .padding(10)
-                            .background(Color.btnBlue)
+                            .background(Color.primOrange)
                             .clipShape(RoundedRectangle(cornerRadius: 9))
                         }
                         .padding(11)
@@ -170,6 +193,7 @@ struct MediaItemCardView: View {
             }
         }
         .frame(width: width, height: height)
+        .clipShape(RoundedRectangle(cornerRadius: 18))
         .onAppear {
             calculateEstimateSize()
         }

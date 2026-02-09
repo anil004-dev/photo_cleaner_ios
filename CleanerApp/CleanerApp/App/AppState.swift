@@ -23,6 +23,8 @@ class AppState: ObservableObject {
     
     var isRequestingPermission: Bool = false
     
+    var isLive: Bool = false
+    
     static let shared = AppState()
     
     init() {

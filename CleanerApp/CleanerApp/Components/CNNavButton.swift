@@ -23,7 +23,7 @@ struct CNNavButton: View {
                     .resizable()
                     .scaledToFit()
                     .fontWeight(fontWeight)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(iconColor)
                     .frame(width: iconSize.width, height: iconSize.height)
             }
             .frame(width: 40, height: 40)

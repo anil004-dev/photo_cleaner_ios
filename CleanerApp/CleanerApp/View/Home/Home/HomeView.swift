@@ -16,15 +16,12 @@ struct HomeView: View {
     
     var body: some View {
         ZStack {
-            Color.bgDarkBlue.ignoresSafeArea()
+            LinearGradient.orangeBg.ignoresSafeArea()
             
             VStack(alignment: .leading, spacing: 0) {
                 homeSection
             }
         }
-        .navigationTitle("Home")
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar(.hidden, for: .navigationBar)
         .onAppear {
             viewModel.onAppear(mediaDatabase: mediaDatabase)
         }
@@ -48,7 +45,7 @@ struct HomeView: View {
     
     private var titleSection: some View {
         HStack(alignment: .center, spacing: 0) {
-            CNText(title: "Cleanup Storage", color: .white, font: .system(size: 24, weight: .bold, design: .default), alignment: .leading)
+            CNText(title: "Cleanup Storage", color: .textBlack, font: .system(size: 24, weight: .bold, design: .default), alignment: .leading)
             
             Spacer()
         }
@@ -103,16 +100,16 @@ struct HomeView: View {
                             .frame(width: 39, height: 29)
                             .padding(.bottom, 20)
                         
-                        CNText(title: "STORAGE USED", color: .white, font: .system(size: 15, weight: .bold, design: .default), alignment: .leading)
+                        CNText(title: "STORAGE USED", color: .txtBlack, font: .system(size: 15, weight: .bold, design: .default), alignment: .leading)
                             .padding(.bottom, 5)
                         
-                        CNText(title: "\(mediaDatabase.formattedUsedStorage) of \(mediaDatabase.formattedTotalStorage)", color: .white, font: .system(size: 14, weight: .regular, design: .default), alignment: .leading)
+                        CNText(title: "\(mediaDatabase.formattedUsedStorage) of \(mediaDatabase.formattedTotalStorage)", color: .txtBlack, font: .system(size: 14, weight: .regular, design: .default), alignment: .leading)
                             .padding(.bottom, 20)
                         
                         HStack(alignment: .bottom, spacing: 10) {
-                            CNText(title: "\(usedStoragePerc)%", color: .white, font: .system(size: 36, weight: .semibold, design: .default), alignment: .leading)
+                            CNText(title: "\(usedStoragePerc)%", color: .txtBlack, font: .system(size: 36, weight: .heavy, design: .default), alignment: .leading)
                             
-                            CNText(title: "\(mediaDatabase.formattedFreeStorage) FREE", color: .white, font: .system(size: 12, weight: .regular, design: .default), alignment: .leading)
+                            CNText(title: "\(mediaDatabase.formattedFreeStorage) FREE", color: .txtBlack, font: .system(size: 12, weight: .regular, design: .default), alignment: .leading)
                                 .padding(.bottom, 6)
                         }
                         .frame(alignment: .bottom)
@@ -134,8 +131,17 @@ struct HomeView: View {
                 .padding(18)
             }
             .frame(maxWidth: .infinity)
-            .background(Color(hex: "1B1D2B"))
-            .clipShape(RoundedRectangle(cornerRadius: 29))
+            .background(LinearGradient.orangeBgHorizontal)
+            .clipShape(RoundedRectangle(cornerRadius: 18))
+            .overlay(
+                RoundedRectangle(cornerRadius: 18)
+                    .stroke(Color.primOrange, lineWidth: 2)
+            )
+            .background {
+                RoundedRectangle(cornerRadius: 18)
+                    .fill(Color.primOrange)
+                    .offset(x: 4, y: 4)
+            }
         }
         .padding(.horizontal, 20)
         .padding(.top, 8)
@@ -147,13 +153,12 @@ struct HomeView: View {
             if viewModel.mediaDatabase?.scanState == .scanning {
                 Label("Scanning..", systemImage: "progress.indicator")
                     .padding(.vertical, 10)
-                    .padding(.horizontal, 10)
+                    .padding(.horizontal, 18)
             }
             
             ScrollView(.vertical) {
                 if let mediaDatabase = viewModel.mediaDatabase {
-                    LazyVStack(alignment: .leading, spacing: 25) {
-                        
+                    LazyVStack(alignment: .leading, spacing: 12) {
                         SimilarCategoryCell(
                             category: mediaDatabase.duplicatePhotos,
                             onTap: {
@@ -218,13 +223,14 @@ struct HomeView: View {
                         )
                         
                         MediaCategoryCell(
-                            category: mediaDatabase.largeVideos,
+                            category: mediaDatabase.compressVideos,
                             onTap: {
-                                viewModel.btnCategoryAction(category: mediaDatabase.largeVideos)
+                                viewModel.btnCompressVideoAction(category: mediaDatabase.compressVideos)
                             }
                         )
                     }
                     .padding(.bottom, 20)
+                    .padding(.horizontal, 20)
                 }
             }
         }

@@ -42,10 +42,13 @@ extension Color {
             self = .white
         }
     }
+    
+    static let txtBlack = Color.textBlack
+    static let graySep = Color.graySeparator
+    static let primOrange = Color.primaryOrange
 }
 
 extension LinearGradient {
-    
     
     static var blueBg: LinearGradient {
         LinearGradient(
@@ -55,6 +58,28 @@ extension LinearGradient {
             ],
             startPoint: .top,
             endPoint: .bottom
+        )
+    }
+    
+    static var orangeBg: LinearGradient {
+        LinearGradient(
+            colors: [
+                Color(hex: "FBEBE3"),
+                Color(hex: "F3EFEA")
+            ],
+            startPoint: .top,
+            endPoint: .bottom
+        )
+    }
+    
+    static var orangeBgHorizontal: LinearGradient {
+        LinearGradient(
+            colors: [
+                Color(hex: "EA744A"),
+                Color(hex: "FFF3EE")
+            ],
+            startPoint: .leading,
+            endPoint: .trailing
         )
     }
 }

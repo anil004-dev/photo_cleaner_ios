@@ -19,46 +19,43 @@ struct CNMediaPreview: View {
     @State private var isLoading = false
 
     var body: some View {
-        GeometryReader { proxy in
-            Group {
-                // PHOTO
-                if mediaItem.type == .photos || mediaItem.type == .screenshots, let image {
-                    Image(uiImage: image)
-                        .resizable()
-                        .scaledToFit()
-                        .clipped()
-                        .onDisappear {
-                            self.image = nil
-                        }
-                }
-                
-                // VIDEO
-                else if mediaItem.type == .screenRecordings || mediaItem.type == .videos || mediaItem.type == .largeVideos || mediaItem.type == .compressVideos, let player {
-                    VideoPlayer(player: player)
-                        .onAppear {
-                            player.play()
-                        }
-                        .onDisappear {
-                            self.player?.pause()
-                            self.player = nil
-                        }
-                        .clipped()
-                }
-                
-                // LIVE PHOTO
-                else if mediaItem.type == .livePhotos, let livePhoto {
-                    CNLivePhotoView(livePhoto: livePhoto)
-                        .clipped()
-                }
-                
-                else {
-                    ProgressView()
-                        .onAppear(perform: load)
-                }
+        Group {
+            // PHOTO
+            if mediaItem.type == .photos || mediaItem.type == .screenshots, let image {
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFit()
+                    .clipped()
+                    .onDisappear {
+                        self.image = nil
+                    }
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color.black)
+            
+            // VIDEO
+            else if mediaItem.type == .screenRecordings || mediaItem.type == .videos || mediaItem.type == .largeVideos || mediaItem.type == .compressVideos, let player {
+                VideoPlayer(player: player)
+                    .onAppear {
+                        player.play()
+                    }
+                    .onDisappear {
+                        self.player?.pause()
+                        self.player = nil
+                    }
+                    .clipped()
+            }
+            
+            // LIVE PHOTO
+            else if mediaItem.type == .livePhotos, let livePhoto {
+                CNLivePhotoView(livePhoto: livePhoto)
+                    .clipped()
+            }
+            
+            else {
+                ProgressView()
+                    .onAppear(perform: load)
+            }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
 

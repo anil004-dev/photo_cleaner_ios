@@ -17,7 +17,7 @@ struct CompressVideoOptionView: View {
     
     var body: some View {
         ZStack {
-            Color.bgDarkBlue.ignoresSafeArea()
+            LinearGradient.orangeBg.ignoresSafeArea()
             
             videoPreviewSection
                 .ignoresSafeArea(edges: .bottom)
@@ -38,27 +38,29 @@ struct CompressVideoOptionView: View {
     private var compressOptionSection: some View {
         VStack(alignment: .center, spacing: 0) {
             HStack(alignment: .center, spacing: 0) {
-                CNText(title: "You can save around  ", color: .white, font: .system(size: 15, weight: .medium, design: .default), alignment: .center)
+                CNText(title: "You can save around  ", color: .txtBlack, font: .system(size: 15, weight: .medium, design: .default), alignment: .center)
                 
-                CNText(title: viewModel.compressInfo.formattedSavedSize, color: Color(hex: "5988FF"), font: .system(size: 15, weight: .bold, design: .default), alignment: .center)
+                CNText(title: viewModel.compressInfo.formattedSavedSize, color: .primOrange, font: .system(size: 15, weight: .bold, design: .default), alignment: .center)
             }
             .padding(.top, 16)
             .padding(.bottom, 10)
             
             HStack(alignment: .center, spacing: 10) {
-                CNText(title: viewModel.compressInfo.formattedOriginalSize, color: .white, font: .system(size: 25, weight: .semibold, design: .default), alignment: .center)
+                CNText(title: viewModel.compressInfo.formattedOriginalSize, color: .txtBlack, font: .system(size: 25, weight: .semibold, design: .default), alignment: .center)
                 
                 Image(.icChevronDouble)
+                    .renderingMode(.template)
                     .resizable()
                     .scaledToFit()
+                    .foregroundStyle(Color.txtBlack)
                     .frame(width: 14, height: 13)
                 
-                CNText(title: viewModel.compressInfo.formattedEstimatedSize, color: .white, font: .system(size: 25, weight: .semibold, design: .default), alignment: .center)
+                CNText(title: viewModel.compressInfo.formattedEstimatedSize, color: .txtBlack, font: .system(size: 25, weight: .semibold, design: .default), alignment: .center)
             }
             .padding(.bottom, 12)
             
             HStack(alignment: .center, spacing: 12) {
-                CNText(title: "Compress Up to", color: .white, font: .system(size: 15, weight: .medium, design: .default), alignment: .center)
+                CNText(title: "Compress Up to", color: .txtBlack, font: .system(size: 15, weight: .medium, design: .default), alignment: .center)
                 
                 Menu {
                     ForEach(VideoCompressionQuality.allCases, id: \.self) { quality in
@@ -74,13 +76,13 @@ struct CompressVideoOptionView: View {
                     }
                 } label: {
                     HStack(alignment: .center, spacing: 8) {
-                        CNText(title: viewModel.compressInfo.quality.title, color: .white, font: .system(size: 15, weight: .medium, design: .default))
+                        CNText(title: viewModel.compressInfo.quality.title, color: .txtBlack, font: .system(size: 15, weight: .medium, design: .default))
                             .padding(.leading, 16)
                         
                         Image(systemName: "chevron.up.chevron.down")
                             .resizable()
                             .scaledToFit()
-                            .foregroundStyle(.white)
+                            .foregroundStyle(Color.txtBlack)
                             .frame(width: 12, height: 15)
                             .padding(.trailing, 16)
                     }
@@ -88,14 +90,14 @@ struct CompressVideoOptionView: View {
                     .ifiOS26Available { view in
                         if #available(iOS 26.0, *) {
                             view
-                                .background(Color(hex: "1A1A1A").opacity(0.5))
+                                .background(Color(hex: "1A1A1A").opacity(0.1))
                                 .glassEffect(.clear, in: RoundedRectangle(cornerRadius: 20))
                                 .clipShape(RoundedRectangle(cornerRadius: 20))
                         }
                     }
                     .ifiOS26Unavailable { view in
                         view
-                            .background(Color(hex: "1A1A1A").opacity(0.5))
+                            .background(Color(hex: "1A1A1A").opacity(0.1))
                             .clipShape(RoundedRectangle(cornerRadius: 20))
                     }
                 }
@@ -115,13 +117,13 @@ struct CompressVideoOptionView: View {
                     CNText(title: "Start Compressing", color: .white, font: .system(size: 18, weight: .semibold, design: .default), alignment: .center)
                 }
                 .frame(maxWidth: .infinity, minHeight: 55, maxHeight: 55, alignment: .center)
-                .background(Color.btnBlue)
+                .background(Color.primOrange)
                 .clipShape(RoundedRectangle(cornerRadius: 17))
             }
             .padding(.bottom, 25)
             .padding(.horizontal, 26)
         }
-        .background(Color(hex: "232531"))
+        .background(Color.white)
         .clipShape(UnevenRoundedRectangle(topLeadingRadius: 24, topTrailingRadius: 24))
     }
 }

@@ -15,7 +15,7 @@ struct MediaItemsListView: View {
     
     var body: some View {
         ZStack {
-            Color.bgDarkBlue.ignoresSafeArea()
+            LinearGradient.orangeBg.ignoresSafeArea()
             
             VStack(alignment: .leading, spacing: 0) {
                 mediaItemsSection
@@ -24,21 +24,53 @@ struct MediaItemsListView: View {
         .toolbar(.visible, for: .navigationBar)
         .toolbar(.hidden, for: .tabBar)
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .primaryAction) {
                 Button {
                     viewModel.btnSelectAllAction()
                 } label: {
                     HStack(alignment: .center, spacing: 5) {
                         Image(.icSqaureCheckmark)
+                            .renderingMode(.template)
                             .resizable()
                             .scaledToFit()
+                            .foregroundStyle(Color.textBlack)
                             .frame(width: 18, height: 18)
                         
                         Text(viewModel.arrSelectedItems.count != viewModel.arrItems.count ?  "Select All" : "Deselect All")
-                            .foregroundStyle(.white)
+                            .foregroundStyle(.textBlack)
                     }
                     .padding(.horizontal, 10)
                     .clipShape(Rectangle())
+                }
+            }
+            
+            if #available(iOS 26.0, *) {
+                ToolbarSpacer(.fixed, placement: .primaryAction)
+            }
+            
+            ToolbarItem(placement: .primaryAction) {
+                Menu {
+                    ForEach(MediaItemSortType.allCases, id: \.self) { sortType in
+                        Button {
+                            viewModel.sortType = sortType
+                            viewModel.sortItems()
+                        } label: {
+                            HStack {
+                                Text(sortType.rawValue)
+                                
+                                if viewModel.sortType == sortType {
+                                    Spacer()
+                                    Image(systemName: "checkmark")
+                                }
+                            }
+                        }
+                    }
+                } label: {
+                    Image(.icFilter)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 35, height: 35)
+                        .clipShape(Circle())
                 }
             }
         }
@@ -53,53 +85,32 @@ struct MediaItemsListView: View {
                 titleSection
                 mediaItemListSection
             }
-            .safeAreaInset(edge: .bottom) {
-                if !viewModel.arrSelectedItems.isEmpty {
-                    deleteButton
-                }
+        }
+        .safeAreaInset(edge: .bottom) {
+            if !viewModel.arrSelectedItems.isEmpty {
+                deleteButton
             }
         }
+        .ignoresSafeArea(.container, edges: .bottom)
         .animation(.easeInOut, value: viewModel.arrSelectedItems.isEmpty)
     }
     
     private var titleSection: some View {
         VStack(alignment: .leading, spacing: 0) {
-            HStack(alignment: .top, spacing: 0) {
+            HStack(alignment: .center, spacing: 0) {
                 VStack(alignment: .leading, spacing: 4) {
-                    CNText(title: viewModel.mediaCategory.title, color: .white, font: .system(size: 36, weight: .bold, design: .default), alignment: .leading)
-                    
-                    HStack(alignment: .top, spacing: 5) {
-                        CNText(title: viewModel.mediaCategory.formattedSize, color: .white, font: .system(size: 12, weight: .semibold, design: .default), alignment: .leading)
-                        
-                        CNText(title: "(\(viewModel.mediaCategory.count) \(viewModel.mediaCategory.title))", color: .textGray, font: .system(size: 12, weight: .semibold, design: .default), alignment: .leading)
-                    }
+                    CNText(title: viewModel.mediaCategory.title, color: .txtBlack, font: .system(size: 34, weight: .bold, design: .default), alignment: .leading)
                 }
                 
                 Spacer()
                 
-                Menu {
-                    ForEach(MediaItemSortType.allCases, id: \.self) { sortType in
-                        Button {
-                            viewModel.selectSortType(type: sortType)
-                        } label: {
-                            HStack {
-                                Text(sortType.rawValue)
-
-                                if viewModel.sortType == sortType {
-                                    Spacer()
-                                    Image(systemName: "checkmark")
-                                }
-                            }
-                        }
-                    }
-                } label: {
-                    Image(.icFilter)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 45, height: 54)
+                VStack(alignment: .trailing, spacing: 2) {
+                    CNText(title: viewModel.mediaCategory.formattedSize, color: .txtBlack, font: .system(size: 12, weight: .heavy, design: .default), alignment: .trailing)
+                    
+                    CNText(title: "\(viewModel.mediaCategory.count) \(viewModel.mediaCategory.subType)", color: Color(hex: "80818A"), font: .system(size: 12, weight: .semibold, design: .default), alignment: .trailing)
                 }
             }
-            .padding(.horizontal, 17)
+            .padding(.horizontal, 18)
         }
         .padding(.top, 10)
     }
@@ -108,8 +119,8 @@ struct MediaItemsListView: View {
         VStack(alignment: .leading, spacing: 0) {
             let type = viewModel.mediaCategory.type
             let isVideo = (type == .videos || type == .largeVideos || type == .screenRecordings)
-            let totalHorizontalPadding: CGFloat = (isVideo ? 6 : 17) * 2
-            let itemSpacing: CGFloat = type == .screenshots ? 5 : (isVideo ? 6 : 10)
+            let totalHorizontalPadding: CGFloat = ((isVideo ? 6 : 17) + 12) * 2
+            let itemSpacing: CGFloat = type == .screenshots ? 11 : (isVideo ? 6 : 10)
             let numberOfColumns: CGFloat = type == .screenshots ? 3 : 2
             let availableWidth = UIScreen.main.bounds.width - totalHorizontalPadding - (itemSpacing * (numberOfColumns - 1))
             let itemWidth = availableWidth / numberOfColumns
@@ -120,19 +131,35 @@ struct MediaItemsListView: View {
             )
             
             ScrollView(.vertical) {
-                LazyVGrid(columns: columns, spacing: itemSpacing) {
-                    ForEach(viewModel.arrItems) { mediaItem in
-                        mediaItemCard(
-                            mediaItem: mediaItem,
-                            isSelected: viewModel.arrSelectedItems.contains { $0.assetId == mediaItem.assetId },
-                            width: itemWidth,
-                            height: itemHeight,
-                            onTap: {
-                                viewModel.btnMediaAction(media: mediaItem)
-                            }
-                        )
+                LazyVStack(alignment: .leading, spacing: 0) {
+                    LazyVGrid(columns: columns, spacing: itemSpacing) {
+                        ForEach(viewModel.arrItems) { mediaItem in
+                            mediaItemCard(
+                                mediaItem: mediaItem,
+                                isSelected: viewModel.arrSelectedItems.contains { $0.assetId == mediaItem.assetId },
+                                width: itemWidth,
+                                height: itemHeight,
+                                onTap: {
+                                    viewModel.btnMediaAction(media: mediaItem)
+                                }
+                            )
+                        }
                     }
+                    .padding(12)
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(Color.white)
+                .clipShape(RoundedRectangle(cornerRadius: 18))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 18)
+                        .stroke(Color.primOrange, lineWidth: 2)
+                )
+                .background {
+                    RoundedRectangle(cornerRadius: 18)
+                        .fill(Color.primOrange)
+                        .offset(x: 3.5, y: 3.5)
+                }
+                .padding(1)
                 .padding(.horizontal, isVideo ? 6 : 17)
                 .padding(.vertical, 15)
             }
@@ -146,9 +173,8 @@ struct MediaItemsListView: View {
             let size = Utility.getSizeOfMedia(items: viewModel.arrSelectedItems)
             let count = "\(viewModel.arrSelectedItems.count) Items"
             
-            CNDeleteMediaButton(title: "Delete Selected", message: "\(count) • \(size)", onTap: viewModel.btnDeleteAction)
+            CNDeleteMediaButton(title: "Delete Selected", message: "\(count) Items • \(size)", onTap: viewModel.btnDeleteAction)
         }
-        .padding(.horizontal, 10)
         .transition(.move(edge: .bottom))
         .animation(.easeInOut, value: viewModel.arrSelectedItems)
     }
@@ -167,7 +193,7 @@ extension MediaItemsListView {
                     mediaItem: mediaItem,
                     size: CGSize(width: width, height: height)
                 )
-                .clipShape(RoundedRectangle(cornerRadius: 22))
+                
             }
             .background(Color.bgDarkBlue)
             .onTapGesture(perform: onTap)
@@ -177,7 +203,8 @@ extension MediaItemsListView {
                     HStack(alignment: .center, spacing: 0) {
                         CNText(title: "CONVERT TO STILL", color: .white, font: .system(size: 11, weight: .bold, design: .default), alignment: .leading)
                             .padding(6)
-                            .background(Color.btnBlue)
+                            .background(Color.primOrange)
+                            .clipShape(RoundedRectangle(cornerRadius: 5))
                             .onTapGesture {
                                 viewModel.btnConvertToStillAction(mediaItem: mediaItem)
                             }
@@ -214,7 +241,7 @@ extension MediaItemsListView {
                             Button {
                                 viewModel.selectItem(media: mediaItem)
                             } label: {
-                                Image(isSelected ? .icSquareChecked : .icSquareUnchecked)
+                                Image(isSelected ? .icSquareCheckedNew : .icSquareUncheckedNew)
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 26, height: 26)
@@ -232,6 +259,7 @@ extension MediaItemsListView {
             }
         }
         .frame(width: width, height: height)
+        .clipShape(RoundedRectangle(cornerRadius: 18))
         .onTapGesture(perform: onTap)
     }
 }

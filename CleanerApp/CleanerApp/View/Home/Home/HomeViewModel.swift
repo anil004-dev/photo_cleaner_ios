@@ -33,6 +33,11 @@ final class HomeViewModel: ObservableObject {
         let destination = SimilarMediaListDestination(viewModel: SimilarMediaListViewModel(similarMediaCategory: category))
         NavigationManager.shared.push(to: .similarMediaListView(destination: destination))
     }
+    
+    func btnCompressVideoAction(category: MediaCategoryModel) {
+        guard !category.isScanning else { return }
+        NavigationManager.shared.push(to: .compressVideoList)
+    }
 }
 
 extension HomeViewModel {

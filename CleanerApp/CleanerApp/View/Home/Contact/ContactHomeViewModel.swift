@@ -13,10 +13,10 @@ import Contacts
 class ContactHomeViewModel: ObservableObject {
     
     @Published var arrContactMenu: [ContactMenu] = [
-        ContactMenu(imageName: .icDuplicateContacts, title: "Duplicate Contacts", subTitle: "", contactCount: 0),
-        ContactMenu(imageName: .icIncompleteContact, title: "Incompletes", subTitle: "", contactCount: 0),
-        ContactMenu(imageName: .icAllContacts, title: "All Contacts", subTitle: "", contactCount: 0),
-        ContactMenu(imageName: .icBackupContact, title: "Backup Contacts", subTitle: "", contactCount: 0)
+        ContactMenu(imageName: .icDuplicateNew, title: "Duplicate Contacts", subTitle: "", contactCount: 0),
+        ContactMenu(imageName: .icIncompleteNew, title: "Incompletes", subTitle: "", contactCount: 0),
+        ContactMenu(imageName: .icAllContactNew, title: "All Contacts", subTitle: "", contactCount: 0),
+        ContactMenu(imageName: .icBackupContactNew, title: "Backup Contacts", subTitle: "", contactCount: 0)
     ]
     
     @Published var arrContacts: [ContactModel] = []

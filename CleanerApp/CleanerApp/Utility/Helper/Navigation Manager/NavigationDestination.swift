@@ -14,14 +14,18 @@ enum NavigationDestination: Hashable {
     case mediaListView(destination: MediaListDestination)
     case mediaPreviewView(destination: MediaPreviewDestination)
     case similarMediaListView(destination: SimilarMediaListDestination)
+    case stillPhotoPreviewView(destination: StillPhotoPreviewDestination)
+    
+    case compressVideoList
+    case compressVideoOption(destination: CompressVideoOptionDestination)
+    
     case duplicateContactGroupView(destination: DuplicateContactGroupViewDestination)
     case duplicateMergePreview(destination: DuplicateMergePreviewDestination)
     case incompleteContactListView(destination: IncompleteContactListDestination)
     case backupContactView
     case allContactsView
+    
     case chargingAnimationPreviewView(destination: ChargingAnimationPreviewDestination)
-    case stillPhotoPreviewView(destination: StillPhotoPreviewDestination)
-    case compressVideoOption(destination: CompressVideoOptionDestination)
     case widgetListView
     case speedTestView
 }

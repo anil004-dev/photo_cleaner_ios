@@ -13,6 +13,8 @@ struct StillPhotoPreviewView: View {
     
     var body: some View {
         ZStack {
+            LinearGradient.orangeBg.ignoresSafeArea()
+            
             VStack(alignment: .leading, spacing: 0) {
                 previewSection
             }
@@ -23,12 +25,12 @@ struct StillPhotoPreviewView: View {
     
     private var previewSection: some View {
         VStack(alignment: .leading, spacing: 0) {
-            CNText(title: "Preview", color: .white, font: .system(size: 34, weight: .bold, design: .default))
+            CNText(title: "Preview", color: .txtBlack, font: .system(size: 34, weight: .bold, design: .default))
                 .padding(.horizontal, 17)
                 .padding(.top, 16)
             
             VStack(alignment: .leading, spacing: 0) {
-                let totalHorizontalPadding: CGFloat = 17 * 2
+                let totalHorizontalPadding: CGFloat = (17 + 12) * 2
                 let itemSpacing: CGFloat = 10
                 let numberOfColumns: CGFloat =  2
                 let availableWidth = UIScreen.main.bounds.width - totalHorizontalPadding - (itemSpacing * (numberOfColumns - 1))
@@ -41,28 +43,44 @@ struct StillPhotoPreviewView: View {
                 )
                 
                 ScrollView(.vertical) {
-                    LazyVGrid(columns: columns, spacing: itemSpacing) {
-                        ForEach(0..<viewModel.arrImageURLs.count, id: \.self) { index in
-                            let url = viewModel.arrImageURLs[index]
-                            
-                            mediaItemCard(
-                                url: url,
-                                isSelected: url == viewModel.selectedImageURL,
-                                width: itemWidth,
-                                height: itemHeight,
-                                onTap: {
-                                    
-                                }
-                            )
+                    LazyVStack(alignment: .leading, spacing: 0) {
+                        LazyVGrid(columns: columns, spacing: itemSpacing) {
+                            ForEach(0..<viewModel.arrImageURLs.count, id: \.self) { index in
+                                let url = viewModel.arrImageURLs[index]
+                                
+                                mediaItemCard(
+                                    url: url,
+                                    isSelected: url == viewModel.selectedImageURL,
+                                    width: itemWidth,
+                                    height: itemHeight,
+                                    onTap: {
+                                        
+                                    }
+                                )
+                            }
                         }
+                        .padding(12)
                     }
-                    .padding(.horizontal, 17)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(Color.white)
+                    .clipShape(RoundedRectangle(cornerRadius: 18))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 18)
+                            .stroke(Color.primOrange, lineWidth: 2)
+                    )
+                    .background {
+                        RoundedRectangle(cornerRadius: 18)
+                            .fill(Color.primOrange)
+                            .offset(x: 3.5, y: 3.5)
+                    }
+                    .padding(1)
                     .padding(.vertical, 15)
+                    .padding(.horizontal, 17)
                 }
             }
             .padding(.top, 10)
             
-            CNButton(title: "Save") {
+            CNButton(title: "Save", bgColor: .primOrange) {
                 viewModel.onSaveAction?(viewModel.selectedImageURL)
             }
             .padding(20)
@@ -81,7 +99,6 @@ struct StillPhotoPreviewView: View {
             )
             .clipped()
             .aspectRatio(1, contentMode: .fill)
-            .clipShape(RoundedRectangle(cornerRadius: 22))
             
             VStack(alignment: .trailing, spacing: 0) {
                 Spacer()
@@ -92,7 +109,7 @@ struct StillPhotoPreviewView: View {
                     Button {
                         viewModel.selectedImageURL = url
                     } label: {
-                        Image(isSelected ? .icSquareChecked : .icSquareUnchecked)
+                        Image(isSelected ? .icSquareCheckedNew : .icSquareUncheckedNew)
                             .resizable()
                             .scaledToFit()
                             .frame(width: 26, height: 26)
@@ -108,6 +125,7 @@ struct StillPhotoPreviewView: View {
             }
         }
         .frame(width: width, height: height)
+        .clipShape(RoundedRectangle(cornerRadius: 18))
         .onTapGesture(perform: onTap)
     }
 }

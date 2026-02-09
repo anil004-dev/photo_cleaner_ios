@@ -81,7 +81,7 @@ struct HomeTabView: View {
         }
         .onAppear {
             let inline = UITabBarItemAppearance(style: .inline)
-            inline.selected.iconColor = UIColor(Color(hex: "0091FF"))
+            inline.selected.iconColor = UIColor(Color.primOrange)
             inline.normal.iconColor = .white
             
             let tabBarAppearance = UITabBarAppearance()

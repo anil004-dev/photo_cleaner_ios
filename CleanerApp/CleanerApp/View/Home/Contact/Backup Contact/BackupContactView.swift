@@ -14,7 +14,7 @@ struct BackupContactView: View {
     
     var body: some View {
         ZStack {
-            Color.bgDarkBlue.ignoresSafeArea()
+            LinearGradient.orangeBg.ignoresSafeArea()
             
             VStack(alignment: .leading, spacing: 0) {
                 backupContactSection
@@ -27,14 +27,12 @@ struct BackupContactView: View {
                 Button {
                     viewModel.prepareBackup()
                 } label: {
-                    CNNavButton(
-                        imageName: "plus",
-                        fontWeight: .medium,
-                        iconColor: .white,
-                        iconSize: CGSize(width: 20, height: 20),
-                        backgroundColor: .clear,
-                        isLeftButton: false
-                    )
+                    Image(systemName: "plus")
+                        .resizable()
+                        .scaledToFit()
+                        .foregroundStyle(.black)
+                        .frame(width: 20, height: 20)
+                        .padding(5)
                 }
             }
         }
@@ -67,13 +65,15 @@ struct BackupContactView: View {
     }
     
     private var titleSection: some View {
-        VStack(alignment: .leading, spacing: 5) {
-            CNText(title: "Backups", color: .white, font: .system(size: 34, weight: .bold, design: .default), alignment: .trailing)
+        HStack(alignment: .center, spacing: 5) {
+            CNText(title: "Backups", color: .txtBlack, font: .system(size: 34, weight: .bold, design: .default), alignment: .trailing)
+            
+            Spacer(minLength: 0)
             
             CNText(title: "\(viewModel.arrBackups.count) Backup", color: .init(hex: "7E828B"), font: .system(size: 12, weight: .semibold, design: .default), alignment: .trailing)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.horizontal, 16)
+        .padding(.leading, 16)
+        .padding(.trailing, 20)
         .padding(.top, 10)
     }
     
@@ -105,7 +105,7 @@ extension BackupContactView {
         VStack(alignment: .leading, spacing: 0) {
             HStack(alignment: .center, spacing: 10) {
                 VStack(alignment: .leading, spacing: 4) {
-                    CNText(title: backup.formattedDate, color: .white, font: .system(size: 17, weight: .medium, design: .default))
+                    CNText(title: backup.formattedDate, color: .txtBlack, font: .system(size: 17, weight: .medium, design: .default))
                     
                     CNText(title: "\(backup.contactCount) Contacts", color: Color(hex: "7F818D"), font: .system(size: 18, weight: .regular, design: .default))
                 }
@@ -122,7 +122,7 @@ extension BackupContactView {
             .padding(.vertical, 16)
             .padding(.horizontal, 20)
         }
-        .background(Color(hex: "191D2B"))
+        .background(Color.white)
         .clipShape(RoundedRectangle(cornerRadius: 26))
         .onTapGesture {
             onTap()
