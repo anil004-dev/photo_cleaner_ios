@@ -59,7 +59,12 @@ struct CompressVideoListView: View {
     private var compressVideoListSection: some View {
         VStack(alignment: .leading, spacing: 0) {
             titleSection(category: mediaDatabase.compressVideos)
-            videoListSection(category: mediaDatabase.compressVideos)
+            
+            if !mediaDatabase.compressVideos.items.isEmpty {
+                videoListSection(category: mediaDatabase.compressVideos)
+            } else {
+                Spacer(minLength: 0)
+            }
         }
     }
     

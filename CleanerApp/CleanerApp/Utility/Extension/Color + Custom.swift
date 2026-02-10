@@ -46,6 +46,7 @@ extension Color {
     static let txtBlack = Color.textBlack
     static let graySep = Color.graySeparator
     static let primOrange = Color.primaryOrange
+    static let btnRed = Color.softRed
 }
 
 extension LinearGradient {

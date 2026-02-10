@@ -14,7 +14,7 @@ struct ChargingAnimationView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Color.black.ignoresSafeArea()
+                Color.bgDarkBlue.ignoresSafeArea()
                 
                 VStack {
                     switch animationType {

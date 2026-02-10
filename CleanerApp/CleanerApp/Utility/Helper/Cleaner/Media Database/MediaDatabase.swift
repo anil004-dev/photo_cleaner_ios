@@ -445,6 +445,32 @@ final class MediaDatabase: ObservableObject {
                 arrMediaItems: filteredItems
             )
         }
+        
+        duplicatePhotos.arrSimilarMedias  = duplicatePhotos.arrSimilarMedias.compactMap { group in
+            let filteredItems = group.arrMediaItems.filter { !selectedIds.contains($0.assetId) }
+            guard filteredItems.count > 1 else {
+                return nil
+            }
+            
+            return SimilarMedia(
+                title: group.title,
+                bestMediaAssetId: filteredItems.first!.assetId,
+                arrMediaItems: filteredItems
+            )
+        }
+        
+        duplicateScreenshots.arrSimilarMedias  = duplicateScreenshots.arrSimilarMedias.compactMap { group in
+            let filteredItems = group.arrMediaItems.filter { !selectedIds.contains($0.assetId) }
+            guard filteredItems.count > 1 else {
+                return nil
+            }
+            
+            return SimilarMedia(
+                title: group.title,
+                bestMediaAssetId: filteredItems.first!.assetId,
+                arrMediaItems: filteredItems
+            )
+        }
     }
 }
 

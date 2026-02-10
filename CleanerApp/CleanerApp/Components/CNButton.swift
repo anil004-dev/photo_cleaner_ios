@@ -10,7 +10,7 @@ import SwiftUI
 
 struct CNButton: View {
     let title: String
-    var bgColor: Color = Color.btnBlue
+    var bgColor: Color = Color.primOrange
     var height: CGFloat = 51
     let onTap: (() -> ())
     

@@ -13,7 +13,7 @@ struct SpeetTestView: View {
     
     var body: some View {
         ZStack {
-            Color.bgDarkBlue.ignoresSafeArea()
+            LinearGradient.orangeBg.ignoresSafeArea()
             
             VStack(alignment: .leading, spacing: 0) {
                 speedTestSection

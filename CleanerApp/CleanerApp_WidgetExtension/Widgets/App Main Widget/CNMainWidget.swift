@@ -18,7 +18,7 @@ struct CNMainWidget: Widget {
             provider: StorageInfoProvider()
         ) { entry in
             CNWidgetEntryPointView()
-                .containerBackground(Color.btnBlue, for: .widget)
+                .containerBackground(Color.primOrange, for: .widget)
         }
         .supportedFamilies([.systemSmall, .systemMedium])
     }
@@ -28,10 +28,10 @@ struct CNWidgetEntryPointView: View {
     var body: some View {
         if UserDefaultManager.selectedWidget == .battery {
             BatteryWidgetView(entry: BatteryInfoEntry())
-                .containerBackground(Color.btnBlue, for: .widget)
+                .containerBackground(Color.primOrange, for: .widget)
         } else {
             StorageWidgetView(entry: StorageInfoEntry())
-                .containerBackground(Color.btnBlue, for: .widget)
+                .containerBackground(Color.primOrange, for: .widget)
         }
     }
 }

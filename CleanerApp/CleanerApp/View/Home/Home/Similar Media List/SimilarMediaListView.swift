@@ -42,7 +42,7 @@ struct SimilarMediaListView: View {
                         viewModel.btnSelectAllAction()
                     }
                 } label: {
-                    HStack(alignment: .center, spacing: 5) {
+                    HStack(alignment: .center, spacing: 10) {
                         Image(.icSqaureCheckmark)
                             .renderingMode(.template)
                             .resizable()
@@ -100,7 +100,12 @@ struct SimilarMediaListView: View {
         ZStack(alignment: .bottom) {
             VStack(alignment: .leading, spacing: 0) {
                 titleSection
-                mediaItemListSection
+                
+                if !viewModel.similarMediaCategory.arrSimilarMedias.isEmpty {
+                    mediaItemListSection
+                } else {
+                    Spacer(minLength: 0)
+                }
             }
         }
         .safeAreaInset(edge: .bottom) {

@@ -10,4 +10,5 @@ import Foundation
 struct ChargingAnimation {
     let id = UUID()
     let type: ChargingAnimationType
+    let name: String
 }

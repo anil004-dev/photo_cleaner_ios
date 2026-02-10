@@ -28,7 +28,7 @@ struct MediaItemsListView: View {
                 Button {
                     viewModel.btnSelectAllAction()
                 } label: {
-                    HStack(alignment: .center, spacing: 5) {
+                    HStack(alignment: .center, spacing: 10) {
                         Image(.icSqaureCheckmark)
                             .renderingMode(.template)
                             .resizable()
@@ -83,7 +83,12 @@ struct MediaItemsListView: View {
         ZStack(alignment: .bottom) {
             VStack(alignment: .leading, spacing: 0) {
                 titleSection
-                mediaItemListSection
+                
+                if !viewModel.arrItems.isEmpty {
+                    mediaItemListSection
+                } else {
+                    Spacer(minLength: 0)
+                }
             }
         }
         .safeAreaInset(edge: .bottom) {

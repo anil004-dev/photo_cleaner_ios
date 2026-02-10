@@ -101,7 +101,7 @@ struct MediaPreviewView: View {
                 .scrollIndicators(.hidden)
             }
             .frame(height: 100)
-            .padding(.bottom, 15)
+            .padding(.bottom, viewModel.arrSelectedItems.isEmpty ? 25 : 15)
         }
     }
     

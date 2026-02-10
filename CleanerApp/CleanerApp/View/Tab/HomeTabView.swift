@@ -23,7 +23,7 @@ struct HomeTabView: View {
             }
             .tag(0)
             .tabItem {
-                Label("Clean", image: "ic_clean")
+                Label("Home", image: "ic_home")
             }
             
             NavigationStack(path: $navigationManager.path) {
@@ -34,18 +34,7 @@ struct HomeTabView: View {
             }
             .tag(1)
             .tabItem {
-                Label("Contacts", image: "ic_contact")
-            }
-            
-            NavigationStack(path: $navigationManager.path) {
-                CompressVideoListView()
-                    .navigationDestination(for: NavigationDestination.self) { destination in
-                        NavigationRouter.destinationView(for: destination)
-                    }
-            }
-            .tag(2)
-            .tabItem {
-                Label("Compress", image: "ic_compress")
+                Label("Diary", image: "ic_diary")
             }
             
             NavigationStack(path: $navigationManager.path) {
@@ -54,9 +43,9 @@ struct HomeTabView: View {
                         NavigationRouter.destinationView(for: destination)
                     }
             }
-            .tag(3)
+            .tag(2)
             .tabItem {
-                Label("Battery", image: "ic_battery")
+                Label("Animation", image: "ic_animation")
             }
             
             NavigationStack(path: $navigationManager.path) {
@@ -65,9 +54,9 @@ struct HomeTabView: View {
                         NavigationRouter.destinationView(for: destination)
                     }
             }
-            .tag(4)
+            .tag(3)
             .tabItem {
-                Label("More", image: "ic_more")
+                Label("Settings", image: "ic_settings")
             }
             
         }
@@ -80,16 +69,26 @@ struct HomeTabView: View {
             }
         }
         .onAppear {
-            let inline = UITabBarItemAppearance(style: .inline)
-            inline.selected.iconColor = UIColor(Color.primOrange)
-            inline.normal.iconColor = .white
-            
-            let tabBarAppearance = UITabBarAppearance()
-            tabBarAppearance.configureWithOpaqueBackground()
-            tabBarAppearance.inlineLayoutAppearance = inline
-            
-            UITabBar().standardAppearance = tabBarAppearance
-            UITabBar().scrollEdgeAppearance = tabBarAppearance
+            let appearance = UITabBarAppearance()
+            let itemAppearance = UITabBarItemAppearance()
+
+            itemAppearance.normal.iconColor = UIColor(Color.txtBlack)
+            itemAppearance.normal.titleTextAttributes = [
+                .foregroundColor:  UIColor(Color.txtBlack)
+            ]
+
+            itemAppearance.selected.iconColor = UIColor(Color.primOrange)
+            itemAppearance.selected.titleTextAttributes = [
+                .foregroundColor: UIColor(Color.primOrange)
+            ]
+
+            appearance.configureWithOpaqueBackground()
+            appearance.inlineLayoutAppearance = itemAppearance
+            appearance.stackedLayoutAppearance = itemAppearance
+            appearance.compactInlineLayoutAppearance = itemAppearance
+
+            UITabBar.appearance().standardAppearance = appearance
+            UITabBar.appearance().scrollEdgeAppearance = appearance
         }
     }
 }

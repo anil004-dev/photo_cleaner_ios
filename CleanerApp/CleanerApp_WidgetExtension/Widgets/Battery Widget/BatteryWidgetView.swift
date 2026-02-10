@@ -54,13 +54,13 @@ struct BatteryWidgetView: View {
         switch family {
         case .systemSmall:
             SmallBatteryWidgetView(batteryInfo: entry)
-                .containerBackground(Color.btnBlue, for: .widget)
+                .containerBackground(Color.primOrange, for: .widget)
         case .systemMedium:
             MediumBatteryWidgetView(batteryInfo: entry)
-                .containerBackground(Color.btnBlue, for: .widget)
+                .containerBackground(Color.primOrange, for: .widget)
         default:
             SmallBatteryWidgetView(batteryInfo: entry)
-                .containerBackground(Color.btnBlue, for: .widget)
+                .containerBackground(Color.primOrange, for: .widget)
         }
     }
 }

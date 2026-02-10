@@ -43,6 +43,23 @@ struct ContactModel: Identifiable, Hashable {
     
     var raw: CNContact
     var isSelected: Bool = false
+    
+    var  intialName: String {
+        let parts = (displayName ?? "")
+            .split(separator: " ")
+            .filter { !$0.isEmpty }
+
+        if parts.count >= 2 {
+            let first = parts.first?.first
+            let last = parts.last?.first
+            return "\(first ?? " ")\(last ?? " ")".uppercased()
+        } else if let first = parts.first?.first {
+            return String(first).uppercased()
+        }
+
+        return ""
+    }
+
 
     // MARK: - Helpers
     var isNoName: Bool { (displayName ?? "").isEmpty }

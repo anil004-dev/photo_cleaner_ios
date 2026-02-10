@@ -9,11 +9,12 @@ import Combine
 import SwiftUI
 
 class OnboardingViewModel: ObservableObject {
+    
     let arrSteps: [WalkThroughStep] = [
-        WalkThroughStep(imageName: "img_delete_photo", title: "Delete Duplicate\nPhotos", description: "Identify duplicate photos and safely delete the ones you don’t need."),
-        WalkThroughStep(imageName: "img_merge_contacts", title: "Merge or Delete\nDuplicate Contacts", description: "Identify duplicate contacts and choose whether to merge details or remove extras"),
-        WalkThroughStep(imageName: "imge_free_up_storage", title: "Free Up\niPhone Storage", description: "Recover up to 80% of your storage in just a few taps"),
-        WalkThroughStep(imageName: "img_charging_animation", title: "Battery Charging\nAnimation", description: "See your battery charge in real time with a stunning visual effect.")
+        WalkThroughStep(image: .imgDuplicateRemoval, title: "Duplicate Photos\nRemoval", description: "Identify duplicate photos and safely delete the ones you don’t need."),
+        WalkThroughStep(image: .imgDeleteMergeContact, title: "Duplicate Contacts\nMerge or Delete", description: "Identify duplicate contacts and choose whether to merge details or remove extras"),
+        WalkThroughStep(image: .imgFreeupStorage, title: "Free Up\nYour Storage", description: "Recover up to 80% of your storage in just a few taps"),
+        WalkThroughStep(image: .imgChrgingAnimation, title: "Charging\nAnimation", description: "See your battery charge in real time with a stunning visual effect.")
     ]
 
     @Published var currentIndex: Int = 0
@@ -75,8 +76,12 @@ class OnboardingViewModel: ObservableObject {
             
             startProgress(for: currentIndex)
         } else {
-            UserDefaultManager.isWalkThroughCompleted = true
-            AppState.shared.navigateToHomeFlow()
+            moveToHomeScreen()
         }
+    }
+    
+    func moveToHomeScreen() {
+        UserDefaultManager.isWalkThroughCompleted = true
+        AppState.shared.navigateToHomeFlow()
     }
 }

@@ -29,7 +29,7 @@ struct CNDeleteMediaButton: View {
                     }
                     .frame(height: 58)
                     .frame(maxWidth: .infinity)
-                    .background(Color(hex: "F34235"))
+                    .background(Color.btnRed)
                     .clipShape(RoundedRectangle(cornerRadius: 29))
                 }
                 

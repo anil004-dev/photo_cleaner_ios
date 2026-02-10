@@ -13,7 +13,7 @@ struct WelcomeView: View {
     
     var body: some View {
         ZStack {
-            LinearGradient.blueBg.ignoresSafeArea()
+            LinearGradient.orangeBg.ignoresSafeArea()
             
             VStack(alignment: .center, spacing: 0) {
                 welcomeSection
@@ -24,26 +24,47 @@ struct WelcomeView: View {
     
     private var welcomeSection: some View {
         VStack(alignment: .center, spacing: 0) {
-            CNText(title: "Welcome to\nCleanup storage\nmaster", color: .white, font: .system(size: 36, weight: .bold, design: .default), alignment: .center)
-                .padding(.top, 30)
             
             Spacer()
             
             Image(.imgPhotos)
                 .resizable()
                 .scaledToFit()
-                .frame(width: 211, height: 152)
-                .padding(.bottom, 30)
-                        
-            Spacer()
+                .padding(.horizontal, 35)
+                .padding(.bottom, 40)
             
-            CNText(title: "Cleaner AI requires access to your Photos to help free up storage. We value transparency and are committed to protecting your privacy.", color: .white, font: .system(size: 14, weight: .regular, design: .default), alignment: .center)
-                .padding(.horizontal, 36)
-                .padding(.bottom, 33)
-            
-            CNButton(title: "Get Started", onTap: viewModel.btnGetStartedAction)
-                .padding(.horizontal, 20)
+            CNText(title: "We’re so delighted\nyou are here!", color: .txtBlack, font: .custom("YoungSerif-Regular", size: 29), alignment: .center)
                 .padding(.bottom, 20)
+            
+            
+            CNText(title: "We requires access to your Photos to help free up storage. We value transparency and are committed to protecting your privacy.", color: .txtBlack, font: .system(size: 16, weight: .regular, design: .default), alignment: .center)
+                .padding(.horizontal, 18)
+                .padding(.bottom, 50)
+            
+            Button {
+                viewModel.btnGetStartedAction()
+            } label: {
+                HStack(alignment: .center, spacing: 0) {
+                    Image(systemName: "chevron.forward")
+                        .resizable()
+                        .scaledToFit()
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.white)
+                        .frame(width: 14, height: 23)
+                        .padding(.leading, 2)
+                }
+                .frame(width: 70, height: 70)
+                .background(Color.primOrange)
+                .clipShape(Circle())
+                .background {
+                    Circle()
+                        .fill(Color.primOrange.opacity(0.1))
+                        .frame(width: 90, height: 90)
+                }
+            }
+            .frame(width: 90, height: 90)
+            .clipShape(Circle())
+            .padding(.bottom, 20)
         }
     }
 }

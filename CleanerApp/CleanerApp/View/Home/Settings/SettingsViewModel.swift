@@ -17,8 +17,7 @@ struct SettingSection: Identifiable {
 struct SettingOption: Identifiable {
     let id = UUID()
     let title: String
-    let subTitle: String
-    let imageName: String
+    let image: ImageResource
 }
 
 class SettingsViewModel: ObservableObject {
@@ -27,28 +26,28 @@ class SettingsViewModel: ObservableObject {
         SettingSection(
             title: "Utilities",
             arrOption: [
-                SettingOption(title: "Widget", subTitle: "Key insights, always at a glance.", imageName: "widget.small"),
-                SettingOption(title: "Speed Test", subTitle: "Get accurate internet speed results, fast.", imageName: "globe")
+                SettingOption(title: "Set Widget", image: .imgSetWidget),
+                SettingOption(title: "Speed Test", image: .imgSpeedTest)
             ]
         ),
         
         SettingSection(
             title: "Get in Touch",
             arrOption: [
-                SettingOption(title: "Share App", subTitle: "Share this app with friends and family.", imageName: "square.and.arrow.up"),
-                SettingOption(title: "Rate Us", subTitle: "Share your feedback on the App Store.", imageName: "star.fill")
+                SettingOption(title: "Rate our app", image: .imgRateOurApp),
+                SettingOption(title: "Share our app", image: .imgShareOurApp)
+            ]
+        ),
+        
+        SettingSection(
+            title: "Support",
+            arrOption: [
+                SettingOption(title: "Contact Us", image: .imgContactUs),
+                SettingOption(title: "Terms", image: .imgTerms),
+                SettingOption(title: "Privacy", image: .imgPrivacy)
             ]
         )
     ]
-    
-    let supportSection: SettingSection = SettingSection(
-        title: "Support",
-        arrOption: [
-            SettingOption(title: "Contact Us", subTitle: "Share this app with friends and family.", imageName: "envelope"),
-            SettingOption(title: "Terms of Services", subTitle: "Share your feedback on the App Store.", imageName: "text.page"),
-            SettingOption(title: "Privacy Policy", subTitle: "Share your feedback on the App Store.", imageName: "hand.raised")
-        ]
-    )
     
     @Published var showShareAppView: Bool = false
     
@@ -56,25 +55,25 @@ class SettingsViewModel: ObservableObject {
         let title = option.title
         
         switch title {
-        case "Widget":
+        case "Set Widget":
             openWidgetListView()
             
         case "Speed Test":
             openSpeedTestView()
             
-        case "Share App":
+        case "Share our app":
             shareApp()
             
-        case "Rate Us":
+        case "Rate our app":
             rateUs()
             
         case "Contact Us":
             contactUs()
             
-        case "Terms of Services":
+        case "Terms":
             termsofServices()
             
-        case "Privacy Policy":
+        case "Privacy":
             privacyPolicy()
             
         default: break

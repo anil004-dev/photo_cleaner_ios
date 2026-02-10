@@ -19,36 +19,9 @@ struct AllContactsView: View {
                 allContactSection
             }
         }
+        .navigationTitle("All Contacts")
         .toolbar(.visible, for: .navigationBar)
         .toolbar(.hidden, for: .tabBar)
-        .toolbar {
-            if !viewModel.arrContacts.isEmpty {
-                ToolbarItem(placement: .topBarTrailing) {
-                    let isAllSelected = viewModel.arrContacts.allSatisfy({ $0.isSelected })
-                    
-                    Button {
-                        if !isAllSelected  {
-                            viewModel.btnSelectAllAction()
-                        } else {
-                            viewModel.btnDeselectAllAction()
-                        }
-                    } label: {
-                        HStack(alignment: .center, spacing: 10) {
-                            Image(.icSqaureCheckmark)
-                                .renderingMode(.template)
-                                .resizable()
-                                .scaledToFit()
-                                .foregroundStyle(Color.txtBlack)
-                                .frame(width: 18, height: 18)
-                            
-                            CNText(title: isAllSelected ? "Deselect All" : "Select All", color: .txtBlack, font: .system(size: 17, weight: .medium, design: .default), alignment: .center)
-                        }
-                        .padding(.horizontal, 10)
-                        .clipShape(Rectangle())
-                    }
-                }
-            }
-        }
         .onAppear {
             viewModel.onAppear()
         }
@@ -74,34 +47,52 @@ struct AllContactsView: View {
     
     private var titleSection: some View {
         HStack(alignment: .center, spacing: 5) {
-            CNText(title: "All Contacts", color: .txtBlack, font: .system(size: 34, weight: .bold, design: .default), alignment: .trailing)
+            CNText(title: "\(viewModel.arrContacts.count) Contacts", color: .txtBlack, font: .system(size: 18, weight: .semibold, design: .default), alignment: .trailing)
             
             Spacer(minLength: 0)
             
-            CNText(title: "\(viewModel.arrContacts.count) Contacts", color: .init(hex: "7E828B"), font: .system(size: 12, weight: .semibold, design: .default), alignment: .trailing)
+            if !viewModel.arrContacts.isEmpty {
+                let isAllSelected = viewModel.arrContacts.allSatisfy({ $0.isSelected })
+                
+                Button {
+                    if !isAllSelected  {
+                        viewModel.btnSelectAllAction()
+                    } else {
+                        viewModel.btnDeselectAllAction()
+                    }
+                } label: {
+                    CNText(title: isAllSelected ? "Deselect All" : "Select All", color: .primOrange, font: .system(size: 17, weight: .bold, design: .default), alignment: .center)
+                }
+            }
         }
         .padding(.leading, 16)
         .padding(.trailing, 20)
-        .padding(.top, 10)
+        .padding(.top, 27)
     }
     
     private var allContactListSection: some View {
         ZStack(alignment: .bottom) {
             VStack(alignment: .leading, spacing: 0) {
                 titleSection
-                    .padding(.bottom, 8)
+                    .padding(.bottom, 13)
                 
                 ScrollView(.vertical) {
-                    VStack(alignment: .leading, spacing: 12) {
-                        ForEach(viewModel.arrContacts) { contact in
-                            contactRow(contact: contact)
+                    VStack(alignment: .leading, spacing: 0) {
+                        ForEach(0..<viewModel.arrContacts.count, id: \.self) { index in
+                            let contact = viewModel.arrContacts[index]
+                            contactRow(
+                                contact: contact,
+                                showSeparator: index+1 != viewModel.arrContacts.count
+                            )
                         }
                     }
-                    .padding(.horizontal, 16)
-                    .padding(.bottom, 20)
-                    .padding(.top, 14)
+                    .padding(.vertical, 5)
                 }
-                .transition(.move(edge: .bottom))
+                .background(Color(hex: "FDFDFD"))
+                .clipShape(RoundedRectangle(cornerRadius: 25))
+                .padding(.horizontal, 16)
+                .padding(.bottom, viewModel.arrContactToDelete.isEmpty ? 25 : 13)
+                .scrollIndicators(.hidden)
             }
         }
         .safeAreaInset(edge: .bottom) {
@@ -131,7 +122,7 @@ struct AllContactsView: View {
                     Spacer()
                 }
                 .frame(height: 58)
-                .background(Color(hex: "F34235"))
+                .background(Color.btnRed)
                 .clipShape(RoundedRectangle(cornerRadius: 29))
             }
             .padding(26)
@@ -145,13 +136,20 @@ struct AllContactsView: View {
         .shadow(color: .black.opacity(0.11), radius: 8, x: 0, y: 0)
     }
     
-    @ViewBuilder private func contactRow(contact: ContactModel) -> some View {
+    @ViewBuilder private func contactRow(contact: ContactModel, showSeparator: Bool) -> some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack(alignment: .center, spacing: 10) {
-                VStack(alignment: .leading, spacing: 4) {
-                    CNText(title: contact.displayName ?? "No Name", color: .txtBlack, font: .system(size: 17, weight: .medium, design: .default))
+                HStack(alignment: .center, spacing: 0) {
+                    CNText(title: contact.intialName, color: .primOrange, font: .system(size: 20, weight: .heavy, design: .default), alignment: .center)
+                }
+                .frame(width: 46, height: 46)
+                .background(Color(hex: "F4F4F4"))
+                .clipShape(Circle())
+                
+                VStack(alignment: .leading, spacing: 2) {
+                    CNText(title: contact.displayName ?? "No Name", color: .txtBlack, font: .system(size: 17, weight: .semibold, design: .default))
                     
-                    CNText(title: contact.phoneNumbers.first ?? "-", color: Color(hex: "7F818D"), font: .system(size: 18, weight: .regular, design: .default))
+                    CNText(title: contact.phoneNumbers.first ?? "-", color: Color(hex: "7F818D"), font: .system(size: 14, weight: .regular, design: .default))
                 }
                 
                 Spacer(minLength: 0)
@@ -167,11 +165,17 @@ struct AllContactsView: View {
                         .frame(width: 26, height: 26)
                         .animation(.easeInOut(duration: 0.1), value: isSelected)
                 }
+                .padding(.trailing, 6)
             }
-            .padding(.vertical, 16)
-            .padding(.horizontal, 20)
+            .padding(.vertical, 12)
+            
+            if showSeparator {
+                Rectangle()
+                    .fill(Color(hex: "F0F0F0"))
+                    .frame(height: 1)
+                    .frame(maxWidth: .infinity)
+            }
         }
-        .background(Color.white)
-        .clipShape(RoundedRectangle(cornerRadius: 26))
+        .padding(.horizontal, 14)
     }
 }

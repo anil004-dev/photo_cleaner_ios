@@ -121,7 +121,7 @@ struct IncompleteContactListView: View {
                     Spacer()
                 }
                 .frame(height: 58)
-                .background(Color(hex: "F34235"))
+                .background(Color.btnRed)
                 .clipShape(RoundedRectangle(cornerRadius: 29))
             }
             .padding(26)

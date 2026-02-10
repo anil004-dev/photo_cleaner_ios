@@ -14,7 +14,7 @@ struct WidgetListView: View {
     
     var body: some View {
         ZStack {
-            Color.bgDarkBlue.ignoresSafeArea()
+            LinearGradient.orangeBg.ignoresSafeArea()
             
             VStack(alignment: .center, spacing: 0) {
                 widgetSection
@@ -25,7 +25,7 @@ struct WidgetListView: View {
     
     private var widgetSection: some View {
         VStack(alignment: .center, spacing: 0) {
-            CNText(title: "Widgets", color: .white, font: .system(size: 24, weight: .bold, design: .default), alignment: .leading)
+            CNText(title: "Widgets", color: .txtBlack, font: .system(size: 24, weight: .bold, design: .default), alignment: .leading)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.top, 6)
                 .padding(.bottom, 15)
@@ -40,7 +40,7 @@ struct WidgetListView: View {
                     .frame(height: 36)
                     .tag(WidgetKind.battery)
             }
-            .tint(.btnBlue)
+            .tint(.primOrange)
             .pickerStyle(.segmented)
             .padding(.horizontal, 20)
             
@@ -55,10 +55,10 @@ struct WidgetListView: View {
             .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
             .padding(.bottom, 20)
             
-            CNButton(title: "Set Widget") {
+            CNButton(title: "Use Widget", height: 55) {
                 viewModel.setWidget(kind: viewModel.selectedWidgetKind)
             }
-            .frame(width: 200)
+            .padding(.horizontal, 20)
             .padding(.bottom, 20)
         }
     }
@@ -103,14 +103,14 @@ struct WidgetListView: View {
             if size == .small {
                 SmallStorageWidgetView(storageInfo: storageInfo)
                     .padding(20)
-                    .background(.btnBlue)
+                    .background(Color.primOrange)
                     .clipShape(RoundedRectangle(cornerRadius: 28))
                     .shadow(color: .white.opacity(0.25), radius: 35, x: 0, y: 0)
                     .frame(width: 190, height: 190)
             } else {
                 MediumStorageWidgetView(storageInfo: storageInfo)
                     .padding(20)
-                    .background(.btnBlue)
+                    .background(Color.primOrange)
                     .clipShape(RoundedRectangle(cornerRadius: 28))
                     .shadow(color: .white.opacity(0.25), radius: 35, x: 0, y: 0)
                     .frame(height: 170)
@@ -129,14 +129,14 @@ struct WidgetListView: View {
             if size == .small {
                 SmallBatteryWidgetView(batteryInfo: batteryInfo)
                     .padding(20)
-                    .background(.btnBlue)
+                    .background(Color.primOrange)
                     .clipShape(RoundedRectangle(cornerRadius: 28))
                     .shadow(color: .white.opacity(0.25), radius: 35, x: 0, y: 0)
                     .frame(width: 190, height: 190)
             } else {
                 MediumBatteryWidgetView(batteryInfo: batteryInfo)
                     .padding(20)
-                    .background(.btnBlue)
+                    .background(Color.primOrange)
                     .clipShape(RoundedRectangle(cornerRadius: 28))
                     .shadow(color: .white.opacity(0.25), radius: 35, x: 0, y: 0)
                     .frame(height: 170)

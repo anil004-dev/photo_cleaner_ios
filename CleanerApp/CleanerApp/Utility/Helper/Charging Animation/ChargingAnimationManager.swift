@@ -13,12 +13,12 @@ class ChargingAnimationManager {
     
     func getAllAnimations() -> [ChargingAnimation] {
         return [
-            ChargingAnimation(type: .waterDrop),
-            ChargingAnimation(type: .bubbleRing),
-            ChargingAnimation(type: .circularGlowingRing),
-            ChargingAnimation(type: .circularNoiseRing),
-            ChargingAnimation(type: .angularGlowingRing),
-            ChargingAnimation(type: .rainDropBucket)
+            ChargingAnimation(type: .waterDrop, name: "Quantum\nParticles"),
+            ChargingAnimation(type: .bubbleRing, name: "Blue Core"),
+            ChargingAnimation(type: .circularGlowingRing, name: "Prism Aura"),
+            ChargingAnimation(type: .circularNoiseRing, name: "Spectrum Boost"),
+            ChargingAnimation(type: .angularGlowingRing, name: "Cosmic Orbit"),
+            ChargingAnimation(type: .rainDropBucket, name: "Cloud Energy")
         ]
     }
     

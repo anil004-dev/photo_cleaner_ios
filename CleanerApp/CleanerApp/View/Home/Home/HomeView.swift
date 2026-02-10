@@ -59,22 +59,17 @@ struct HomeView: View {
             
             Spacer()
             
-            Image(.imgPhotosRing)
-                .resizable()
-                .scaledToFit()
-                .padding(.horizontal, 20)
-                .padding(.bottom, 50)
-            
-            CNText(title: "Allow Access to Photos", color: .white, font: .system(size: 24, weight: .bold, design: .default), alignment: .center)
+            CNText(title: "Allow Access to Photos", color: .txtBlack, font: .system(size: 24, weight: .bold, design: .default), alignment: .center)
                 .padding(.bottom, 8)
             
-            CNText(title: "This allows us to find duplicate photos\nand videos so you can safely free up\nstorage.", color: .white, font: .system(size: 17, weight: .regular, design: .default), alignment: .center)
+            CNText(title: "This allows us to find duplicate photos\nand videos so you can safely free up\nstorage.", color: .txtBlack, font: .system(size: 17, weight: .regular, design: .default), alignment: .center)
                 .padding(.bottom, 30)
             
             CNButton(title: "Go to Settings") {
                 viewModel.btnGoToSettingsAction()
             }
-            .padding(.bottom, 30)
+            
+            Spacer()
         }
         .frame(maxWidth: .infinity)
         .padding(.horizontal, 20)
@@ -146,7 +141,6 @@ struct HomeView: View {
         .padding(.horizontal, 20)
         .padding(.top, 8)
     }
-    
     
     private var mediaSection: some View {
         VStack(alignment: .leading, spacing: 0) {

@@ -165,22 +165,17 @@ struct ContactHomeView: View {
             VStack(alignment: .center, spacing: 0) {
                 Spacer()
                 
-                Image(.imgContactPermission)
-                    .resizable()
-                    .scaledToFit()
-                    .padding(.horizontal, 10)
-                    .padding(.bottom, 96)
-                
-                CNText(title: "Need Access to Your Contacts", color: .white, font: .system(size: 24, weight: .bold, design: .default), alignment: .center)
+                CNText(title: "Need Access to Your Contacts", color: .txtBlack, font: .system(size: 24, weight: .bold, design: .default), alignment: .center)
                     .padding(.bottom, 8)
                 
-                CNText(title: "Cleaner AI requires contact access to\nwork properly. You can enable this in\nSettings.", color: .white, font: .system(size: 17, weight: .regular, design: .default), alignment: .center)
+                CNText(title: "We requires contact access to\nwork properly. You can enable this in\nSettings.", color: .txtBlack, font: .system(size: 17, weight: .regular, design: .default), alignment: .center)
                     .padding(.bottom, 30)
                 
                 CNButton(title: "Go to Settings") {
                     viewModel.btnGoToSettingsAction()
                 }
-                .padding(.bottom, 30)
+                
+                Spacer()
             }
             .frame(maxWidth: .infinity)
             .padding(.horizontal, 20)

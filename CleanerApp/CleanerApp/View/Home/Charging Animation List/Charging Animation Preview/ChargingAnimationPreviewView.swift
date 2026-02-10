@@ -13,6 +13,8 @@ struct ChargingAnimationPreviewView: View {
     
     var body: some View {
         ZStack {
+            Color.bgDarkBlue.ignoresSafeArea()
+            
             VStack(alignment: .leading, spacing: 15) {
                 previewSection
             }

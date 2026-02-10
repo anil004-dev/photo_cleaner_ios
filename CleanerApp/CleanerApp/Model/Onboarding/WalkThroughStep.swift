@@ -6,11 +6,11 @@
 //
 
 
-import Foundation
+import SwiftUI
 
 struct WalkThroughStep: Identifiable {
     let id = UUID()
-    let imageName: String
+    let image: ImageResource
     let title: String
     let description: String
 }

@@ -74,6 +74,13 @@
 			);
 			target = 888788C22EE006D9009DE313 /* CleanerApp */;
 		};
+		88B46E9C2F3B16EB00BFBBBD /* Exceptions for "CleanerApp" folder in "CleanerApp" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 888788C22EE006D9009DE313 /* CleanerApp */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -89,6 +96,7 @@
 		888788C52EE006D9009DE313 /* CleanerApp */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
+				88B46E9C2F3B16EB00BFBBBD /* Exceptions for "CleanerApp" folder in "CleanerApp" target */,
 				881295E92F0650F60071ED86 /* Exceptions for "CleanerApp" folder in "CleanerApp_WidgetExtension" target */,
 			);
 			path = CleanerApp;
@@ -529,7 +537,8 @@
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = KQ3X2L5SCP;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "Storage Blast: Smart Cleaner";
+				INFOPLIST_FILE = CleanerApp/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Ocean Storage Cleaner";
 				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_NSContactsUsageDescription = "This app needs access to your contacts to find duplicates, clean invalid entries, and create backups.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "We need permission to save compressed videos to your gallery.";
@@ -577,7 +586,8 @@
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = KQ3X2L5SCP;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "Storage Blast: Smart Cleaner";
+				INFOPLIST_FILE = CleanerApp/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Ocean Storage Cleaner";
 				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_NSContactsUsageDescription = "This app needs access to your contacts to find duplicates, clean invalid entries, and create backups.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "We need permission to save compressed videos to your gallery.";

@@ -64,13 +64,13 @@ struct StorageWidgetView: View {
         switch family {
         case .systemSmall:
             SmallStorageWidgetView(storageInfo: entry)
-                .containerBackground(Color.btnBlue, for: .widget)
+                .containerBackground(Color.primOrange, for: .widget)
         case .systemMedium:
             MediumStorageWidgetView(storageInfo: entry)
-                .containerBackground(Color.btnBlue, for: .widget)
+                .containerBackground(Color.primOrange, for: .widget)
         default:
             SmallStorageWidgetView(storageInfo: entry)
-                .containerBackground(Color.btnBlue, for: .widget)
+                .containerBackground(Color.primOrange, for: .widget)
         }
     }
 }
