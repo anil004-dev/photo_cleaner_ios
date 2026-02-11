@@ -147,7 +147,16 @@ struct HomeView: View {
     private var mediaSection: some View {
         VStack(alignment: .leading, spacing: 0) {
             if viewModel.mediaDatabase?.scanState == .scanning {
-                Label("Scanning..", systemImage: "progress.indicator")
+                HStack {
+                    ProgressView()
+                        .progressViewStyle(.circular)
+                        .tint(.txtBlack)
+                        .foregroundStyle(Color.txtBlack)
+                        .frame(width: 18, height: 18)
+                    
+                    CNText(title: "Scanning", color: .txtBlack, font: .system(size: 17.0, weight: .semibold))
+                }
+                //Label("Scanning..", systemImage: "progress.indicator")
                     .padding(.vertical, 10)
                     .padding(.horizontal, 18)
             }

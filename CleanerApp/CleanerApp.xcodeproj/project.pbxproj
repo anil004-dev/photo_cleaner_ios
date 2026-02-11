@@ -327,7 +327,7 @@
 				CODE_SIGN_ENTITLEMENTS = CleanerApp_WidgetExtension/CleanerApp_WidgetExtension.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = KQ3X2L5SCP;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
@@ -335,6 +335,7 @@
 				INFOPLIST_FILE = CleanerApp_WidgetExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = CleanerApp_WidgetExtension;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -370,7 +371,7 @@
 				CODE_SIGN_ENTITLEMENTS = CleanerApp_WidgetExtension/CleanerApp_WidgetExtension.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = KQ3X2L5SCP;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
@@ -378,6 +379,7 @@
 				INFOPLIST_FILE = CleanerApp_WidgetExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = CleanerApp_WidgetExtension;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -532,7 +534,7 @@
 				CODE_SIGN_ENTITLEMENTS = CleanerApp/CleanerApp.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = KQ3X2L5SCP;
 				ENABLE_PREVIEWS = YES;
@@ -580,7 +582,7 @@
 				CODE_SIGN_ENTITLEMENTS = CleanerApp/CleanerApp.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = KQ3X2L5SCP;
 				ENABLE_PREVIEWS = YES;

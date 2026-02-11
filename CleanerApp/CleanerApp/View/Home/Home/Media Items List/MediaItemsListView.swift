@@ -160,7 +160,7 @@ struct MediaItemsListView: View {
                         .stroke(Color.primOrange, lineWidth: 2)
                 )
                 .background {
-                    RoundedRectangle(cornerRadius: 18)
+                    RoundedRectangle(cornerRadius: 20)
                         .fill(Color.primOrange)
                         .offset(x: 3.5, y: 3.5)
                 }
