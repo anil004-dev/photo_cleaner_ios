@@ -54,7 +54,7 @@ struct CNGradientCircularProgressView: View {
             
             let purpleAngularGradient = AngularGradient(
                 gradient: Gradient(
-                    colors: [Color(hex: "EA754B"), Color.white, Color.white]
+                    colors: [Color(hex: "F84100"), Color.white, Color.white]
                 ),
                 center: .center,
                 startAngle: .degrees(0),

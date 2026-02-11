@@ -45,7 +45,8 @@ struct HomeView: View {
     
     private var titleSection: some View {
         HStack(alignment: .center, spacing: 0) {
-            CNText(title: "Cleanup Storage", color: .textBlack, font: .system(size: 24, weight: .bold, design: .default), alignment: .leading)
+            CNText(title: "Ocean Storage Cleaner", color: .textBlack, font: .system(size: 24, weight: .heavy, design: .default), alignment: .leading)
+                .italic()
             
             Spacer()
         }
@@ -113,18 +114,19 @@ struct HomeView: View {
                     Spacer(minLength: 0)
                     
                     ZStack {
-                        CNGradientCircularProgressView(progress: Double(usedStorage / totalStorage), lineWidth: 12)
+                        CNGradientCircularProgressView(progress: Double(usedStorage / totalStorage), lineWidth: 18)
                         
                         Image(.icDb)
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 95, height: 95)
+                            .frame(width: 92, height: 92)
                     }
                     .frame(width: 120, height: 120)
                     .padding(.trailing, 5)
                 }
                 .padding(18)
             }
+            .frame(height: 170)
             .frame(maxWidth: .infinity)
             .background(LinearGradient.orangeBgHorizontal)
             .clipShape(RoundedRectangle(cornerRadius: 18))
@@ -133,7 +135,7 @@ struct HomeView: View {
                     .stroke(Color.primOrange, lineWidth: 2)
             )
             .background {
-                RoundedRectangle(cornerRadius: 18)
+                RoundedRectangle(cornerRadius: 19)
                     .fill(Color.primOrange)
                     .offset(x: 4, y: 4)
             }
